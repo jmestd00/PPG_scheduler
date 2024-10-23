@@ -14,5 +14,8 @@ public class PPGScheduler {
         //TODO a modificar la signatura
     }
 
+    public void calcularItem (Lote lote) {
+        //Necesitamos el algoritmo para calcular el item a partir de los datos, pedir a ppg
+    }
 
 }
