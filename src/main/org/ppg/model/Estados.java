@@ -1,4 +1,4 @@
-package model;
+package org.ppg.model;
 
 public enum Estados {
     EN_ESPERA,

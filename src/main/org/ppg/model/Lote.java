@@ -1,4 +1,4 @@
-package model;
+package org.ppg.model;
 
 public class Lote {
     private Estados estados;
@@ -8,7 +8,8 @@ public class Lote {
     private String tipo, planta, planningClass, cantidad, item;
     private final int id;
 
-    public Lote(int id, String planningClass, String planta, String item, String cantidad, String tipo, Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado) {
+    public Lote(int id, String planningClass, String planta, String item, String cantidad, String tipo,
+            Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado) {
         this.id = id;
         this.planningClass = planningClass;
         this.planta = planta;
