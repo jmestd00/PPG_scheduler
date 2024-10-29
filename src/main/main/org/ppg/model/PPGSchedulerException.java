@@ -1,4 +1,4 @@
-package model;
+package org.ppg.model;
 
 public class PPGSchedulerException extends Exception{
     

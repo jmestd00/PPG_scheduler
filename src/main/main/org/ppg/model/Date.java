@@ -1,4 +1,4 @@
-package model;
+package org.ppg.model;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
