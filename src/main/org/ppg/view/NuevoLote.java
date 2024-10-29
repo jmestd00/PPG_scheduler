@@ -1,4 +1,4 @@
-package org.ppg.model.view;
+package org.ppg.view;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
