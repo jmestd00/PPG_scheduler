@@ -6,8 +6,8 @@ de control que permite la manipulación de los diferentes
 diluidores de la planta de producción.
 
 ## Tecnologías
-* Java 23
-* JavaFX 23
+* Java 21
+* JavaFX 21.0.5
 * JUnit 4.13.1
 * MySQL 15.1
 * Maven 4.0.0
@@ -22,7 +22,7 @@ Para instalar el proyecto, se debe instalar el software
 ## Uso
 Para ejecutar el proyecto, se debe ejecutar el siguiente
 comando en la terminal:
-```bash java -jar ppg.jar```
+```java -jar PPG_scheduler.jar```
 
 ## Autores
 * Dirigidos por Laura Fernández Robles
