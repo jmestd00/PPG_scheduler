@@ -1,3 +1,5 @@
+package org.ppg.model;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
