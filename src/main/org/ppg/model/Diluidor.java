@@ -7,6 +7,7 @@ public class Diluidor {
     private final String name;
     private final int capacity;
     private final ArrayList<Lote> lotes;
+    private Date fechafin;
     public Diluidor (int id, String name, int capacity){
         lotes = new ArrayList<>();
         this.id = id;
@@ -16,13 +17,21 @@ public class Diluidor {
     public void addLote(Lote lote)throws PPGSchedulerException{
         //TODO implementar la funcion add lote en la clase diluidor
     }
-    public int capacity(){
+    public int getCapacity(){
         return this.capacity;
     }
-    public int id(){
+    public int getId(){
         return this.id;
     }
-    public String name(){
+    public String getName(){
         return this.name;
+    }
+
+    public Date getFechaFin() {
+        return this.fechafin;
+    }
+
+    public void setFechaFin(Date newDate) {
+        this.fechafin = newDate;
     }
 }
