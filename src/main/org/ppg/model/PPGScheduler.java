@@ -3,16 +3,20 @@ package org.ppg.model;
 import java.util.ArrayList;
 
 public class PPGScheduler {
+    private ArrayList<Diluidor> diluidores = new ArrayList<>();
 
     public PPGScheduler() throws PPGSchedulerException {
         // TODO implementar constructor PPGScheduler
+        //Asumiendo que los diluidores y su capacidad se nos pasan como parametro
+        diluidores.add(new Diluidor(1,"",50));//En este ejemplo asumimos que el id es 1 y que su capacidad es 50
     }
 
+    //Llama al resto de metodos de la clase para realizar la accion de añadir lotes al horario
     public void insertarLote(String planningClass, String planta, String tipo, String cantidad, String fechaNecesidad)
             throws PPGSchedulerException {
         // TODO implementar metodo insertar de la clase PPGScheduler
     }
-
+    
     public void modificarFechaNecesidad(int idLote, String fechaNecesidad) throws PPGSchedulerException {
         // TODO implementar metodo modifyDate de la clase PPGScheduler
     }
