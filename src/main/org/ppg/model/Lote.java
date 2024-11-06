@@ -5,10 +5,11 @@ public class Lote {
     private Date fechaNecesidad;
     private Date fechaInicio;
     private Date fechaFinal;
-    private String tipo, planta, planningClass, cantidad, item;
+    private String tipo, planta, planningClass, item;
+    private int cantidad;
     private final int id;
 
-    public Lote(int id, String planningClass, String planta, String item, String cantidad, String tipo,
+    public Lote(int id, String planningClass, String planta, String item, int cantidad, String tipo,
             Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado) {
         this.id = id;
         this.planningClass = planningClass;
