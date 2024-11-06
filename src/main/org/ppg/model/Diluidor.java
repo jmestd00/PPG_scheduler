@@ -34,4 +34,17 @@ public class Diluidor {
     public void setFechaFin(Date newDate) {
         this.fechafin = newDate;
     }
+
+    public ArrayList<Diluidor> sortDiluidores(ArrayList<Diluidor> diluidores) {
+        for(int i = 0; i < diluidores.size(); i++) {
+            for(int j = 0; j < diluidores.size(); j++) {
+              if(diluidores.get(j).getCapacity() < diluidores.get(i).getCapacity()) {
+                Diluidor temp = diluidores.get(i);
+                diluidores.set(i, diluidores.get(j));
+                diluidores.set(j, temp);
+              }  
+            }
+        }
+        return diluidores;
+    }
 }
