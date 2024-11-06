@@ -22,4 +22,8 @@ public class Lote {
         this.tipo = tipo;
         this.cantidad = cantidad;
     }
+
+    public int getCantidad() {
+        return this.cantidad;
+    }
 }
