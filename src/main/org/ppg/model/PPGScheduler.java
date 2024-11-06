@@ -29,17 +29,33 @@ public class PPGScheduler {
         // TODO implementar metodo retrasarLote de la clase PPGScheduler
     }
 
+     /**
+     * Metodo para obtener los lotes previos si existen para añadir los nuevos lotes y recalcular 
+     * el calendario de lotes para acomodarlos
+     * @return Devuelve los lotes ya en calendario.
+     * @throws PPGSchedulerException
+     */
     private ArrayList<Lote> obtenerLotesDeLaBaseDeDatos() throws PPGSchedulerException {
         // TODO implementar metodo obtenerLotesDeLaBaseDeDatos de la clase PPGScheduler
         return null;
     }
 
+    /**
+     * Metodo para calcular el Item 
+     * @throws PPGSchedulerException
+     */
     private void calcularItem() throws PPGSchedulerException {
         // TODO implementar metodo calcularItem de la clase PPGScheduler
         // Necesitamos el algoritmo para calcular el item a partir de los datos, pedir a
         // ppg
     }
 
+    /**
+     * Metodo para calcular las fechas de inicio de los lotes a partir de la fecha de fin 
+     * que ha calculado el algoritmo
+     * @return
+     * @throws PPGSchedulerException
+     */
     private Date calcularFechaInicio() throws PPGSchedulerException {
         // TODO implementar metodo obtenerFechaInicio de la clase PPGScheduler
         return null;
