@@ -60,4 +60,9 @@ public class DateTest {
         newDate = date2.AddOrSubstractDays(-365);
         assertEquals("3/11/2023", newDate.toString());
     }
+
+    @Test
+    public void testIsBefore() {
+        assertTrue(date1.isBefore(date2));
+    }
 }

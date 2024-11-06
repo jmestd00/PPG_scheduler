@@ -62,4 +62,11 @@ public class Date {
 
         return day;
     }
+
+    public boolean isBefore(Date comparedDate) {
+
+        return localDate.isBefore(comparedDate.getLocalDate());
+    }
+
+
 }
