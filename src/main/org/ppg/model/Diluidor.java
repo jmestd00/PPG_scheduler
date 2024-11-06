@@ -35,7 +35,7 @@ public class Diluidor {
         this.fechafin = newDate;
     }
 
-    public ArrayList<Diluidor> sortDiluidores(ArrayList<Diluidor> diluidores) {
+    public static ArrayList<Diluidor> sortDiluidores(ArrayList<Diluidor> diluidores) {
         for(int i = 0; i < diluidores.size(); i++) {
             for(int j = 0; j < diluidores.size(); j++) {
               if(diluidores.get(j).getCapacity() < diluidores.get(i).getCapacity()) {

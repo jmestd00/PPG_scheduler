@@ -3,6 +3,10 @@ package org.ppg.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+
+
 public class DiluidorTest {
 
     // TODO Hay que implementar los test
@@ -13,9 +17,9 @@ public class DiluidorTest {
     private Diluidor d3;
     @Before
     public void setUp() {
-        d1 = new Diluidor(1, d1, 10);
-        d2 = new Diluidor(2, d2, 20);
-        d3 = new Diluidor(3, d3, 30);
+        d1 = new Diluidor(1, "d1", 10);
+        d2 = new Diluidor(2, "d2", 20);
+        d3 = new Diluidor(3, "d3", 30);
 
         diluidores.add(d2);
         diluidores.add(d3);
