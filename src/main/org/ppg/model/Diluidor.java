@@ -47,4 +47,17 @@ public class Diluidor {
         }
         return diluidores;
     }
+
+
+    public ArrayList<Lote> getLotes(){
+        return this.lotes;
+    }
+
+    @Override
+    public String toString() {
+        return "id: " + this.id+'\n'+
+                "name: " + this.name + '\n'+
+                "capacity: " + this.capacity+'\n'+
+                "Lotes: {\n" + lotes.toString() + "\n}";
+    }
 }

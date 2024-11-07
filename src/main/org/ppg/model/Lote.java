@@ -26,4 +26,21 @@ public class Lote {
     public int getCantidad() {
         return this.cantidad;
     }
+
+
+    @Override
+    public String toString() {
+        return "Lote{" +
+                "id=" + id +
+                ", estados=" + estados +
+                ", fechaNecesidad=" + fechaNecesidad +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFinal=" + fechaFinal +
+                ", tipo='" + tipo + '\'' +
+                ", planta='" + planta + '\'' +
+                ", planningClass='" + planningClass + '\'' +
+                ", item='" + item + '\'' +
+                ", cantidad=" + cantidad +
+                '}';
+    }
 }
