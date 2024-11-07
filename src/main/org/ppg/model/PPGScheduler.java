@@ -89,13 +89,16 @@ public class PPGScheduler {
 
         // Intentar agregar el lote actual a cada diluidor
         for (Diluidor diluidor : diluidores) {
-            int fechaDisponible = diluidor.getFechaFin();  // Fecha hasta la cual está ocupado el diluidor
-
+            LocalDate fechaDisponible = diluidor.getFechaFin();  // Fecha hasta la cual está ocupado el diluidor
+            LocalDate fechaFinTemp = fechaDisponible.plusDays(loteActual.getDuracion());
+            LocalDate fechaNecesidad = loteActual.getFechaNecesidad();
             // Verificar si el lote puede agregarse al diluidor sin exceder su fecha de fin
-            if (loteActual.isBiggerThan(fechaDisponible) && diluidor.getCapacity() >= loteActual.getCantidad()) {
+            if ((fechaFinTemp.isBefore(fechaNecesidad) || fechaNecesidad.equals(fechaFinTemp)) && diluidor.getCapacity() >= loteActual.getCantidad()) {
                 // Actualizar la fecha de ocupación del diluidor
-                diluidor.setFechaFin((fechaDisponible + loteActual.getDuracion())); // Actualizamos la fecha ocupada con la duración del lote
+                diluidor.setFechaFin(fechaFinTemp); // Actualizamos la fecha ocupada con la duración del lote
                 //Lote marcar diluidor o el addLote de diluidor
+                loteActual.setDiluidor(diluidor.getId());
+                loteActual.setFechaFin(fechaFinTemp);
                 // Avanzar al siguiente lote
                 if (planificarRec(lotes, indiceLote + 1)) {
                     return true; // Si llegamos aquí, hemos encontrado una solución válida
@@ -103,7 +106,8 @@ public class PPGScheduler {
 
                 // Backtrack: si no fue una solución, restauramos la fecha ocupada y quitamos el lote
                 diluidor.setFechaFin(fechaDisponible);
-                diluidor.eliminarLote(loteActual); //o desmarcar de lote el diluidor
+                loteActual.setDiluidor(0);//o desmarcar de lote el diluidor
+                //estudiar la necesidad de restear la fechafin, ya que la fechaNecesidad no cambia
             }
         }
 
