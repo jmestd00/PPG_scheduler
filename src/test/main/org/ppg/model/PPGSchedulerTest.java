@@ -33,4 +33,11 @@ public class PPGSchedulerTest {
         System.out.println(diluidores);
     }
 
+    @Test
+    public void testUpdateLoteDB() throws PPGSchedulerException {
+        PPGScheduler app = new PPGScheduler();
+        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1);
+        app.actualizarLoteDB(lote);
+    }
+
 }

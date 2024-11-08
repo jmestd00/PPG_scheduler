@@ -1,12 +1,8 @@
 package org.ppg.view;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import java.util.Objects;
 
+import java.util.Objects;
+/*
 public class NuevoLote extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -27,3 +23,4 @@ public class NuevoLote extends Application {
         launch(args);
     }
 }
+*/

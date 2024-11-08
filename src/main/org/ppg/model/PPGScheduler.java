@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import static java.sql.DriverManager.getConnection;
 
 public class PPGScheduler {
@@ -21,10 +22,10 @@ public class PPGScheduler {
         String password = "PPG.";
         int port = 3306;
         String database = "PPG_scheduler";
-        String url = "jdbc:mysql://"+hostname+":"+port+"/"+database;
-        try{
+        String url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
+        try {
             connection = getConnection(url, username, password);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
@@ -34,7 +35,7 @@ public class PPGScheduler {
             throws PPGSchedulerException {
         // TODO implementar metodo insertar de la clase PPGScheduler
     }
-    
+
     public void modificarFechaNecesidad(int idLote, String fechaNecesidad) throws PPGSchedulerException {
         // TODO implementar metodo modifyDate de la clase PPGScheduler
     }
@@ -46,7 +47,35 @@ public class PPGScheduler {
     public void retrasarLote(int idLote) throws PPGSchedulerException {
         // TODO implementar metodo retrasarLote de la clase PPGScheduler
     }
-    private void obtenerDiluidoresDB(HashMap<Integer, Diluidor> diluidores)throws PPGSchedulerException {
+
+    public void actualizarLoteDB(Lote lote)throws PPGSchedulerException{
+        String query = "UPDATE Lote SET Fecha_inicio = ?, Fecha_fin = ?, Fecha_necesidad = ?, Tipo = ?, Plant = ?, Cantidad = ?, ID_diluidor = ?, Planning_class = ?, Estado = ?, Item = ? WHERE Lote.ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, lote.getFechaInicio().toString());
+            statement.setString(2, lote.getFechaFinal().toString());
+            statement.setString(3, lote.getFechaNecesidad().toString());
+            statement.setString(4, lote.getTipo());
+            statement.setString(5, lote.getPlant());
+            statement.setInt(6, lote.getCantidad());
+            statement.setInt(7, lote.getIdDiluidor());
+            statement.setString(8, lote.getPlannigClass());
+            statement.setString(9, lote.getEstado());
+            statement.setString(10, lote.getItem());
+            statement.setInt(11, lote.getId());
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Update successful. Rows affected: " + rowsAffected);
+            } else {
+                System.out.println("No rows were updated.");
+            }
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+
+    }
+
+    private void obtenerDiluidoresDB(HashMap<Integer, Diluidor> diluidores) throws PPGSchedulerException {
         assert diluidores != null;
         String query = "select ID, Name, Capacity from Diluidores";
         try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
@@ -61,7 +90,8 @@ public class PPGScheduler {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-    private void obtenerLotesDB(HashMap<Integer, Diluidor> diluidores)throws PPGSchedulerException {
+
+    private void obtenerLotesDB(HashMap<Integer, Diluidor> diluidores) throws PPGSchedulerException {
         String query = "select Lote.ID, Fecha_inicio,Fecha_fin,Fecha_necesidad,Tipo, Plant,Cantidad, ID_diluidor, Planning_class, Estado, Item from PPG_scheduler.Lote inner join Diluidores on Diluidores.ID like Lote.ID_diluidor";
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
@@ -73,10 +103,10 @@ public class PPGScheduler {
                 int cantidad = resultSet.getInt("Cantidad");
                 String tipo = resultSet.getString("Tipo");
                 Date f_inicio = new Date(resultSet.getDate("Fecha_inicio"));
-                Date f_fin  = new Date(resultSet.getDate("Fecha_fin"));
+                Date f_fin = new Date(resultSet.getDate("Fecha_fin"));
                 Date f_necesidad = new Date(resultSet.getDate("Fecha_necesidad"));
                 Estados estado = Estados.fromValue(resultSet.getString("ESTADO"));
-                Lote lote = new Lote(id, planningClass, planta, item, cantidad, tipo, f_inicio, f_fin,f_necesidad,estado);
+                Lote lote = new Lote(id, planningClass, planta, item, cantidad, tipo, f_inicio, f_fin, f_necesidad, estado, idDiluidor);
                 diluidores.get(idDiluidor).addLote(lote);
             }
         } catch (SQLException e) {
@@ -84,18 +114,20 @@ public class PPGScheduler {
         }
     }
 
-     public ArrayList<Diluidor> obtenerDiluidoresDeLaBaseDeDatos() throws PPGSchedulerException {
-         HashMap<Integer, Diluidor> diluidoresHashMap = new HashMap<>();
-         obtenerDiluidoresDB(diluidoresHashMap);
-         obtenerLotesDB(diluidoresHashMap);
-         ArrayList<Diluidor> diluidores = new ArrayList<>();
-         for(Integer id:diluidoresHashMap.keySet()){
-             diluidores.add(diluidoresHashMap.get(id));
-         }
-         return diluidores;
-     }
+    public ArrayList<Diluidor> obtenerDiluidoresDeLaBaseDeDatos() throws PPGSchedulerException {
+        HashMap<Integer, Diluidor> diluidoresHashMap = new HashMap<>();
+        obtenerDiluidoresDB(diluidoresHashMap);
+        obtenerLotesDB(diluidoresHashMap);
+        ArrayList<Diluidor> diluidores = new ArrayList<>();
+        for (Integer id : diluidoresHashMap.keySet()) {
+            diluidores.add(diluidoresHashMap.get(id));
+        }
+        return diluidores;
+    }
+
     /**
-     * Metodo para calcular el Item 
+     * Metodo para calcular el Item
+     *
      * @throws PPGSchedulerException
      */
     private void calcularItem() throws PPGSchedulerException {
@@ -105,8 +137,9 @@ public class PPGScheduler {
     }
 
     /**
-     * Metodo para calcular las fechas de inicio de los lotes a partir de la fecha de fin 
+     * Metodo para calcular las fechas de inicio de los lotes a partir de la fecha de fin
      * que ha calculado el algoritmo
+     *
      * @return
      * @throws PPGSchedulerException
      */
@@ -121,14 +154,15 @@ public class PPGScheduler {
     }
 
     /**
-     * Metodo donde se ejecuta el algoritmo de backtracking necesario para obtener un 
+     * Metodo donde se ejecuta el algoritmo de backtracking necesario para obtener un
      * calendario de lostes ideal
      * precondicion: los lotes deben estar ordenados por fecha de necesidad
      * Los diluidores deben estar ordenados de menor a mayor Cantidad.
+     *
      * @param lotesPrevios Lotes ya existentes obtenidos de la base de datos
-     * @param nuevosLotes Lotes nuevos introducidos por el usuario
+     * @param nuevosLotes  Lotes nuevos introducidos por el usuario
      */
-    private void planificar(ArrayList<Lote> lotesPrevios, ArrayList<Lote> nuevosLotes){
+    private void planificar(ArrayList<Lote> lotesPrevios, ArrayList<Lote> nuevosLotes) {
         //planificarRec(null, null, 0);
     }
     /*

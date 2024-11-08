@@ -1,16 +1,17 @@
 package org.ppg.model;
 
 public class Lote {
-    private Estados estados;
+    private Estados estado;
     private Date fechaNecesidad;
     private Date fechaInicio;
     private Date fechaFinal;
     private String tipo, planta, planningClass, item;
     private int cantidad;
     private final int id;
+    private int idDiluidor;
 
     public Lote(int id, String planningClass, String planta, String item, int cantidad, String tipo,
-            Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado) {
+            Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado,  int idDiluidor) {
         this.id = id;
         this.planningClass = planningClass;
         this.planta = planta;
@@ -18,9 +19,10 @@ public class Lote {
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
         this.fechaNecesidad = fechaNecesidad;
-        this.estados = estado;
+        this.estado = estado;
         this.tipo = tipo;
         this.cantidad = cantidad;
+        this.idDiluidor = idDiluidor;
     }
 
     public int getCantidad() {
@@ -32,7 +34,7 @@ public class Lote {
     public String toString() {
         return "Lote{" +
                 "id=" + id +
-                ", estados=" + estados +
+                ", estados=" + estado +
                 ", fechaNecesidad=" + fechaNecesidad +
                 ", fechaInicio=" + fechaInicio +
                 ", fechaFinal=" + fechaFinal +
@@ -42,5 +44,45 @@ public class Lote {
                 ", item='" + item + '\'' +
                 ", cantidad=" + cantidad +
                 '}';
+    }
+
+    public String getTipo() {
+        return this.tipo;
+    }
+
+    public String getPlant() {
+        return this.planta;
+    }
+
+    public int getIdDiluidor() {
+        return this.idDiluidor;
+    }
+
+    public String getPlannigClass() {
+        return this.planningClass;
+    }
+
+    public String getEstado() {
+        return this.estado.getValue();
+    }
+
+    public String getItem() {
+        return this.item;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public Date getFechaInicio() {
+        return this.fechaInicio;
+    }
+
+    public Date getFechaFinal() {
+        return this.fechaFinal;
+    }
+
+    public Date getFechaNecesidad() {
+        return this.fechaNecesidad;
     }
 }
