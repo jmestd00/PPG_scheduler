@@ -9,9 +9,10 @@ public class Lote {
     private int cantidad;
     private final int id;
     private int idDiluidor;
+    private int stock;
 
     public Lote(int id, String planningClass, String planta, String item, int cantidad, String tipo,
-            Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado,  int idDiluidor) {
+            Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado,  int idDiluidor, int stock) {
         this.id = id;
         this.planningClass = planningClass;
         this.planta = planta;
@@ -23,6 +24,7 @@ public class Lote {
         this.tipo = tipo;
         this.cantidad = cantidad;
         this.idDiluidor = idDiluidor;
+        this.stock = stock;
     }
 
     public int getCantidad() {
@@ -84,5 +86,9 @@ public class Lote {
 
     public Date getFechaNecesidad() {
         return this.fechaNecesidad;
+    }
+
+    public int getStock() {
+        return this.stock;
     }
 }

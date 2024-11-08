@@ -36,8 +36,14 @@ public class PPGSchedulerTest {
     @Test
     public void testUpdateLoteDB() throws PPGSchedulerException {
         PPGScheduler app = new PPGScheduler();
-        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1);
+        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1, 0);
         app.actualizarLoteDB(lote);
     }
 
+    @Test
+    public void testInsertLoteDB() throws PPGSchedulerException {
+        PPGScheduler app = new PPGScheduler();
+        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1, 0);
+        app.insertarLoteDB(lote);
+    }
 }

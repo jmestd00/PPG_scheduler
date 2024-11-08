@@ -48,6 +48,34 @@ public class PPGScheduler {
         // TODO implementar metodo retrasarLote de la clase PPGScheduler
     }
 
+    public void insertarLoteDB(Lote lote)throws PPGSchedulerException{
+        String query = "INSERT INTO Lote (Fecha_inicio, Fecha_fin, Fecha_necesidad, Tipo, Plant, Cantidad, ID_diluidor, Planning_class, Estado, Item, Stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            // Set parameters for the placeholders in the query
+            statement.setString(1, lote.getFechaInicio().toString());
+            statement.setString(2, lote.getFechaFinal().toString());
+            statement.setString(3, lote.getFechaNecesidad().toString());
+            statement.setString(4, lote.getTipo());
+            statement.setString(5, lote.getPlant());
+            statement.setInt(6, lote.getCantidad());
+            statement.setInt(7, lote.getIdDiluidor());
+            statement.setString(8, lote.getPlannigClass());
+            statement.setString(9, lote.getEstado());
+            statement.setString(10, lote.getItem());
+            statement.setInt(11, lote.getStock());
+
+            // Execute the insert
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Insert successful. Rows affected: " + rowsAffected);
+            } else {
+                System.out.println("No rows were inserted.");
+            }
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+    }
+
     public void actualizarLoteDB(Lote lote)throws PPGSchedulerException{
         String query = "UPDATE Lote SET Fecha_inicio = ?, Fecha_fin = ?, Fecha_necesidad = ?, Tipo = ?, Plant = ?, Cantidad = ?, ID_diluidor = ?, Planning_class = ?, Estado = ?, Item = ? WHERE Lote.ID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -92,7 +120,7 @@ public class PPGScheduler {
     }
 
     private void obtenerLotesDB(HashMap<Integer, Diluidor> diluidores) throws PPGSchedulerException {
-        String query = "select Lote.ID, Fecha_inicio,Fecha_fin,Fecha_necesidad,Tipo, Plant,Cantidad, ID_diluidor, Planning_class, Estado, Item from PPG_scheduler.Lote inner join Diluidores on Diluidores.ID like Lote.ID_diluidor";
+        String query = "select Lote.ID, Fecha_inicio,Fecha_fin,Fecha_necesidad,Tipo, Plant,Cantidad, ID_diluidor, Planning_class, Estado, Item, Stock from PPG_scheduler.Lote inner join Diluidores on Diluidores.ID like Lote.ID_diluidor";
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
@@ -106,7 +134,8 @@ public class PPGScheduler {
                 Date f_fin = new Date(resultSet.getDate("Fecha_fin"));
                 Date f_necesidad = new Date(resultSet.getDate("Fecha_necesidad"));
                 Estados estado = Estados.fromValue(resultSet.getString("ESTADO"));
-                Lote lote = new Lote(id, planningClass, planta, item, cantidad, tipo, f_inicio, f_fin, f_necesidad, estado, idDiluidor);
+                int stock = resultSet.getInt("Stock");
+                Lote lote = new Lote(id, planningClass, planta, item, cantidad, tipo, f_inicio, f_fin, f_necesidad, estado, idDiluidor, stock);
                 diluidores.get(idDiluidor).addLote(lote);
             }
         } catch (SQLException e) {
