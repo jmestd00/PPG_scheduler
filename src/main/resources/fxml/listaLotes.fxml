@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="1080" maxWidth="1920" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.ListaLotes">
+<AnchorPane fx:id="rootPane" maxHeight="1080" maxWidth="1920" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.ListaLotes">
     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="1920.0" text="LISTADO DE LOTES">
         <font>
             <Font name="Futura Medium" size="40.0" />
