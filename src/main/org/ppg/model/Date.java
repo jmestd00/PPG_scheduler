@@ -1,12 +1,13 @@
 package org.ppg.model;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class Date {
 
     private final int day, month, year;
-    private final LocalDate localDate;
+    private LocalDate localDate;
 
     public Date(int day, int month, int year) {
         this.day = day;
@@ -17,7 +18,11 @@ public class Date {
 
     //Get a date from a sql date
     public Date(java.sql.Date date){
-        this(date.getDay(), date.getMonth(), date.getYear());
+        String[] splitDate = date.toString().split("-");
+        this.day = Integer.parseInt(splitDate[2]);
+        this.month =  Integer.parseInt(splitDate[1]);
+        this.year = Integer.parseInt(splitDate[0]);
+        localDate = LocalDate.of(year, month, day);
     }
 
     @Override
@@ -64,14 +69,10 @@ public class Date {
     }
 
     public int getDay() {
-
         return day;
     }
 
     public boolean isBefore(Date comparedDate) {
-
         return localDate.isBefore(comparedDate.getLocalDate());
     }
-
-
 }

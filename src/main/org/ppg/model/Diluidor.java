@@ -15,7 +15,7 @@ public class Diluidor {
         this.capacity = capacity;
     }
     public void addLote(Lote lote)throws PPGSchedulerException{
-        //TODO implementar la funcion add lote en la clase diluidor
+        lotes.add(lote);
     }
     public int getCapacity(){
         return this.capacity;
@@ -58,6 +58,6 @@ public class Diluidor {
         return "id: " + this.id+'\n'+
                 "name: " + this.name + '\n'+
                 "capacity: " + this.capacity+'\n'+
-                "Lotes: {\n" + lotes.toString() + "\n}";
+                "Lotes: {\n" + lotes + "\n}";
     }
 }
