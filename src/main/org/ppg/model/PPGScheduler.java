@@ -126,7 +126,6 @@ public class PPGScheduler {
     private void planificar(ArrayList<Lote> lotesPrevios, ArrayList<Lote> nuevosLotes){
         //planificarRec(null, null, 0);
     }
-
     public boolean planificarRec(ArrayList<Lote> lotes, int indiceLote){
         //hay que añadir la tolerancia al retraso-----------------------------------
         // Caso base: si hemos asignado todos los lotes, es una solución válida
@@ -159,7 +158,6 @@ public class PPGScheduler {
                 //estudiar la necesidad de restear la fechafin, ya que la fechaNecesidad no cambia
             }
         }
-
         // Si no se pudo asignar el lote actual a ningún diluidor, no hay solución
         return false;
     }
