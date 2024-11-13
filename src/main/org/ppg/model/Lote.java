@@ -1,29 +1,24 @@
 package org.ppg.model;
 
-public class Lote {
-    private Estados estados;
-    private Date fechaNecesidad;
-    private Date fechaInicio;
-    private Date fechaFinal;
-    private String tipo, planta, planningClass, item;
-    private int cantidad;
-    private final int id;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
-    public Lote(int id, String planningClass, String planta, String item, int cantidad, String tipo,
-            Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado) {
-        this.id = id;
-        this.planningClass = planningClass;
-        this.planta = planta;
-        this.item = item;
-        this.fechaInicio = fechaInicio;
-        this.fechaFinal = fechaFinal;
-        this.fechaNecesidad = fechaNecesidad;
-        this.estados = estado;
-        this.tipo = tipo;
-        this.cantidad = cantidad;
-    }
-
-    public int getCantidad() {
-        return this.cantidad;
+public record Lote(
+        int nLote, String planningClass, String plant, String item, int quantity, Date fStart, Date fNeed,
+        Estados status, String description, Types type
+) {
+   
+    public StringProperty[] getProperties() {
+        StringProperty[] properties = new StringProperty[9];
+        properties[0] = new SimpleStringProperty(Integer.toString(nLote));
+        properties[1] = new SimpleStringProperty(planningClass);
+        properties[2] = new SimpleStringProperty(plant);
+        properties[3] = new SimpleStringProperty(item);
+        properties[4] = new SimpleStringProperty(Integer.toString(quantity));
+        properties[5] = new SimpleStringProperty(fStart.toString());
+        properties[6] = new SimpleStringProperty(fNeed.toString());
+        properties[7] = new SimpleStringProperty(status.toString());
+        properties[8] = new SimpleStringProperty(description);
+        return properties;
     }
 }

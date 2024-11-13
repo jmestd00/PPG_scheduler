@@ -27,14 +27,12 @@
             </TextField>
          </VBox>
          <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-            <children>
-               <Label text="Nº LOTE">
-                  <font>
-                     <Font size="23.0" />
-                  </font>
-               </Label>
-               <TextField prefHeight="55.0" prefWidth="125.0" />
-            </children>
+            <Label text="Nº LOTE">
+               <font>
+                  <Font size="23.0"/>
+               </font>
+            </Label>
+            <TextField prefHeight="55.0" prefWidth="125.0"/>
          </VBox>
          <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
             <Label text="PLANTA">
@@ -85,27 +83,23 @@
          </VBox>
       </HBox>
       <Pane prefHeight="112.0" prefWidth="965.0">
-         <children>
-            <TextArea layoutX="73.0" layoutY="14.0" prefHeight="89.0" prefWidth="820.0" promptText="Descripción">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </TextArea>
-         </children>
+         <TextArea layoutX="73.0" layoutY="14.0" prefHeight="89.0" prefWidth="820.0" promptText="Descripción">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </TextArea>
       </Pane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
-         <children>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="PLANIFICAR">
-               <font>
-                  <Font name="Roboto Light" size="20.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="+">
-               <font>
-                  <Font name="Roboto Light" size="20.0" />
-               </font>
-            </Button>
-         </children>
+         <Button alignment="CENTER" mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="PLANIFICAR">
+            <font>
+               <Font name="Roboto Light" size="20.0"/>
+            </font>
+         </Button>
+         <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="+">
+            <font>
+               <Font name="Roboto Light" size="20.0"/>
+            </font>
+         </Button>
       </HBox>
    </VBox>
 </AnchorPane>
