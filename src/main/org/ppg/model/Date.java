@@ -15,6 +15,11 @@ public class Date {
         localDate = LocalDate.of(year, month, day);
     }
 
+    //Get a date from a sql date
+    public Date(java.sql.Date date){
+        this(date.getDay(), date.getMonth(), date.getYear());
+    }
+
     @Override
     public String toString() {
         return "" + day + "/" + month + "/" + year;
