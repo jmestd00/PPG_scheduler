@@ -1,3 +1,7 @@
 .pagination {
     -fx-font: 18px "Futura Medium";
 }
+.font {
+    -fx-font: 26px "Futura Medium";
+    -fx-alignment: CENTER;
+}

@@ -8,27 +8,28 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="1080" maxWidth="1920" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.ListaLotes">
+<AnchorPane fx:id="rootPane" maxHeight="1080" maxWidth="1920" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.ListaLotes">
     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="1920.0" text="LISTADO DE LOTES">
         <font>
             <Font name="Futura Medium" size="40.0" />
         </font>
     </Label>
-    <Button fx:id="addButton" layoutX="10.0" layoutY="53.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="235.0" stylesheets="@../css/listaLotes.css" text="+ AÑADIR LOTE">
+    <Button fx:id="addButton" layoutX="10.0" layoutY="53.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="235.0" stylesheets="@../css/listaLotes.css" text="+ AÑADIR LOTE" onAction="#abrirNuevoLote">
         <font>
             <Font size="24.0" />
         </font>
     </Button>
     <TableView fx:id="tableView" layoutX="5.0" layoutY="105.0" prefHeight="900.0" prefWidth="1910.0" styleClass="pagination" stylesheets="@../css/listaLotes.css">
         <columns>
-            <TableColumn fx:id="nLoteCol" editable="false" maxWidth="210.0" minWidth="210.0" prefWidth="210" sortable="false" text="Nº DE LOTE" />
-            <TableColumn fx:id="pClassCol" editable="false" maxWidth="370.0" minWidth="370.0" prefWidth="370" sortable="false" styleClass="pClass" text="PLANNING CLASS" />
-            <TableColumn fx:id="plantCol" editable="false" maxWidth="190" minWidth="190" prefWidth="190" sortable="false" text="PLANTA" />
-            <TableColumn fx:id="itemCol" editable="false" maxWidth="300.0" minWidth="300.0" prefWidth="300" sortable="false" text="ITEM" />
-            <TableColumn fx:id="iDateCol" editable="false" maxWidth="210.0" minWidth="210.0" prefWidth="210" sortable="false" text="FECHA INICIO" />
-            <TableColumn fx:id="nDateCol" editable="false" maxWidth="280.0" minWidth="280.0" prefWidth="280" sortable="false" text="FECHA NECESIDAD" />
-            <TableColumn fx:id="statusCol" editable="false" maxWidth="210.0" minWidth="210.0" prefWidth="210" sortable="false" text="ESTADO" />
-            <TableColumn fx:id="editCol" editable="false" maxWidth="137" minWidth="137" prefWidth="137" sortable="false" text="EDIT" />
+            <TableColumn fx:id="nLoteCol" editable="false" maxWidth="210.0" minWidth="210.0" prefWidth="210" sortable="false" styleClass="font" text="Nº DE LOTE" />
+            <TableColumn fx:id="pClassCol" editable="false" maxWidth="260.0" minWidth="260.0" prefWidth="260" sortable="false" styleClass="font" text="PLANNING CLASS" />
+            <TableColumn fx:id="plantCol" editable="false" maxWidth="190" minWidth="190" prefWidth="190" sortable="false" styleClass="font" text="PLANTA" />
+            <TableColumn fx:id="itemCol" editable="false" maxWidth="260.0" minWidth="260.0" prefWidth="260" sortable="false" styleClass="font" text="ITEM" />
+            <TableColumn fx:id="quantityCol" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160" sortable="false" styleClass="font" text="CANTIDAD" />
+            <TableColumn fx:id="iDateCol" editable="false" maxWidth="210.0" minWidth="210.0" prefWidth="210" sortable="false" styleClass="font" text="FECHA INICIO" />
+            <TableColumn fx:id="nDateCol" editable="false" maxWidth="280.0" minWidth="280.0" prefWidth="280" sortable="false" styleClass="font" text="FECHA NECESIDAD" />
+            <TableColumn fx:id="statusCol" editable="false" maxWidth="190.0" minWidth="190.0" prefWidth="190" sortable="false" styleClass="font" text="ESTADO" />
+            <TableColumn fx:id="editCol" editable="false" maxWidth="137" minWidth="137" prefWidth="137" sortable="false" styleClass="font" text="EDIT" />
         </columns>
     </TableView>
     <Pagination fx:id="pagination" layoutY="1000.0" prefHeight="70.0" prefWidth="1920.0" styleClass="pagination" stylesheets="@../css/listaLotes.css" />
