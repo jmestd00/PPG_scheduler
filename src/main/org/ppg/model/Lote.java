@@ -1,10 +1,12 @@
 package org.ppg.model;
 
+import java.time.LocalDate;
+
 public class Lote {
     private Estados estado;
-    private Date fechaNecesidad;
-    private Date fechaInicio;
-    private Date fechaFinal;
+    private LocalDate fechaNecesidad;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFinal;
     private String tipo, planta, planningClass, item;
     private int cantidad;
     private final int id;
@@ -12,7 +14,7 @@ public class Lote {
     private int stock;
 
     public Lote(int id, String planningClass, String planta, String item, int cantidad, String tipo,
-            Date fechaInicio, Date fechaFinal, Date fechaNecesidad, Estados estado,  int idDiluidor, int stock) {
+            LocalDate fechaInicio, LocalDate fechaFinal, LocalDate fechaNecesidad, Estados estado,  int idDiluidor, int stock) {
         this.id = id;
         this.planningClass = planningClass;
         this.planta = planta;
@@ -76,15 +78,15 @@ public class Lote {
         return this.id;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return this.fechaInicio;
     }
 
-    public Date getFechaFinal() {
+    public LocalDate getFechaFinal() {
         return this.fechaFinal;
     }
 
-    public Date getFechaNecesidad() {
+    public LocalDate getFechaNecesidad() {
         return this.fechaNecesidad;
     }
 

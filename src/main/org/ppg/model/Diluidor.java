@@ -1,5 +1,6 @@
 package org.ppg.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Diluidor {
@@ -7,7 +8,7 @@ public class Diluidor {
     private final String name;
     private final int capacity;
     private final ArrayList<Lote> lotes;
-    private Date fechafin;
+    private LocalDate fechafin;
     public Diluidor (int id, String name, int capacity){
         lotes = new ArrayList<>();
         this.id = id;
@@ -27,25 +28,17 @@ public class Diluidor {
         return this.name;
     }
 
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return this.fechafin;
     }
 
-    public void setFechaFin(Date newDate) {
+    public void setFechaFin(LocalDate newDate) {
         this.fechafin = newDate;
     }
 
-    public static ArrayList<Diluidor> sortDiluidores(ArrayList<Diluidor> diluidores) {
-        for(int i = 0; i < diluidores.size(); i++) {
-            for(int j = 0; j < diluidores.size(); j++) {
-              if(diluidores.get(j).getCapacity() < diluidores.get(i).getCapacity()) {
-                Diluidor temp = diluidores.get(i);
-                diluidores.set(i, diluidores.get(j));
-                diluidores.set(j, temp);
-              }  
-            }
-        }
-        return diluidores;
+    @Override
+    public int compareTo(Diluidor o) {
+        return Integer.compare(this.id, o.id);
     }
 
 

@@ -12,21 +12,25 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PPGSchedulerTest {
 
     // TODO Hay que implementar los test
 
-    @Before
-    public void setUp() {
+    private PPGScheduler app;
 
+    @Before
+    public void setUp() throws PPGSchedulerException{
+        app = new PPGScheduler();
     }
 
     @Test /* (expected = PPGSchedulerException.class) */
@@ -40,26 +44,31 @@ public class PPGSchedulerTest {
     }
 
     @Test
-    public void testGetDiluidoresFromDatabase() throws PPGSchedulerException{
-        PPGScheduler app = new PPGScheduler();
+    public void testGetDiluidoresFromDatabase() throws PPGSchedulerException {
         ArrayList<Diluidor> diluidores = app.obtenerDiluidoresDeLaBaseDeDatos();
         System.out.println(diluidores);
     }
 
     @Test
     public void testUpdateLoteDB() throws PPGSchedulerException {
-        PPGScheduler app = new PPGScheduler();
-        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1, 0);
+        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", LocalDate.of(2025, 11, 8), LocalDate.of(2025, 11, 15), LocalDate.of(2025, 11, 15), Estados.EN_DEMORA, 1, 0);
         app.actualizarLoteDB(lote);
     }
 
     @Test
     public void testInsertLoteDB() throws PPGSchedulerException {
-        PPGScheduler app = new PPGScheduler();
-        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1, 0);
+        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", LocalDate.of(2025, 11, 8), LocalDate.of(2025, 11, 15), LocalDate.of(2025, 11, 15), Estados.EN_DEMORA, 1, 0);
         app.insertarLoteDB(lote);
     }
 
+    @Test
+    public void testSortDiluidores() throws PPGSchedulerException {
+        ArrayList<Diluidor> diluidores = app.obtenerDiluidoresDeLaBaseDeDatos();
+        app.sortDilutors();
+        assertEquals(diluidores.get(0).getId(), 1);
+        assertEquals(diluidores.get(1).getId(), 2);
+        assertEquals(diluidores.get(2).getId(), 3);
+    }
 
 
     //Esto no es un test. Es un metodo para subir el csv a la base de datos

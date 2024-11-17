@@ -1,6 +1,7 @@
 package org.ppg.model;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.sql.Connection;
@@ -130,9 +131,9 @@ public class PPGScheduler {
                 String item = resultSet.getString("Item");
                 int cantidad = resultSet.getInt("Cantidad");
                 String tipo = resultSet.getString("Tipo");
-                Date f_inicio = new Date(resultSet.getDate("Fecha_inicio"));
-                Date f_fin = new Date(resultSet.getDate("Fecha_fin"));
-                Date f_necesidad = new Date(resultSet.getDate("Fecha_necesidad"));
+                LocalDate f_inicio = resultSet.getDate("Fecha_inicio").toLocalDate();
+                LocalDate f_fin = resultSet.getDate("Fecha_fin").toLocalDate();
+                LocalDate f_necesidad = resultSet.getDate("Fecha_necesidad").toLocalDate();
                 Estados estado = Estados.fromValue(resultSet.getString("ESTADO"));
                 int stock = resultSet.getInt("Stock");
                 Lote lote = new Lote(id, planningClass, planta, item, cantidad, tipo, f_inicio, f_fin, f_necesidad, estado, idDiluidor, stock);
@@ -172,12 +173,12 @@ public class PPGScheduler {
      * @return
      * @throws PPGSchedulerException
      */
-    private Date calcularFechaInicio() throws PPGSchedulerException {
+    private LocalDate calcularFechaInicio() throws PPGSchedulerException {
         // TODO implementar metodo obtenerFechaInicio de la clase PPGScheduler
         return null;
     }
 
-    private Date calcularFechaFin() throws PPGSchedulerException {
+    private LocalDate calcularFechaFin() throws PPGSchedulerException {
         // TODO implementar metodo obtenerFechaFin de la clase PPGScheduler
         return null;
     }
@@ -194,6 +195,12 @@ public class PPGScheduler {
     private void planificar(ArrayList<Lote> lotesPrevios, ArrayList<Lote> nuevosLotes) {
         //planificarRec(null, null, 0);
     }
+
+    public ArrayList<Diluidor> sortDilutors() {
+        this.diluidores.sort(null);
+        return this.diluidores;
+    }
+
     /*
     public boolean planificarRec(ArrayList<Lote> lotes, int indiceLote){
         //hay que añadir la tolerancia al retraso-----------------------------------
