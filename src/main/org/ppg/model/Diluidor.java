@@ -3,7 +3,7 @@ package org.ppg.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Diluidor {
+public class Diluidor implements Comparable<Diluidor> {
     private final int id;
     private final String name;
     private final int capacity;
