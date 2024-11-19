@@ -62,6 +62,8 @@ public class PPGSchedulerTest {
 
 
 
+    //Esto no es un test. Es un metodo para subir el csv a la base de datos
+    /*
     @Test
     public void loadCSV() throws PPGSchedulerException {
         File file = new File("./src/main/resources/csv/schedule_template.csv");
@@ -133,5 +135,5 @@ public class PPGSchedulerTest {
             return null;
         }
     }
-
+    */
 }
