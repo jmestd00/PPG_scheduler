@@ -91,4 +91,6 @@ public class Lote {
     public int getStock() {
         return this.stock;
     }
+
+
 }
