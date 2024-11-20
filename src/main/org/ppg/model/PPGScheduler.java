@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static java.lang.Math.abs;
 import static java.sql.DriverManager.getConnection;
 
 public class PPGScheduler {
@@ -201,6 +202,23 @@ public class PPGScheduler {
         return this.diluidores;
     }
 
+    private Solucion getBestSolution(ArrayList<Solucion> soluciones) {
+        int min = Integer.MAX_VALUE;
+        Solucion best = null;
+        for (Solucion solucion : soluciones) {
+            int sum = 0;
+            for (Diluidor diluidor : diluidores) {
+                for (Lote lote : diluidor.getLotes()) {
+                    sum += abs(lote.getFechaFinal().getDayOfYear() - lote.getFechaNecesidad().getDayOfYear());
+                }
+            }
+            if (sum < min) {
+                min = sum;
+                best = solucion;
+            }
+        }
+        return best;
+    }
     /*
     public boolean planificarRec(ArrayList<Lote> lotes, int indiceLote){
         //hay que añadir la tolerancia al retraso-----------------------------------
