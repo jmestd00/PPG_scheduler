@@ -22,7 +22,7 @@ public record Lote(int nLote, String planningClass, String plant, String item, i
 
     @Override
     public Lote clone(){
-        Lote clone = new Lote(nLote,planningClass, plant, item,quantity, fStart, fNeed, estado, descriptions, type);
+        Lote clone = new Lote(nLote,planningClass, plant, item,quantity, fStart, fNeed, estados, descriptions, type);
         return clone;
     }
 
