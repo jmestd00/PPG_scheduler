@@ -1,13 +1,13 @@
+package org.ppg.model;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Solucion {
-    private ArrayList<Lote> lotesSolucion;
+public class Solution {
+    private ArrayList<Batch> lotesSolucion;
 
 
-    public Solucion(ArrayList<Lote> lotes) {
+    public Solution(ArrayList<Batch> lotes) {
         this.lotesSolucion = new ArrayList<>();
-        for (Lote lote : lotes) {
+        for (Batch lote : lotes) {
             this.lotesSolucion.add(lote.clone()); // Copia profunda
         }
     }

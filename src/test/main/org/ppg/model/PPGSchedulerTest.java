@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,21 +41,21 @@ public class PPGSchedulerTest {
     @Test
     public void testGetDiluidoresFromDatabase() throws PPGSchedulerException{
         PPGScheduler app = new PPGScheduler();
-        ArrayList<Diluidor> diluidores = app.obtenerDiluidoresDeLaBaseDeDatos();
+        ArrayList<Dilutor> diluidores = app.obtenerDiluidoresDeLaBaseDeDatos();
         System.out.println(diluidores);
     }
 
     @Test
     public void testUpdateLoteDB() throws PPGSchedulerException {
         PPGScheduler app = new PPGScheduler();
-        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1, 0);
+        Batch lote = new Batch(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Statuses.EN_DEMORA, 1, 0);
         app.actualizarLoteDB(lote);
     }
 
     @Test
     public void testInsertLoteDB() throws PPGSchedulerException {
         PPGScheduler app = new PPGScheduler();
-        Lote lote = new Lote(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Estados.EN_DEMORA, 1, 0);
+        Batch lote = new Batch(3, "VD-APA", "VDM", "A-RXX3359-DD", 650, "PISC", new Date(8, 11, 2025), new Date(15, 11, 2025), new Date(15, 11, 2025), Statuses.EN_DEMORA, 1, 0);
         app.insertarLoteDB(lote);
     }
 

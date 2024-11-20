@@ -11,15 +11,15 @@ public class DiluidorTest {
 
     // TODO Hay que implementar los test
 
-    private ArrayList<Diluidor> diluidores;
-    private Diluidor d1;
-    private Diluidor d2;
-    private Diluidor d3;
+    private ArrayList<Dilutor> diluidores;
+    private Dilutor d1;
+    private Dilutor d2;
+    private Dilutor d3;
     @Before
     public void setUp() {
-        d1 = new Diluidor(1, "d1", 10);
-        d2 = new Diluidor(2, "d2", 20);
-        d3 = new Diluidor(3, "d3", 30);
+        d1 = new Dilutor(1, "d1", 10);
+        d2 = new Dilutor(2, "d2", 20);
+        d3 = new Dilutor(3, "d3", 30);
 
         diluidores.add(d2);
         diluidores.add(d3);
@@ -28,7 +28,7 @@ public class DiluidorTest {
 
     @Test 
     public void testSortDiluidores()  throws PPGSchedulerException {
-        Diluidor.sortDiluidores(diluidores);
+        Dilutor.sortDiluidores(diluidores);
         assertEquals(diluidores.get(0).getId(), 1);
         assertEquals(diluidores.get(1).getId(), 2);
         assertEquals(diluidores.get(2).getId(), 3);

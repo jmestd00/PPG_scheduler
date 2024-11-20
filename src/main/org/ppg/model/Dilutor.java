@@ -2,19 +2,19 @@ package org.ppg.model;
 
 import java.util.ArrayList;
 
-public class Diluidor {
+public class Dilutor {
     private final int id;
     private final String name;
     private final int capacity;
-    private final ArrayList<Lote> lotes;
+    private final ArrayList<Batch> lotes;
     private Date fechafin;
-    public Diluidor (int id, String name, int capacity){
+    public Dilutor(int id, String name, int capacity){
         lotes = new ArrayList<>();
         this.id = id;
         this.name = name;
         this.capacity = capacity;
     }
-    public void addLote(Lote lote)throws PPGSchedulerException{
+    public void addLote(Batch lote)throws PPGSchedulerException{
         lotes.add(lote);
     }
     public int getCapacity(){
@@ -35,11 +35,11 @@ public class Diluidor {
         this.fechafin = newDate;
     }
 
-    public static ArrayList<Diluidor> sortDiluidores(ArrayList<Diluidor> diluidores) {
+    public static ArrayList<Dilutor> sortDiluidores(ArrayList<Dilutor> diluidores) {
         for(int i = 0; i < diluidores.size(); i++) {
             for(int j = 0; j < diluidores.size(); j++) {
               if(diluidores.get(j).getCapacity() < diluidores.get(i).getCapacity()) {
-                Diluidor temp = diluidores.get(i);
+                Dilutor temp = diluidores.get(i);
                 diluidores.set(i, diluidores.get(j));
                 diluidores.set(j, temp);
               }  
@@ -49,7 +49,7 @@ public class Diluidor {
     }
 
 
-    public ArrayList<Lote> getLotes(){
+    public ArrayList<Batch> getLotes(){
         return this.lotes;
     }
 

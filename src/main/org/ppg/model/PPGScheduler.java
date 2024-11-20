@@ -14,7 +14,7 @@ public class PPGScheduler {
 
 
     private Connection connection;
-    private ArrayList<Diluidor> diluidores = new ArrayList<>();
+    private ArrayList<Dilutor> diluidores = new ArrayList<>();
 
     public PPGScheduler() throws PPGSchedulerException {
         String hostname = "josedm64rpi.ddns.net";
@@ -48,17 +48,17 @@ public class PPGScheduler {
         // TODO implementar metodo retrasarLote de la clase PPGScheduler
     }
 
-    public void insertarLoteDB(Lote lote)throws PPGSchedulerException{
+    public void insertarLoteDB(Batch lote)throws PPGSchedulerException{
         String query = "INSERT INTO Lote (Fecha_inicio, Fecha_fin, Fecha_necesidad, Tipo, Plant, Cantidad, ID_diluidor, Planning_class, Estado, Item, Stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             // Set parameters for the placeholders in the query
-            statement.setString(1, lote.getFechaInicio().toString());
-            statement.setString(2, lote.getFechaFinal().toString());
-            statement.setString(3, lote.getFechaNecesidad().toString());
-            statement.setString(4, lote.getTipo());
-            statement.setString(5, lote.getPlant());
-            statement.setInt(6, lote.getCantidad());
-            statement.setInt(7, lote.getIdDiluidor());
+            statement.setString(1, lote.dStart().toString());
+            statement.setString(2, lote.dNeed().toString());
+            statement.setString(3, lote.dNeed().toString());
+            statement.setString(4, lote.type());
+            statement.setString(5, lote.plant());
+            statement.setInt(6, lote.quantity());
+            statement.setInt(7, lote.dil);
             statement.setString(8, lote.getPlannigClass());
             statement.setString(9, lote.getEstado());
             statement.setString(10, lote.getItem());
@@ -76,7 +76,7 @@ public class PPGScheduler {
         }
     }
 
-    public void actualizarLoteDB(Lote lote)throws PPGSchedulerException{
+    public void actualizarLoteDB(Batch lote)throws PPGSchedulerException{
         String query = "UPDATE Lote SET Fecha_inicio = ?, Fecha_fin = ?, Fecha_necesidad = ?, Tipo = ?, Plant = ?, Cantidad = ?, ID_diluidor = ?, Planning_class = ?, Estado = ?, Item = ? WHERE Lote.ID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, lote.getFechaInicio().toString());
@@ -103,7 +103,7 @@ public class PPGScheduler {
 
     }
 
-    private void obtenerDiluidoresDB(HashMap<Integer, Diluidor> diluidores) throws PPGSchedulerException {
+    private void obtenerDiluidoresDB(HashMap<Integer, Dilutor> diluidores) throws PPGSchedulerException {
         assert diluidores != null;
         String query = "select ID, Name, Capacity from Diluidores";
         try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
@@ -111,7 +111,7 @@ public class PPGScheduler {
                 int id = resultSet.getInt("ID");
                 String name = resultSet.getString("Name");
                 int capacidad = resultSet.getInt("Capacity");
-                Diluidor diluidor = new Diluidor(id, name, capacidad);
+                Dilutor diluidor = new Dilutor(id, name, capacidad);
                 diluidores.put(id, diluidor);
             }
         } catch (SQLException e) {
@@ -119,7 +119,7 @@ public class PPGScheduler {
         }
     }
 
-    private void obtenerLotesDB(HashMap<Integer, Diluidor> diluidores) throws PPGSchedulerException {
+    private void obtenerLotesDB(HashMap<Integer, Dilutor> diluidores) throws PPGSchedulerException {
         String query = "select Lote.ID, Fecha_inicio,Fecha_fin,Fecha_necesidad,Tipo, Plant,Cantidad, ID_diluidor, Planning_class, Estado, Item, Stock from PPG_scheduler.Lote inner join Diluidores on Diluidores.ID like Lote.ID_diluidor";
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
@@ -133,9 +133,9 @@ public class PPGScheduler {
                 Date f_inicio = new Date(resultSet.getDate("Fecha_inicio"));
                 Date f_fin = new Date(resultSet.getDate("Fecha_fin"));
                 Date f_necesidad = new Date(resultSet.getDate("Fecha_necesidad"));
-                Estados estado = Estados.fromValue(resultSet.getString("ESTADO"));
+                Statuses estado = Statuses.fromValue(resultSet.getString("ESTADO"));
                 int stock = resultSet.getInt("Stock");
-                Lote lote = new Lote(id, planningClass, planta, item, cantidad, tipo, f_inicio, f_fin, f_necesidad, estado, idDiluidor, stock);
+                Batch lote = new Batch(id, planningClass, planta, item, cantidad, tipo, f_inicio, f_fin, f_necesidad, estado, idDiluidor, stock);
                 diluidores.get(idDiluidor).addLote(lote);
             }
         } catch (SQLException e) {
@@ -143,11 +143,11 @@ public class PPGScheduler {
         }
     }
 
-    public ArrayList<Diluidor> obtenerDiluidoresDeLaBaseDeDatos() throws PPGSchedulerException {
-        HashMap<Integer, Diluidor> diluidoresHashMap = new HashMap<>();
+    public ArrayList<Dilutor> obtenerDiluidoresDeLaBaseDeDatos() throws PPGSchedulerException {
+        HashMap<Integer, Dilutor> diluidoresHashMap = new HashMap<>();
         obtenerDiluidoresDB(diluidoresHashMap);
         obtenerLotesDB(diluidoresHashMap);
-        ArrayList<Diluidor> diluidores = new ArrayList<>();
+        ArrayList<Dilutor> diluidores = new ArrayList<>();
         for (Integer id : diluidoresHashMap.keySet()) {
             diluidores.add(diluidoresHashMap.get(id));
         }
@@ -191,7 +191,7 @@ public class PPGScheduler {
      * @param lotesPrevios Lotes ya existentes obtenidos de la base de datos
      * @param nuevosLotes  Lotes nuevos introducidos por el usuario
      */
-    private void planificar(ArrayList<Lote> lotesPrevios, ArrayList<Lote> nuevosLotes) {
+    private void planificar(ArrayList<Batch> lotesPrevios, ArrayList<Batch> nuevosLotes) {
         //planificarRec(null, null, 0);
     }
     /*
