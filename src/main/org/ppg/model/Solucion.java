@@ -1,7 +1,5 @@
 package org.ppg.model;
 
-import org.ppg.model.Lote;
-
 import java.util.ArrayList;
 import java.util.List;
 
