@@ -1,7 +1,10 @@
 package org.ppg.model;
 
 public enum Statuses {
-    EN_ESPERA("EN ESPERA", "#009BFF"), EN_PROCESO("EN PROCESO", "#FF8C00"), FINALIZADO("FINALIZADO", "#28A745"), EN_DEMORA("EN DEMORA", "#c30b00");
+    EN_ESPERA("EN ESPERA", "#009BFF"),
+    EN_PROCESO("EN PROCESO", "#FF8C00"),
+    FINALIZADO("FINALIZADO", "#28A745"),
+    EN_DEMORA("EN DEMORA", "#c30b00");
     
     private final String value;
     private final String hex_color;
@@ -12,6 +15,8 @@ public enum Statuses {
     }
     
     public static Statuses fromValue(String value) {
+        value = value.replace('_', ' ');
+        
         for (Statuses status : Statuses.values()) {
             if (status.getValue().equalsIgnoreCase(value)) {
                 return status;

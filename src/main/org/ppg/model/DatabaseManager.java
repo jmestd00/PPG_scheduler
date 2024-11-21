@@ -90,6 +90,32 @@ public class DatabaseManager {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
+    public ArrayList<Batch> getBatchesListDB() {
+        String query = "SELECT * FROM Lote";
+        ArrayList<Batch> batches = new ArrayList<>();
+        
+        try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("ID");
+                String planningClass = resultSet.getString("Planning_class");
+                String plant = resultSet.getString("Plant");
+                String item = resultSet.getString("Item");
+                int quantity = resultSet.getInt("Cantidad");
+                LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
+                LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
+                Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
+                String description = resultSet.getString("Descripcion");
+                Types type = Types.fromValue(resultSet.getString("Tipo"));
+                int idDilutor = resultSet.getInt("ID_diluidor");
+                
+                Dilutor dilutor = getDilutorDB(idDilutor);
+                batches.add(new Batch(id, planningClass, plant, item, quantity, startDate, needDate, status, description, type, dilutor));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return batches;
+    }
     public void insertBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "INSERT INTO Lote (Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Item) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
