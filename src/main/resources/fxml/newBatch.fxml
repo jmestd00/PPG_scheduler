@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.NuevoLote">
+<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.NewBatch">
    <VBox alignment="CENTER" layoutX="-2.0" prefHeight="540.0" prefWidth="965.0" spacing="15.0">
       <Label text="INSERTAR NUEVO LOTE">
          <font>

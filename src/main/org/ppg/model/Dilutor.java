@@ -1,63 +1,61 @@
 package org.ppg.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Dilutor {
+public class Dilutor implements Comparable<Dilutor> {
     private final int id;
     private final String name;
     private final int capacity;
-    private final ArrayList<Batch> lotes;
-    private Date fechafin;
-    public Dilutor(int id, String name, int capacity){
-        lotes = new ArrayList<>();
+    private final ArrayList<Batch> batches;
+    private LocalDate endDate;
+    
+    //Constructor
+    public Dilutor(int id, String name, int capacity) {
+        this.batches = new ArrayList<>();
         this.id = id;
         this.name = name;
         this.capacity = capacity;
     }
-    public void addLote(Batch lote)throws PPGSchedulerException{
-        lotes.add(lote);
-    }
-    public int getCapacity(){
+    
+    //Getters
+    public int getCapacity() {
         return this.capacity;
     }
-    public int getId(){
+    public int getId() {
         return this.id;
     }
-    public String getName(){
+    public String getName() {
         return this.name;
     }
-
-    public Date getFechaFin() {
-        return this.fechafin;
+    public LocalDate getFechaFin() {
+        return this.endDate;
     }
-
-    public void setFechaFin(Date newDate) {
-        this.fechafin = newDate;
+    public ArrayList<Batch> getBatches() {
+        return this.batches;
     }
-
-    public static ArrayList<Dilutor> sortDiluidores(ArrayList<Dilutor> diluidores) {
-        for(int i = 0; i < diluidores.size(); i++) {
-            for(int j = 0; j < diluidores.size(); j++) {
-              if(diluidores.get(j).getCapacity() < diluidores.get(i).getCapacity()) {
-                Dilutor temp = diluidores.get(i);
-                diluidores.set(i, diluidores.get(j));
-                diluidores.set(j, temp);
-              }  
-            }
-        }
-        return diluidores;
+    
+    //Setters
+    public void setEndDate(LocalDate newDate) {
+        this.endDate = newDate;
     }
-
-
-    public ArrayList<Batch> getLotes(){
-        return this.lotes;
+    
+    //Funcionalidad
+    public void addLote(Batch batch) throws PPGSchedulerException {
+        batches.add(batch);
     }
-
+    
+    //Override
+    @Override
+    public int compareTo(Dilutor d) {
+        return Integer.compare(this.id, d.id);
+    }
+    
     @Override
     public String toString() {
-        return "id: " + this.id+'\n'+
-                "name: " + this.name + '\n'+
-                "capacity: " + this.capacity+'\n'+
-                "Lotes: {\n" + lotes + "\n}";
+        return "id: " + this.id + '\n' +
+                "Name: " + this.name + '\n' +
+                "Capacity: " + this.capacity + '\n' +
+                "Batches: {\n" + batches + "\n}";
     }
 }

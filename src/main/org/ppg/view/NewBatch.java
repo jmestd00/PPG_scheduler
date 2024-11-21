@@ -8,10 +8,10 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class NuevoLote extends Application {
+public class NewBatch extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/nuevoLote.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/newBatch.fxml")));
         Scene scene = new Scene(root);
         
         primaryStage.setTitle("Insertar nuevo lote");

@@ -1,0 +1,20 @@
+.pagination {
+    -fx-font: 18px "Futura Medium";
+}
+.font {
+    -fx-font: 26px "Futura Medium";
+    -fx-alignment: CENTER;
+}
+.addButton {
+    -fx-background-color: #a7c7e7;
+    -fx-border-color: black;
+    -fx-font-weight: bold;
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 20px;
+}
+.addButton:hover {
+    -fx-background-color: #a7c7e7;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+
+}
