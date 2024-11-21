@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.control.DatePicker?>
-<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.EditarLote">
+<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.EditBatches">
     <VBox alignment="CENTER" layoutX="-2.0" prefHeight="675.0" prefWidth="1200.0" spacing="15.0">
         <Label text="EDITAR LOTE">
             <font>
@@ -20,14 +20,13 @@
         </Label>
         <HBox alignment="CENTER" prefHeight="166.0" prefWidth="965.0" spacing="20.0">
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-                <children>
-                    <Label fx:id="nLoteLabel" text="Nº LOTE">
-                        <font>
-                            <Font size="23.0" />
-                        </font>
-                    </Label>
-                    <TextField fx:id="nLoteField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="125.0" promptText="(5)" />
-                </children>
+                <Label fx:id="nLoteLabel" text="Nº LOTE">
+                    <font>
+                        <Font size="23.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="nBatchField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="125.0"
+                           promptText="(5)"/>
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
                 <Label fx:id="pClassLabel" alignment="CENTER" text="PLANNING&#10;CLASS" textAlignment="CENTER">
@@ -69,7 +68,7 @@
                         <Font size="23.0" />
                     </font>
                 </Label>
-            <DatePicker fx:id="iDatePicker" prefHeight="55.0" prefWidth="150.0" promptText="(14/11/2024)" styleClass="datePicker" stylesheets="@../css/editarLote.css" />
+            <DatePicker fx:id="startDatePicker" prefHeight="55.0" prefWidth="150.0" promptText="(14/11/2024)" styleClass="datePicker" stylesheets="@../css/editBatches.css" />
             </VBox>
          <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
             <children>
@@ -78,7 +77,7 @@
                      <Font size="23.0" />
                   </font>
                </Label>
-               <TextField fx:id="nDateField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(30/11/2024)" />
+               <TextField fx:id="needDateField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(30/11/2024)" />
             </children>
          </VBox>
         </HBox>
@@ -102,7 +101,7 @@
         </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
          <children>
-            <Button fx:id="elimButton" alignment="CENTER" mnemonicParsing="false" prefHeight="48.0" prefWidth="48.0" styleClass="elimButton" stylesheets="@../css/editarLote.css">
+            <Button fx:id="elimButton" alignment="CENTER" mnemonicParsing="false" prefHeight="48.0" prefWidth="48.0" styleClass="elimButton" stylesheets="@../css/editBatches.css">
                <font>
                   <Font name="Roboto Light" size="20.0" />
                </font>

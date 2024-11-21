@@ -8,29 +8,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="1080" maxWidth="1920" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.ListaLotes">
+<AnchorPane fx:id="rootPane" maxHeight="1080" maxWidth="1920" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.BatchesList">
     <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-12.0" prefHeight="100.0" prefWidth="1920.0" text="LISTADO DE LOTES">
         <font>
             <Font name="Futura Medium" size="40.0" />
         </font>
     </Label>
-    <Button fx:id="addButton" layoutX="5.0" layoutY="50.0" mnemonicParsing="false" onAction="#abrirNuevoLote" prefHeight="43.0" prefWidth="220.0" stylesheets="@../css/listaLotes.css" text="+ AÑADIR LOTE">
+    <Button fx:id="addButton" layoutX="5.0" layoutY="47.85" mnemonicParsing="false" onAction="#openNewBatch" prefHeight="43.0" prefWidth="220.0" stylesheets="@../css/batchesList.css" styleClass="addButton" text="+ AÑADIR LOTE">
         <font>
             <Font size="24.0" />
         </font>
     </Button>
-    <TableView fx:id="tableView" layoutX="5.0" layoutY="103.0" prefHeight="900.0" prefWidth="1914.0" styleClass="pagination" stylesheets="@../css/listaLotes.css">
+    <TableView fx:id="tableView" layoutX="5.0" layoutY="103.0" prefHeight="900.0" prefWidth="1914.0" styleClass="pagination" stylesheets="@../css/batchesList.css">
         <columns>
-            <TableColumn fx:id="nLoteCol" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220" sortable="false" styleClass="font" text="Nº DE LOTE" />
+            <TableColumn fx:id="nBatchCol" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220" sortable="false" styleClass="font" text="Nº DE LOTE" />
             <TableColumn fx:id="pClassCol" editable="false" maxWidth="270.0" minWidth="270.0" prefWidth="270" sortable="false" styleClass="font" text="PLANNING CLASS" />
             <TableColumn fx:id="plantCol" editable="false" maxWidth="200" minWidth="200" prefWidth="200" sortable="false" styleClass="font" text="PLANTA" />
             <TableColumn fx:id="itemCol" editable="false" maxWidth="270.0" minWidth="270.0" prefWidth="270" sortable="false" styleClass="font" text="ITEM" />
             <TableColumn fx:id="quantityCol" editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170" sortable="false" styleClass="font" text="CANTIDAD" />
-            <TableColumn fx:id="iDateCol" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220" sortable="false" styleClass="font" text="FECHA INICIO" />
-            <TableColumn fx:id="nDateCol" editable="false" maxWidth="290.0" minWidth="290.0" prefWidth="290" sortable="false" styleClass="font" text="FECHA NECESIDAD" />
+            <TableColumn fx:id="startDateCol" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220" sortable="false" styleClass="font" text="FECHA INICIO" />
+            <TableColumn fx:id="needDateCol" editable="false" maxWidth="290.0" minWidth="290.0" prefWidth="290" sortable="false" styleClass="font" text="FECHA NECESIDAD" />
             <TableColumn fx:id="statusCol" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200" sortable="false" styleClass="font" text="ESTADO" />
-            <TableColumn fx:id="editCol" editable="false" maxWidth="70" minWidth="70" prefWidth="70" sortable="false" styleClass="font" text="" />
+            <TableColumn fx:id="editCol" editable="false" maxWidth="70" minWidth="70" prefWidth="70" sortable="false" styleClass="font"/>
         </columns>
     </TableView>
-    <Pagination fx:id="pagination" layoutY="1000.0" prefHeight="70.0" prefWidth="1920.0" styleClass="pagination" stylesheets="@../css/listaLotes.css" />
+    <Pagination fx:id="pagination" layoutY="1000.0" prefHeight="70.0" prefWidth="1920.0" styleClass="pagination" stylesheets="@../css/batchesList.css" />
 </AnchorPane>
