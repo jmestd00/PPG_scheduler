@@ -11,12 +11,12 @@ import java.sql.SQLException;
 
 import static java.sql.DriverManager.getConnection;
 
-public class PPGScheduler {
+public class DatabaseManager {
     private final Connection connection;
-    private final ArrayList<Dilutor> dilutors = new ArrayList<>();
+    private static DatabaseManager instance;
     
     //Constructor
-    public PPGScheduler() throws PPGSchedulerException {
+    private DatabaseManager() throws PPGSchedulerException {
         String hostname = "josedm64rpi.ddns.net";
         String username = "PPG";
         String password = "PPG.";
@@ -28,6 +28,14 @@ public class PPGScheduler {
         } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
+    }
+    
+    //Singleton
+    public static DatabaseManager getInstance() throws PPGSchedulerException {
+        if (instance == null) {
+            instance = new DatabaseManager();
+        }
+        return instance;
     }
     
     //Lotes
@@ -58,7 +66,6 @@ public class PPGScheduler {
         }
         return null;
     }
-    
     private void getBatchesDB(HashMap<Integer, Dilutor> diluidores) throws PPGSchedulerException {
         String query = "SELECT Fecha_inicio, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Item FROM PPG_scheduler.Lote inner join Diluidores on Diluidores.ID like Lote.ID_diluidor";
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
@@ -83,7 +90,6 @@ public class PPGScheduler {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-    
     public void insertBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "INSERT INTO Lote (Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Item) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -110,7 +116,6 @@ public class PPGScheduler {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-    
     public void updateBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "UPDATE Lote SET Fecha_inicio = ? WHERE Lote.N_Lote = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -148,7 +153,6 @@ public class PPGScheduler {
         }
         return null;
     }
-    
     private void getDilutorsDB(HashMap<Integer, Dilutor> diluidores) throws PPGSchedulerException {
         assert diluidores != null;
         String query = "SELECT ID, Name, Capacity FROM Diluidores";
@@ -178,10 +182,5 @@ public class PPGScheduler {
         }
         
         return diluidores;
-    }
-    
-    public ArrayList<Dilutor> sortDilutors() {
-        this.dilutors.sort(null);
-        return this.dilutors;
     }
 }
