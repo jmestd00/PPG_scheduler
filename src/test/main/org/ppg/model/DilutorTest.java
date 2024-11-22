@@ -58,4 +58,21 @@ public class DilutorTest {
                 "Tipo " + "PIMM" + "\n" +
                 "Dilutor " + "Dilutor1"), dilutor.getBatches().getFirst().toString());
     }
+
+    @Test
+    public void testCompareTo(){
+        Dilutor dilutor2 = new Dilutor(2, "Dilutor2", 5000);
+        assertEquals(-1, dilutor.compareTo(dilutor2));
+        assertEquals(1, dilutor2.compareTo(dilutor));
+        dilutor2 = new Dilutor(1, "Dilutor2", 5000);
+        assertEquals(0, dilutor.compareTo(dilutor2));
+    }
+
+    @Test
+    public void testToString(){
+        assertEquals("id: " + 1 + '\n' +
+                "Name: " + "Dilutor1" + '\n' +
+                "Capacity: " + 10000 + '\n' +
+                "Batches: {\n" + "[]" + "\n}", dilutor.toString());
+    }
 }
