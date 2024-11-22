@@ -1,20 +1,116 @@
-.pagination {
-    -fx-font: 18px "Futura Medium";
+.rootPane {
+    -fx-background-color: white;
 }
+
+.titleLabel {
+    -fx-background-color: white;
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+}
+
+.pagination {
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+.pagination .toggle-button {
+    -fx-background-color:#505050; /* Mismo fondo que .addButton */
+    -fx-border-color: black; /* Color del borde */
+    -fx-font-weight: bold; /* Peso de la fuente */
+    -fx-font-family: "Futura Medium"; /* Fuente personalizada */
+    -fx-font-size: 24px; /* Tamaño de la fuente */
+    -fx-text-fill: white;
+}
+
+/* Efecto al pasar el mouse sobre los botones */
+.pagination .toggle-button:hover {
+    -fx-background-color: #2F2F2F;
+    -fx-scale-x: 1.05; /* Escala horizontal */
+    -fx-scale-y: 1.05; /* Escala vertical */
+}
+
+/* Opcional: Cambiar el estilo del botón seleccionado */
+.pagination .toggle-button:selected {
+    -fx-background-color: black; /* Color de fondo para el botón seleccionado */
+    -fx-text-fill: white; /* Color del texto */
+}
+
+.pagination .left-arrow, .pagination .right-arrow {
+    -fx-background-color: white; /* Fondo gris oscuro */
+    -fx-text-fill: white; /* Color blanco para las flechas */
+    -fx-border-color: #A9A9A9; /* (Opcional) Borde gris claro */
+    -fx-border-width: 1px; /* Ancho del borde */
+    -fx-padding: 5px; /* Espaciado interno */
+    -fx-font-size: 16px; /* Tamaño de la flecha */
+}
+
+/* Cambiar el fondo de las flechas al pasar el ratón */
+.pagination .left-arrow:hover, .pagination .right-arrow:hover {
+    -fx-background-color: white; /* Fondo más claro al hacer hover */
+    -fx-text-fill: white; /* Mantener el color blanco de las flechas */
+}
+
+/* Opcional: Cambiar el aspecto de las flechas cuando se presionan */
+.pagination .left-arrow:pressed, .pagination .right-arrow:pressed {
+    -fx-background-color: white; /* Fondo más oscuro */
+    -fx-text-fill: white; /* Mantener el color blanco */
+}
+
+.pagination .button {
+    -fx-background-color:#505050;
+}
+
+.pagination .button:hover {
+    -fx-background-color: #2F2F2F;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.pagination:focused {
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: white; /* Fondo gris oscuro */
+    -fx-text-fill: black; /* Texto blanco */
+    -fx-font-size: 24px; /* Tamaño de la fuente */
+    -fx-font-weight: bold; /* Negrita para el texto */
+}
+
+.table-view .table-cell {
+    -fx-background-color: white; /* Fondo gris claro */
+    -fx-text-fill: black; /* Color del texto */
+    -fx-border-color: transparent; /* Borde gris oscuro */
+    -fx-alignment: CENTER; /* Centrar texto en la celda */
+}
+
+.table-view {
+    -fx-border-color: transparent;
+    -fx-font-size: 24px;
+    -fx-font-weight: normal;
+    -fx-alignment: CENTER;
+    -fx-background-color: white;
+    /* Sin borde */
+}
+
 .font {
     -fx-font: 26px "Futura Medium";
     -fx-alignment: CENTER;
 }
 .addButton {
-    -fx-background-color: #a7c7e7;
+    -fx-text-fill: black;
+    -fx-background-color:white;
     -fx-border-color: black;
     -fx-font-weight: bold;
     -fx-font-family: "Futura Medium";
-    -fx-font-size: 20px;
+    -fx-font-size: 24px;
 }
 .addButton:hover {
-    -fx-background-color: #a7c7e7;
+    -fx-background-color: white;
+    -fx-text-fill: black;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
+    -fx-translate-x: 5.0;
 
 }

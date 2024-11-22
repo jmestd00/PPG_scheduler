@@ -1,104 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.NewBatch">
-   <VBox alignment="CENTER" layoutX="-2.0" prefHeight="540.0" prefWidth="965.0" spacing="15.0">
-      <Label text="INSERTAR NUEVO LOTE">
+<AnchorPane maxHeight="1080" maxWidth="1000" prefHeight="540.0" prefWidth="1100.0" styleClass="anchorPane" stylesheets="@../css/newBatch.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.NewBatchController">
+   <VBox alignment="CENTER" layoutX="-2.0" prefHeight="540.0" prefWidth="1080.0" spacing="15.0" styleClass="" stylesheets="@../css/newBatch.css">
+      <Label fx:id="titleLabel" styleClass="titleLabel" stylesheets="@../css/newBatch.css" text="INSERTAR NUEVO LOTE">
          <font>
             <Font name="Futura Medium" size="40.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" prefHeight="166.0" prefWidth="965.0" spacing="20.0">
-         <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
-            <Label alignment="CENTER" text="PLANNING&#10;CLASS" textAlignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="166.0" prefWidth="1085.0" spacing="20.0">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="131.0" spacing="15.0">
+            <Label styleClass="customLabel" stylesheets="@../css/newBatch.css" text="Nº LOTE">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField alignment="CENTER" prefHeight="55.0" prefWidth="150.0">
+            <TextField fx:id="nBatchText" alignment="CENTER" prefHeight="55.0" prefWidth="200.0" promptText="57932" styleClass="custom_text-field" stylesheets="@../css/newBatch.css" />
+         </VBox>
+         <VBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="150.0" spacing="15.0">
+            <Label alignment="CENTER" styleClass="customLabel" stylesheets="@../css/newBatch.css" text="PLANNING&#10;CLASS" textAlignment="CENTER">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+            <TextField fx:id="planningClassText" alignment="CENTER" prefHeight="55.0" prefWidth="200.0" promptText="VDWBBC" styleClass="custom_text-field" stylesheets="@../css/newBatch.css">
                <font>
                   <Font size="18.0" />
                </font>
             </TextField>
          </VBox>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-            <Label text="Nº LOTE">
-               <font>
-                  <Font size="23.0"/>
-               </font>
-            </Label>
-            <TextField prefHeight="55.0" prefWidth="125.0"/>
-         </VBox>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
-            <Label text="PLANTA">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="130.0" spacing="15.0">
+            <Label styleClass="customLabel" stylesheets="@../css/newBatch.css" text="PLANTA">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField alignment="CENTER" prefHeight="55.0" prefWidth="150.0">
+            <TextField fx:id="plantText" alignment="CENTER" prefHeight="55.0" prefWidth="200.0" promptText="VDW" styleClass="custom_text-field" stylesheets="@../css/newBatch.css">
                <font>
                   <Font size="18.0" />
                </font>
             </TextField>
          </VBox>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="199.0" prefWidth="125.0" spacing="15.0">
-            <Label text="TIPO">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="168.0" spacing="15.0">
+            <Label styleClass="customLabel" stylesheets="@../css/newBatch.css" text="TIPO">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <ComboBox prefHeight="55.0" prefWidth="125.0">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="PIMM" />
-                        <String fx:value="PISC" />
-                    </FXCollections>
-                </items>
+            <ComboBox prefHeight="55.0" prefWidth="166.0" styleClass="combo-box" stylesheets="@../css/newBatch.css">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="PIMM" />
+                     <String fx:value="PISC" />
+                  </FXCollections>
+               </items>
             </ComboBox>
          </VBox>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-            <Label text="CANTIDAD">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="150.0" spacing="15.0">
+            <Label styleClass="customLabel" stylesheets="@../css/newBatch.css" text="CANTIDAD">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <TextField alignment="CENTER" prefHeight="55.0" prefWidth="150.0">
+            <TextField fx:id="quantityText" alignment="CENTER" prefHeight="55.0" prefWidth="200.0" promptText="18000" styleClass="custom_text-field" stylesheets="@../css/newBatch.css">
                <font>
                   <Font size="18.0" />
                </font>
             </TextField>
          </VBox>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-            <Label alignment="CENTER" text="FECHA DE&#10;NECESIDAD" textAlignment="CENTER">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="196.0" spacing="15.0">
+            <Label alignment="CENTER" styleClass="customLabel" stylesheets="@../css/newBatch.css" text="FECHA DE&#10;NECESIDAD" textAlignment="CENTER">
                <font>
                   <Font size="23.0" />
                </font>
             </Label>
-            <DatePicker prefHeight="55.0" prefWidth="150.0" />
+            <DatePicker fx:id="datePicker" editable="false" prefHeight="55.0" prefWidth="196.0" promptText="31/12/3333" styleClass="datePicker" stylesheets="@../css/newBatch.css" />
          </VBox>
       </HBox>
-      <Pane prefHeight="112.0" prefWidth="965.0">
-         <TextArea layoutX="73.0" layoutY="14.0" prefHeight="89.0" prefWidth="820.0" promptText="Descripción">
+      <Pane prefHeight="130.0" prefWidth="1280.0" styleClass="anchorPane" stylesheets="@../css/newBatch.css">
+         <TextArea fx:id="descriptionText" layoutX="40.0" layoutY="14.0" prefHeight="89.0" prefWidth="1000.0" promptText="Descripción" styleClass="text-area" stylesheets="@../css/newBatch.css">
             <font>
-               <Font size="18.0"/>
+               <Font size="18.0" />
             </font>
          </TextArea>
       </Pane>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
-         <Button alignment="CENTER" mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="PLANIFICAR">
-            <font>
-               <Font name="Roboto Light" size="20.0"/>
-            </font>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="25.0">
+         <Button fx:id="planButton" alignment="CENTER" maxHeight="60" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="264.0" styleClass="planButton" stylesheets="@../css/newBatch.css" text="PLANIFICAR">
          </Button>
-         <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="+">
-            <font>
-               <Font name="Roboto Light" size="20.0"/>
-            </font>
+         <Button fx:id="plusButton" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="60.0" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="202.0" styleClass="plusButton" stylesheets="@../css/newBatch.css" text="+" textAlignment="CENTER">
          </Button>
       </HBox>
    </VBox>
