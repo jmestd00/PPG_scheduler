@@ -1,17 +1,19 @@
 package org.ppg.model;
 
 public enum Statuses {
-    EN_ESPERA("EN ESPERA", "#009BFF"),
-    EN_PROCESO("EN PROCESO", "#FF8C00"),
-    FINALIZADO("FINALIZADO", "#28A745"),
-    EN_DEMORA("EN DEMORA", "#c30b00");
+    EN_ESPERA("EN ESPERA", "#42aaff", "#0057d9"),
+    EN_PROCESO("EN PROCESO", "#ffa726", "#f57c00"),
+    FINALIZADO("FINALIZADO", "#a8e6a3", "#56c453"),
+    EN_DEMORA("EN DEMORA", "#e0e0e0", "#9e9e9e");
     
     private final String value;
-    private final String hex_color;
+    private final String hex_color_primary;
+    private final String hex_color_secondary;
     
-    Statuses(String value, String hex_color) {
+    Statuses(String value, String hex_color_primary, String hex_color_secondary) {
         this.value = value;
-        this.hex_color = hex_color;
+        this.hex_color_primary = hex_color_primary;
+        this.hex_color_secondary = hex_color_secondary;
     }
     
     public static Statuses fromValue(String value) {
@@ -29,7 +31,11 @@ public enum Statuses {
         return value;
     }
     
-    public String getHexColor() {
-        return hex_color;
+    public String getHexColorPrimary() {
+        return hex_color_primary;
+    }
+
+    public String getHexColorSecondary() {
+        return hex_color_secondary;
     }
 }

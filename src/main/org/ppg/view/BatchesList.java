@@ -1,5 +1,13 @@
 package org.ppg.view;
 
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import org.ppg.model.*;
 
 import javafx.beans.property.StringProperty;
@@ -42,9 +50,11 @@ public class BatchesList extends Application {
     @FXML
     private TableColumn<Batch, String> nBatchCol;
     @FXML
-    private TableColumn<Batch, String> statusCol;
-    @FXML
     private TableColumn<Batch, String> quantityCol;
+    @FXML
+    private TableColumn<Batch, Void> colorCol;
+    @FXML
+    private TableColumn<Batch, String> statusCol;
     @FXML
     private TableColumn<Batch, Void> editCol;
     @FXML
@@ -87,6 +97,25 @@ public class BatchesList extends Application {
         needDateCol.setCellValueFactory(data -> data.getValue().getProperties()[6]);
         needDateCol.setReorderable(false);
         addTooltipToCells(nBatchCol, 8);
+        colorCol.setReorderable(false);
+        colorCol.setCellFactory(param -> new TableCell<>() {
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null) {
+                    setText(null);
+                } else {
+                    Batch selectedBatch = getTableView().getItems().get(getIndex());
+                    LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
+                            new Stop(0, Color.web(selectedBatch.status().getHexColorPrimary())),
+                            new Stop(1, Color.web(selectedBatch.status().getHexColorSecondary())));
+                    Circle circle = new Circle(15); // Radio del círculo
+                    circle.setFill(gradient); // Color de relleno del círculo
+                    circle.setStroke(Color.BLACK); // Color del borde
+                    // Añadir el círculo y el texto a la celda
+                    setGraphic(circle);
+                }
+            }
+        });
         // Configuración del botón en buttonNameColumn
         statusCol.setCellFactory(param -> new TableCell<>() {
             protected void updateItem(String item, boolean empty) {
@@ -94,10 +123,11 @@ public class BatchesList extends Application {
                 if (empty || getTableRow() == null) {
                     setText(null);
                 } else {
-                    Batch selectedLote = getTableView().getItems().get(getIndex());
-                    setText(selectedLote.status().getValue());
-                    setStyle("-fx-background-color: " + selectedLote.status().getHexColor() +
-                            "; -fx-text-fill: white; -fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 24px");
+                    Batch selectedBatch = getTableView().getItems().get(getIndex());
+                    setText(selectedBatch.status().getValue());
+
+                    setStyle(/*"-fx-background-color: " + selectedBatch.status().getHexColor() +
+                            "; -fx-text-fill: white; -fx-alignment: center; */"-fx-alignment: center_left;-fx-font-weight: normal; -fx-font-size: 24px; -fx-font-family: Futura medium");
                 }
             }
         });
@@ -109,8 +139,8 @@ public class BatchesList extends Application {
             {
                 // Define la acción del botón
                 btn.setOnAction(event -> {
-                    Batch selectedLote = getTableView().getItems().get(getIndex());
-                    openEditBatch(selectedLote);
+                    Batch selectedBatch = getTableView().getItems().get(getIndex());
+                    openEditBatch(selectedBatch);
                 });
                 btn.setStyle("/*-fx-background-color: #ffffff;*/ -fx-background-radius: 0; -fx-alignment: " +
                         "center; -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" +
@@ -159,7 +189,9 @@ public class BatchesList extends Application {
         pagination.setCurrentPageIndex(0);
         changeTableView(0, ROWS_PER_PAGE);
         pagination.currentPageIndexProperty().addListener(
-                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+                (observable, oldValue, newValue) -> {
+                    changeTableView(newValue.intValue(), ROWS_PER_PAGE);
+                });
     }
     public void setupData() {
         batchData.addAll(databaseManager.getBatchesListDB());
@@ -169,12 +201,15 @@ public class BatchesList extends Application {
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
         int toIndex = Math.min(fromIndex + limit, batchData.size());
-        
+
         int minIndex = Math.min(toIndex, batchData.size());
         SortedList<Batch> sortedData = new SortedList<>(FXCollections.observableArrayList(batchData.subList(Math.min(fromIndex, minIndex), minIndex)));
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-        
         tableView.setItems(sortedData);
+        if (index == (batchData.size() / ROWS_PER_PAGE)) {
+            tableView.setItems(FXCollections.observableArrayList());
+            tableView.setItems(FXCollections.observableArrayList(batchData.subList(fromIndex, batchData.size())));
+        }
     }
     private void addTooltipToCells(TableColumn<Batch, String> column, int propertyIndex) {
         column.setCellFactory(new Callback<>() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -8,104 +9,67 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.DatePicker?>
-<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.EditBatches">
+<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../css/editBatches.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.EditBatches">
     <VBox alignment="CENTER" layoutX="-2.0" prefHeight="675.0" prefWidth="1200.0" spacing="15.0">
-        <Label text="EDITAR LOTE">
-            <font>
-                <Font name="Futura Medium" size="40.0" />
-            </font>
+        <Label styleClass="titleLabel" stylesheets="@../css/editBatches.css" text="EDITAR LOTE">
         </Label>
         <HBox alignment="CENTER" prefHeight="166.0" prefWidth="965.0" spacing="20.0">
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-                <Label fx:id="nLoteLabel" text="Nº LOTE">
-                    <font>
-                        <Font size="23.0"/>
-                    </font>
+                <Label fx:id="nLoteLabel" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="Nº LOTE">
                 </Label>
-                <TextField fx:id="nBatchField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="125.0"
-                           promptText="(5)"/>
+                <TextField fx:id="nBatchField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="125.0" promptText="(5)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
-                <Label fx:id="pClassLabel" alignment="CENTER" text="PLANNING&#10;CLASS" textAlignment="CENTER">
-                    <font>
-                        <Font size="23.0" />
-                    </font>
+                <Label fx:id="pClassLabel" alignment="CENTER" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="PLANNING&#10;CLASS" textAlignment="CENTER">
                 </Label>
-                <TextField fx:id="pClassField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(VD-WBBC)" />
+                <TextField fx:id="pClassField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(VD-WBBC)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
-                <Label fx:id="plantLabel" text="PLANTA">
-                    <font>
-                        <Font size="23.0" />
-                    </font>
+                <Label fx:id="plantLabel" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="PLANTA">
                 </Label>
-                <TextField fx:id="plantField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(VDW)" />
+                <TextField fx:id="plantField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(VDW)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
             </VBox>
          <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
             <children>
-               <Label fx:id="itemLabel" text="ITEM">
-                  <font>
-                     <Font size="23.0" />
-                  </font>
+               <Label fx:id="itemLabel" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="ITEM">
                </Label>
-               <TextField fx:id="itemField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(A-RXX3359-DD)" />
+               <TextField fx:id="itemField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(A-RXX3359-DD)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
             </children>
          </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-                <Label fx:id="quantityLabel" text="CANTIDAD">
-                    <font>
-                        <Font size="23.0" />
-                    </font>
+                <Label fx:id="quantityLabel" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="CANTIDAD">
                 </Label>
-                <TextField fx:id="quantityField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(16000)" />
+                <TextField fx:id="quantityField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(16000)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
             </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
-                <Label fx:id="iDateLabel" alignment="CENTER" text="FECHA DE&#10;INICIO&#10;" textAlignment="CENTER">
-                    <font>
-                        <Font size="23.0" />
-                    </font>
+            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="196.0" spacing="15.0">
+                <Label fx:id="iDateLabel" alignment="CENTER" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="FECHA DE&#10;INICIO&#10;" textAlignment="CENTER">
                 </Label>
-            <DatePicker fx:id="startDatePicker" prefHeight="55.0" prefWidth="150.0" promptText="(14/11/2024)" styleClass="datePicker" stylesheets="@../css/editBatches.css" />
+            <DatePicker fx:id="startDatePicker" editable="false" prefHeight="55.0" prefWidth="196.0" promptText="(14/11/2024)" styleClass="datePicker" stylesheets="@../css/editBatches.css" />
             </VBox>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="125.0" spacing="15.0">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="172.0" spacing="15.0">
             <children>
-               <Label fx:id="nDateLabel" alignment="CENTER" text="FECHA DE&#10;NECESIDAD" textAlignment="CENTER">
-                  <font>
-                     <Font size="23.0" />
-                  </font>
+               <Label fx:id="nDateLabel" alignment="CENTER" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="FECHA DE&#10;NECESIDAD" textAlignment="CENTER">
                </Label>
-               <TextField fx:id="needDateField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(30/11/2024)" />
+               <TextField fx:id="needDateField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="172.0" promptText="(30/11/2024)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
             </children>
          </VBox>
         </HBox>
         <Pane prefHeight="112.0" prefWidth="965.0">
             <children>
-                <TextArea fx:id="descriptionField" editable="false" layoutX="130.0" layoutY="14.0" prefHeight="89.0" prefWidth="940.0" promptText="Descripción">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
+                <TextArea fx:id="descriptionField" editable="false" layoutX="130.0" layoutY="14.0" prefHeight="89.0" prefWidth="940.0" promptText="Descripción" styleClass="text-area" stylesheets="@../css/editBatches.css">
                 </TextArea>
             </children>
         </Pane>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
             <children>
-                <Button fx:id="modifyData" alignment="CENTER" mnemonicParsing="false" prefHeight="43.0" prefWidth="237.0" text="CAMBIAR DATOS">
-                    <font>
-                        <Font name="Roboto Light" size="20.0" />
-                    </font>
+                <Button fx:id="modifyData" alignment="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="237.0" styleClass="modifyButton" stylesheets="@../css/editBatches.css" text="CAMBIAR DATOS">
                 </Button>
             </children>
         </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
          <children>
-            <Button fx:id="elimButton" alignment="CENTER" mnemonicParsing="false" prefHeight="48.0" prefWidth="48.0" styleClass="elimButton" stylesheets="@../css/editBatches.css">
-               <font>
-                  <Font name="Roboto Light" size="20.0" />
-               </font>
-
+            <Button fx:id="deleteButton" alignment="CENTER" mnemonicParsing="false" prefHeight="48.0" prefWidth="48.0" styleClass="deleteButton" stylesheets="@../css/editBatches.css">
             </Button>
          </children>
       </HBox>
