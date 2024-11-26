@@ -30,23 +30,6 @@ public class PPGScheduler {
         }
     }
 
-    //Llama al resto de metodos de la clase para realizar la accion de añadir lotes al horario
-    public void insertarLote(String planningClass, String planta, String tipo, String cantidad, String fechaNecesidad)
-            throws PPGSchedulerException {
-        // TODO implementar metodo insertar de la clase PPGScheduler
-    }
-
-    public void modificarFechaNecesidad(int idLote, String fechaNecesidad) throws PPGSchedulerException {
-        // TODO implementar metodo modifyDate de la clase PPGScheduler
-    }
-
-    public void empezarLote(int idLote) throws PPGSchedulerException {
-        // TODO implementar metodo empezarLote de la clase PPGScheduler
-    }
-
-    public void retrasarLote(int idLote) throws PPGSchedulerException {
-        // TODO implementar metodo retrasarLote de la clase PPGScheduler
-    }
 
     public void insertarLoteDB(Batch lote)throws PPGSchedulerException{
         String query = "INSERT INTO Lote (Fecha_inicio, Fecha_fin, Fecha_necesidad, Tipo, Plant, Cantidad, ID_diluidor, Planning_class, Estado, Item, Stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -63,7 +46,6 @@ public class PPGScheduler {
             statement.setString(9, lote.getEstado());
             statement.setString(10, lote.getItem());
             statement.setInt(11, lote.getStock());
-
             // Execute the insert
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
