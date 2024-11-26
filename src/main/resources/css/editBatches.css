@@ -1,0 +1,131 @@
+/* Panel principal */
+.anchorPane {
+    -fx-background-color: white;
+}
+
+/* Etiqueta de título */
+.titleLabel {
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+}
+
+.modifyButton {
+    -fx-border-color: black;
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color:#505050;
+    -fx-padding: 1px 0px 0px 0px;
+}
+
+.modifyButton:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-background-color: #2F2F2F;
+    -fx-text-fill: white;
+}
+
+.deleteButton {
+    -fx-background-image: url('/images/Bin_Icon.png');
+    -fx-background-size: 48px 48px;
+}
+
+.deleteButton:hover {
+-fx-scale-x: 1.05;
+-fx-scale-y: 1.05;
+}
+/* Etiquetas de texto */
+.customLabel {
+    -fx-background-color: white;
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold
+}
+/* DatePicker */
+.datePicker {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.datePicker .date-picker-popup {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-translate-x: -51px;
+    -fx-translate-y: 5px;
+}
+
+.month-year-pane {
+    -fx-background-color: transparent;
+}
+
+.datePicker .button {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
+.datePicker .button:hover {
+    -fx-background-color: #EEEEEE;
+    -fx-border-color: black;
+    -fx-font-size: 12px;
+}
+
+.datePicker .date-cell {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.datePicker .date-cell:hover {
+    -fx-background-color: #EEEEEE;
+    -fx-text-fill: black;
+}
+
+.datePicker .text-field{
+    -fx-alignment: CENTER;
+    -fx-border-color: black;
+    -fx-border-width: 1px 0px 1px 1px;
+    -fx-font-family: "Future Medium";
+    -fx-font-size: 24px;
+    -fx-padding: 0px;
+}
+
+.datePicker .arrow-button{
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 1px;
+    -fx-border-color: black;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+}
+
+.datePicker .arrow-button:hover{
+    -fx-background-color: #EEEEEE;
+
+    -fx-font-size: 18px;
+}
+
+.datePicker .arrow-button .arrow{
+    -fx-alignment: center;
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+}
+
+/* Text fields*/
+.custom_text-field {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-font-size: 24px;
+    -fx-font-family: "Future Medium";
+    -fx-alignment: center;
+}
+
+/* Area de descripción */
+.text-area {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-font-size: 24px;
+    -fx-font-family: "Future Medium";
+}

@@ -4,14 +4,19 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static java.sql.DriverManager.getConnection;
 
-public class DatabaseConnection {
+public class DatabaseManager {
     private final Connection connection;
-    private static DatabaseConnection instance;
+    private static DatabaseManager instance;
+    
     //Constructor
-    private DatabaseConnection() throws PPGSchedulerException {
+    private DatabaseManager() throws PPGSchedulerException {
         String hostname = "josedm64rpi.ddns.net";
         String username = "PPG";
         String password = "PPG.";
@@ -24,14 +29,16 @@ public class DatabaseConnection {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
+    
     //Singleton
-    public static DatabaseConnection getInstance() throws PPGSchedulerException {
+    public static DatabaseManager getInstance() throws PPGSchedulerException {
         if (instance == null) {
-            instance = new DatabaseConnection();
+            instance = new DatabaseManager();
         }
         return instance;
     }
+    
+    //Lotes
     public Batch getBatchDB(int nBatch) {
         String query = "SELECT * FROM Lote WHERE N_Lote = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -49,6 +56,7 @@ public class DatabaseConnection {
                     String description = resultSet.getString("Descripcion");
                     Types type = Types.fromValue(resultSet.getString("Tipo"));
                     int idDilutor = resultSet.getInt("ID_diluidor");
+                    
                     Dilutor dilutor = getDilutorDB(idDilutor);
                     return new Batch(id, planningClass, plant, item, quantity, startDate, needDate, status, description, type, dilutor);
                 }
@@ -73,7 +81,7 @@ public class DatabaseConnection {
                 String description = resultSet.getString("Descripcion");
                 int nBatch = resultSet.getInt("N_Lote");
                 String item = resultSet.getString("Item");
-
+                
                 Dilutor dilutor = diluidores.get(dilutorID);
                 Batch batch = new Batch(nBatch, planningClass, plant, item, quantity, startDate, needDate, status, description, type, dilutor);
                 diluidores.get(dilutorID).addLote(batch);
@@ -85,6 +93,7 @@ public class DatabaseConnection {
     public ArrayList<Batch> getBatchesListDB() {
         String query = "SELECT * FROM Lote";
         ArrayList<Batch> batches = new ArrayList<>();
+        
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
@@ -98,7 +107,7 @@ public class DatabaseConnection {
                 String description = resultSet.getString("Descripcion");
                 Types type = Types.fromValue(resultSet.getString("Tipo"));
                 int idDilutor = resultSet.getInt("ID_diluidor");
-
+                
                 Dilutor dilutor = getDilutorDB(idDilutor);
                 batches.add(new Batch(id, planningClass, plant, item, quantity, startDate, needDate, status, description, type, dilutor));
             }
@@ -122,6 +131,7 @@ public class DatabaseConnection {
             statement.setString(10, batch.description());
             statement.setInt(11, batch.nBatch());
             statement.setString(12, batch.item());
+            
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Insert successful. Rows affected: " + rowsAffected);
@@ -137,7 +147,7 @@ public class DatabaseConnection {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, batch.startDate().toString());
             statement.setInt(2, batch.nBatch());
-
+            
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Update successful. Rows affected: " + rowsAffected);
@@ -148,18 +158,19 @@ public class DatabaseConnection {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
+    
+    //Diluidores
     private Dilutor getDilutorDB(int id) {
         String query = "SELECT * FROM Diluidores WHERE ID = ?";
-
+        
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
-
+            
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     String name = resultSet.getString("Name");
                     int capacity = resultSet.getInt("Capacity");
-
+                    
                     return new Dilutor(id, name, capacity);
                 }
             }
@@ -183,17 +194,19 @@ public class DatabaseConnection {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
-    /*
-    public ArrayList<Dilutor> getFilledDilutors() throws PPGSchedulerException {
+    
+    //Funcionalidad
+    public ArrayList<Dilutor> getDilutorsAndBatches() throws PPGSchedulerException {
         HashMap<Integer, Dilutor> diluidoresHashMap = new HashMap<>();
+        
         getDilutorsDB(diluidoresHashMap);
         getBatchesDB(diluidoresHashMap);
         ArrayList<Dilutor> diluidores = new ArrayList<>();
+        
         for (Integer id : diluidoresHashMap.keySet()) {
             diluidores.add(diluidoresHashMap.get(id));
         }
+        
         return diluidores;
     }
-    */
 }

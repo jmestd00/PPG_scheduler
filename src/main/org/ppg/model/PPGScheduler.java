@@ -26,7 +26,7 @@ public class PPGScheduler {
     private final String estadoFile = "estado.txt";
 
     public PPGScheduler() throws PPGSchedulerException {
-        connection = new DatabaseConnection();
+        connection = DatabaseConnection.getInstance();
     }
 
     public ArrayList<Dilutor> sortDilutors() {
