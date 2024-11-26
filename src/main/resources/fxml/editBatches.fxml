@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../css/editBatches.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.view.EditBatches">
+<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../css/editBatches.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.EditBatchesController">
     <VBox alignment="CENTER" layoutX="-2.0" prefHeight="675.0" prefWidth="1200.0" spacing="15.0">
         <Label styleClass="titleLabel" stylesheets="@../css/editBatches.css" text="EDITAR LOTE">
         </Label>

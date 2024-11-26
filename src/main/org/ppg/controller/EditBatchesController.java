@@ -1,15 +1,14 @@
-package org.ppg.view;
+package org.ppg.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import org.ppg.model.*;
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDate;
+import org.ppg.model.*;
 
-public class EditBatches {
+public class EditBatchesController {
     @FXML
     private TextField nBatchField;
     @FXML
