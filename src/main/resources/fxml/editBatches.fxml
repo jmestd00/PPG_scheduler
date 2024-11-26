@@ -63,13 +63,13 @@
         </Pane>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
             <children>
-                <Button fx:id="modifyData" alignment="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="237.0" styleClass="modifyButton" stylesheets="@../css/editBatches.css" text="CAMBIAR DATOS">
+                <Button fx:id="modifyData" alignment="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="237.0" styleClass="modifyButton" onAction="#modifyBatch" stylesheets="@../css/editBatches.css" text="CAMBIAR DATOS">
                 </Button>
             </children>
         </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
          <children>
-            <Button fx:id="deleteButton" alignment="CENTER" mnemonicParsing="false" prefHeight="48.0" prefWidth="48.0" styleClass="deleteButton" stylesheets="@../css/editBatches.css">
+            <Button fx:id="deleteButton" alignment="CENTER" mnemonicParsing="false" prefHeight="96.0" prefWidth="96.0" styleClass="deleteButton" onAction="#removeBatch" stylesheets="@../css/editBatches.css">
             </Button>
          </children>
       </HBox>

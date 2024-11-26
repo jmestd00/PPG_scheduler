@@ -68,7 +68,7 @@ public void initialize() throws PPGSchedulerException {
         e.printStackTrace();
     }
     setupData();
-    addButton.setOnAction(event -> openNewBatch(batchData, this));
+    addButton.setOnAction(event -> openNewBatch(batchData));
     tableView.setSelectionModel(null);
     // Configuración de las columnas
     nBatchCol.setCellValueFactory(data -> {
@@ -295,7 +295,7 @@ private void setupData() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (empty || item == null) {
+                    if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                         setText(null);
                         setTooltip(null);
                     } else {
@@ -351,7 +351,7 @@ public void refreshTable() {
 }
 //Ventanas auxiliares
 @FXML
-private void openNewBatch(ObservableList<Batch> batchData, BatchesListController batchesListController) {
+private void openNewBatch(ObservableList<Batch> batchData) {
     try {
         // Cargar el archivo FXML del popup
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/newBatch.fxml"));
@@ -383,20 +383,56 @@ private void openNewBatch(ObservableList<Batch> batchData, BatchesListController
 
 @FXML
 private void openEditBatch(Batch sampleBatch) {
+    if (sampleBatch.status() == Statuses.FINALIZADO || sampleBatch.status() == Statuses.EN_PROCESO) {
+        openError(new FXMLLoader(getClass().getResource("/fxml/errorBatchInProgress.fxml")));
+    } else {
+        try {
+            // Cargar el archivo FXML del popup
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/editBatches.fxml"));
+            Parent popupRoot = fxmlLoader.load();
+            EditBatchesController editBatches = fxmlLoader.getController();
+            // Pasar el objeto batch al controlador de la ventana de edición
+            editBatches.setBatch(sampleBatch);
+            editBatches.setBatchData(batchData);
+            editBatches.setBatchesListController(this);
+            // Crear una nueva ventana para el popup
+            Stage popupStage = new Stage();
+            popupStage.resizableProperty().setValue(Boolean.FALSE);
+            popupStage.setTitle("Editar lote");
+            popupStage.getIcons().add(logoPPG);
+            popupStage.initModality(Modality.APPLICATION_MODAL); // Bloquear la ventana principal
+            popupStage.setScene(new Scene(popupRoot));
+            popupStage.setOnShown(event -> {
+                // Obtener dimensiones de la ventana principal o pantalla
+                double centerX = addButton.getScene().getWindow().getX() + addButton.getScene().getWindow().getWidth() / 2;
+                double centerY = addButton.getScene().getWindow().getY() + addButton.getScene().getWindow().getHeight() / 2;
+                // Calcular posición para centrar el popup
+                popupStage.setX(centerX - popupStage.getWidth() / 2);
+                popupStage.setY(centerY - popupStage.getHeight() / 2);
+            });
+            editBatches.setStage(popupStage);
+            // Mostrar el popup
+            popupStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+public Pagination getPagination() {
+    return this.pagination;
+}
+
+private void openError(FXMLLoader fxmlLoader) {
     try {
         // Cargar el archivo FXML del popup
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/editBatches.fxml"));
         Parent popupRoot = fxmlLoader.load();
-        EditBatchesController editBatches = fxmlLoader.getController();
-        // Pasar el objeto batch al controlador de la ventana de edición
-        editBatches.setBatch(sampleBatch);
-        // Crear una nueva ventana para el popup
         Stage popupStage = new Stage();
         popupStage.resizableProperty().setValue(Boolean.FALSE);
-        popupStage.setTitle("Editar lote");
-        popupStage.getIcons().add(logoPPG);
+        popupStage.setTitle("ERROR");
         popupStage.initModality(Modality.APPLICATION_MODAL); // Bloquear la ventana principal
         popupStage.setScene(new Scene(popupRoot));
+        popupStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/warn_icon.png")));
         popupStage.setOnShown(event -> {
             // Obtener dimensiones de la ventana principal o pantalla
             double centerX = addButton.getScene().getWindow().getX() + addButton.getScene().getWindow().getWidth() / 2;
@@ -405,14 +441,9 @@ private void openEditBatch(Batch sampleBatch) {
             popupStage.setX(centerX - popupStage.getWidth() / 2);
             popupStage.setY(centerY - popupStage.getHeight() / 2);
         });
-        // Mostrar el popup
         popupStage.showAndWait();
     } catch (Exception e) {
         e.printStackTrace();
     }
-}
-
-public Pagination getPagination() {
-    return this.pagination;
 }
 }
