@@ -1,22 +1,21 @@
 package org.ppg.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Solucion {
-    private ArrayList<Lote> lotesSolucion;
+    private ArrayList<Batch> lotesSolucion;
     public static int idSolucionnext;
     private int idSolucion;
 
 
-    public Solucion(ArrayList<Lote> lotes) {
+    public Solucion(ArrayList<Batch> lotes) {
         this.lotesSolucion = new ArrayList<>();
-        for (Lote lote : lotes) {
+        for (Batch lote : lotes) {
             this.lotesSolucion.add(lote.clone()); // Copia profunda
         }
     }
 
-    public ArrayList<Lote> getLotes() {
+    public ArrayList<Batch> getLotes() {
         return this.lotesSolucion;
     }
 
@@ -33,8 +32,8 @@ public class Solucion {
     
         // Comparar lotes uno por uno (orden importa)
         for (int i = 0; i < this.lotesSolucion.size(); i++) {
-            Lote lote1 = this.lotesSolucion.get(i);
-            Lote lote2 = otra.lotesSolucion.get(i);
+            Batch lote1 = this.lotesSolucion.get(i);
+            Batch lote2 = otra.lotesSolucion.get(i);
             if (!lote1.equals(lote2)) { // Asegúrate de que Lote también sobrescriba equals correctamente
                 return false;
             }

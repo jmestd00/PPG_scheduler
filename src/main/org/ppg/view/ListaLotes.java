@@ -4,7 +4,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
-import javafx.scene.shape.SVGPath;
 import org.ppg.model.*;
 
 import javafx.application.Application;
@@ -38,34 +37,34 @@ public class ListaLotes extends Application {
     private Button addButton;
 
     @FXML
-    private TableView<Lote> tableView;
+    private TableView<Batch> tableView;
 
     @FXML
-    private TableColumn<Lote, String> pClassCol;
+    private TableColumn<Batch, String> pClassCol;
 
     @FXML
-    private TableColumn<Lote, String> plantCol;
+    private TableColumn<Batch, String> plantCol;
 
     @FXML
-    private TableColumn<Lote, String> itemCol;
+    private TableColumn<Batch, String> itemCol;
 
     @FXML
-    private TableColumn<Lote, String> iDateCol;
+    private TableColumn<Batch, String> iDateCol;
 
     @FXML
-    private TableColumn<Lote, String> nDateCol;
+    private TableColumn<Batch, String> nDateCol;
 
     @FXML
-    private TableColumn<Lote, String> nLoteCol;
+    private TableColumn<Batch, String> nLoteCol;
 
     @FXML
-    private TableColumn<Lote, String> statusCol;
+    private TableColumn<Batch, String> statusCol;
 
     @FXML
-    private  TableColumn<Lote, String> quantityCol;
+    private  TableColumn<Batch, String> quantityCol;
 
     @FXML
-    private TableColumn<Lote, Void> editCol; // Columna para botones de edición
+    private TableColumn<Batch, Void> editCol; // Columna para botones de edición
 
     @FXML
     private Pagination pagination;
@@ -73,7 +72,7 @@ public class ListaLotes extends Application {
     @FXML
     private Stage stageActual;
 
-    private final ObservableList<Lote> loteData = FXCollections.observableArrayList();
+    private final ObservableList<Batch> loteData = FXCollections.observableArrayList();
 
     private final int ROWS_PER_PAGE = 11; // Número de elementos por página
 
@@ -98,7 +97,7 @@ public class ListaLotes extends Application {
             {
                 // Define la acción del botón
                 btn.setOnAction(event -> {
-                    Lote selectedLote = getTableView().getItems().get(getIndex());
+                    Batch selectedLote = getTableView().getItems().get(getIndex());
                     abrirEditarLote(selectedLote);
                 });
                 btn.setStyle("/*-fx-background-color: #ffffff;*/ -fx-background-radius: 0; -fx-alignment: " +
@@ -143,10 +142,10 @@ public class ListaLotes extends Application {
 
 
     public void setupData() {
-        loteData.add(new Lote(20000000, "A", "A", "A", 5, new Date(1,2,2000), new Date(1,2,2000), Estados.EN_ESPERA, "A", "A"));
-        loteData.add(new Lote(2, "VD-WBBC","VDW" ,"A-RXX3359-DD", 10, new Date(15,2,2023), new Date(15,2,2023), Estados.FINALIZADO, "a" ,"a"));
+        loteData.add(new Batch(20000000, "A", "A", "A", 5, new Date(1,2,2000), new Date(1,2,2000), Statuses.EN_ESPERA, "A", "A"));
+        loteData.add(new Batch(2, "VD-WBBC","VDW" ,"A-RXX3359-DD", 10, new Date(15,2,2023), new Date(15,2,2023), Statuses.FINALIZADO, "a" ,"a"));
         for (int i = 3; i < 500; i++) {
-            loteData.add(new Lote(i + 27000000, "VD-WBBC" + i,"VDW" ,"A-RXX3359-DD", 10,new Date(15,2,2023), new Date(15,2,2023), Estados.EN_ESPERA, "Esto es la descripción. " , "A"));
+            loteData.add(new Batch(i + 27000000, "VD-WBBC" + i,"VDW" ,"A-RXX3359-DD", 10,new Date(15,2,2023), new Date(15,2,2023), Statuses.EN_ESPERA, "Esto es la descripción. " , "A"));
         }
     }
 
@@ -158,7 +157,7 @@ public class ListaLotes extends Application {
         int toIndex = Math.min(fromIndex + limit, loteData.size());
 
         int minIndex = Math.min(toIndex, loteData.size());
-        SortedList<Lote> sortedData = new SortedList<>(
+        SortedList<Batch> sortedData = new SortedList<>(
                 FXCollections.observableArrayList(loteData.subList(Math.min(fromIndex, minIndex), minIndex)));
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 
@@ -198,7 +197,7 @@ public class ListaLotes extends Application {
     }
 
     @FXML
-    private void abrirEditarLote(Lote sampleLote) {
+    private void abrirEditarLote(Batch sampleLote) {
         try {
             // Cargar el archivo FXML del popup
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/editarLote.fxml"));
@@ -229,10 +228,10 @@ public class ListaLotes extends Application {
             e.printStackTrace();
         }
     }
-    private void addTooltipToCells(TableColumn<Lote, String> column, int propertyIndex) {
+    private void addTooltipToCells(TableColumn<Batch, String> column, int propertyIndex) {
         column.setCellFactory(new Callback<>() {
             @Override
-            public TableCell<Lote, String> call(TableColumn<Lote, String> param) {
+            public TableCell<Batch, String> call(TableColumn<Batch, String> param) {
                 return new TableCell<>() {
                     @Override
                     protected void updateItem(String item, boolean empty) {
@@ -245,7 +244,7 @@ public class ListaLotes extends Application {
                             setText(item);
 
                             // Crear y configurar el Tooltip con el valor de la celda
-                            Lote lote = getTableView().getItems().get(getIndex());
+                            Batch lote = getTableView().getItems().get(getIndex());
                             StringProperty tooltipText = lote.getProperties()[propertyIndex];
                             Tooltip tooltip = new Tooltip(tooltipText.getValue());
                             setTooltip(tooltip);

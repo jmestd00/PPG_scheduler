@@ -5,7 +5,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.ppg.model.*;
-import java.time.LocalDate;
 
 
 public class EditarLote {
@@ -26,7 +25,7 @@ public class EditarLote {
     @FXML
     private TextArea descriptionField;
 
-    public void setLote(Lote lote) {
+    public void setLote(Batch lote) {
         nLoteField.setText(String.valueOf(lote.nLote()));
         pClassField.setText(lote.planningClass());
         plantField.setText(lote.plant());
