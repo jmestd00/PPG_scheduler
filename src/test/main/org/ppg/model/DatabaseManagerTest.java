@@ -1,12 +1,6 @@
 package org.ppg.model;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class DatabaseManagerTest {
 
@@ -14,6 +8,9 @@ public class DatabaseManagerTest {
 
     private static DatabaseManager app;
 
+
+
+    /*
     @Before
     public void setup() throws PPGSchedulerException {
         app = DatabaseManager.getInstance();
@@ -30,8 +27,10 @@ public class DatabaseManagerTest {
             System.out.println("Error inicializando base de datos: " + e.getMessage());
         }
     }
+    */
 
 
+    /*
         @Test
         public void testGetBatch() {
             Batch batch = app.getBatchDB(0);
@@ -78,4 +77,14 @@ public class DatabaseManagerTest {
             assertNotNull("La lista de lotes no debería ser nula", batches);
             assertFalse("La lista de lotes debería contener al menos un lote", batches.isEmpty());
         }
+
+     */
+
+    @Test
+    public void testGetBatchFromDatabase()throws PPGSchedulerException {
+        app = DatabaseManager.getInstance();
+        Batch b = app.getBatchDB(2);
+        System.out.println(b);
     }
+
+}

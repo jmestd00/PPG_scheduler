@@ -60,7 +60,7 @@
                   <Font size="23.0" />
                </font>
             </Label>
-            <ComboBox prefHeight="55.0" prefWidth="166.0" styleClass="combo-box" stylesheets="@../css/newBatch.css">
+            <ComboBox fx:id="combo_box" prefHeight="55.0" prefWidth="166.0" styleClass="combo-box" stylesheets="@../css/newBatch.css">
                <items>
                   <FXCollections fx:factory="observableArrayList">
                      <String fx:value="PIMM" />
@@ -100,7 +100,7 @@
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="25.0">
          <Button fx:id="planButton" alignment="CENTER" maxHeight="60" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="264.0" styleClass="planButton" stylesheets="@../css/newBatch.css" text="PLANIFICAR">
          </Button>
-         <Button fx:id="plusButton" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="60.0" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="202.0" styleClass="plusButton" stylesheets="@../css/newBatch.css" text="+" textAlignment="CENTER">
+         <Button fx:id="plusButton" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="60.0" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="202.0" styleClass="plusButton" onAction="#addBatch" stylesheets="@../css/newBatch.css" text="+" textAlignment="CENTER">
          </Button>
       </HBox>
    </VBox>

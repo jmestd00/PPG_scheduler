@@ -7,55 +7,50 @@ public class Dilutor implements Comparable<Dilutor> {
     private final int id;
     private final String name;
     private final int capacity;
-    private final ArrayList<Batch> batches;
-    private LocalDate endDate;
-    
-    //Constructor
-    public Dilutor(int id, String name, int capacity) {
-        this.batches = new ArrayList<>();
+    private final ArrayList<Batch> lotes;
+    private LocalDate fechafin;
+    public Dilutor(int id, String name, int capacity){
+        lotes = new ArrayList<>();
         this.id = id;
         this.name = name;
         this.capacity = capacity;
     }
-    
-    //Getters
-    public int getCapacity() {
+    public void addLote(Batch lote)throws PPGSchedulerException{
+        lotes.add(lote);
+    }
+    public int getCapacity(){
         return this.capacity;
     }
-    public int getId() {
+    public int getId(){
         return this.id;
     }
-    public String getName() {
+    public String getName(){
         return this.name;
     }
+
     public LocalDate getFechaFin() {
-        return this.endDate;
+        return this.fechafin;
     }
-    public ArrayList<Batch> getBatches() {
-        return this.batches;
+
+    public void setFechaFin(LocalDate newDate) {
+        this.fechafin = newDate;
     }
-    
-    //Setters
-    public void setEndDate(LocalDate newDate) {
-        this.endDate = newDate;
-    }
-    
-    //Funcionalidad
-    public void addLote(Batch batch) throws PPGSchedulerException {
-        batches.add(batch);
-    }
-    
-    //Override
+
     @Override
-    public int compareTo(Dilutor d) {
-        return Integer.compare(this.id, d.id);
+    public int compareTo(Dilutor o) {
+        return Integer.compare(this.id, o.id);
     }
-    
+
+
+    public ArrayList<Batch> getLotes(){
+        return this.lotes;
+    }
+
     @Override
     public String toString() {
-        return "id: " + this.id + '\n' +
-                "Name: " + this.name + '\n' +
-                "Capacity: " + this.capacity + '\n' +
-                "Batches: {\n" + batches + "\n}";
+        return "id: " + this.id+'\n'+
+                "name: " + this.name + '\n'+
+                "capacity: " + this.capacity+'\n'+
+                "Lotes: {\n" + lotes + "\n}";
     }
 }
