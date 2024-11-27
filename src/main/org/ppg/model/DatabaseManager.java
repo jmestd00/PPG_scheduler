@@ -70,7 +70,6 @@ public class DatabaseManager {
         return batch;
     }
 
-
     public void getBatchesDB(HashMap<Integer, Dilutor> diluidores) throws PPGSchedulerException {
         String query = "SELECT Fecha_inicio, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Item FROM PPG_scheduler.Lote inner join Diluidores on Diluidores.ID like Lote.ID_diluidor";
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
@@ -95,7 +94,7 @@ public class DatabaseManager {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
+  
     public ArrayList<Batch> getBatchesListDB() {
         String query = "SELECT * FROM Lote";
         ArrayList<Batch> batches = new ArrayList<>();
@@ -150,7 +149,6 @@ public class DatabaseManager {
         }
     }
 
-
     public void updateBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "UPDATE Lote SET Fecha_inicio = ? WHERE Lote.N_Lote = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -167,9 +165,6 @@ public class DatabaseManager {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
-
-
 
     private Dilutor getDilutorDB(int id) {
         String query = "SELECT * FROM Diluidores WHERE ID = ?";
@@ -188,9 +183,7 @@ public class DatabaseManager {
         }
         return null;
     }
-
-
-
+  
     private void getDilutorsDB(HashMap<Integer, Dilutor> diluidores) throws PPGSchedulerException {
         assert diluidores != null;
         String query = "SELECT ID, Name, Capacity FROM Diluidores";
@@ -206,9 +199,7 @@ public class DatabaseManager {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
-
-
+  
     public LocalDate getFreeDilutorDate(int idDilutor)throws PPGSchedulerException{
         String query = "SELECT MAX(Fecha_fin) FROM Lote WHERE ID_diluidor = ? AND Estado like 'EN_PROCESO'";
 
@@ -225,10 +216,7 @@ public class DatabaseManager {
         }
         return null;
     }
-
-
-
-
+  
     public ArrayList<Dilutor> getFilledDilutors() throws PPGSchedulerException {
         HashMap<Integer, Dilutor> diluidoresHashMap = new HashMap<>();
         getDilutorsDB(diluidoresHashMap);
@@ -239,5 +227,4 @@ public class DatabaseManager {
         }
         return diluidores;
     }
-
 }

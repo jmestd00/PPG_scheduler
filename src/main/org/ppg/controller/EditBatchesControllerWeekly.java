@@ -42,14 +42,14 @@ public class EditBatchesControllerWeekly {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public void setBatch(Batch batch) {
-        nBatchField.setText(String.valueOf(batch.nBatch()));
-        pClassField.setText(batch.planningClass());
-        plantField.setText(batch.plant());
-        itemField.setText(batch.item());
-        quantityField.setText(String.valueOf(batch.quantity()));
-        startDatePicker.setValue(batch.startDate());  // Asegúrate de convertir a cadena si es necesario
-        needDateField.setText(batch.needDate().format(formatter));
-        descriptionField.setText(batch.description());
+        nBatchField.setText(String.valueOf(batch.getnBatch()));
+        pClassField.setText(batch.getPlannigClass());
+        plantField.setText(batch.getPlant());
+        itemField.setText(batch.getItem());
+        quantityField.setText(String.valueOf(batch.getQuantity()));
+        startDatePicker.setValue(batch.getStartDate());  // Asegúrate de convertir a cadena si es necesario
+        needDateField.setText(batch.getNeedDate().format(formatter));
+        descriptionField.setText(batch.getDescription());
         this.batch = batch;
     }
 
@@ -85,7 +85,7 @@ public class EditBatchesControllerWeekly {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
+    /*
     @FXML
     private void modifyBatch() {
         if (startDatePicker.getValue().isBefore(LocalDate.parse(needDateField.getText(), formatter))) {
@@ -93,9 +93,9 @@ public class EditBatchesControllerWeekly {
                 openError(new FXMLLoader(getClass().getResource("/fxml/errorDate.fxml")));
             }
             int index = batchData.indexOf(batch);
-            Batch modifiedBatch = new Batch(batch.nBatch(), pClassField.getText(), plantField.getText(), itemField.getText(),
+            Batch modifiedBatch = new Batch(batch.getnBatch(), pClassField.getText(), plantField.getText(), itemField.getText(),
                     Integer.parseInt(quantityField.getText()), startDatePicker.getValue(), LocalDate.parse(needDateField.getText(), formatter),
-                    batch.status(), descriptionField.getText(), batch.type(), batch.dilutor());
+                    batch.getStatus(), descriptionField.getText(), batch.getType(), batch.getDilutorId());
             batchData.remove(index);
             batchData.add(index, modifiedBatch);
             this.stage.hide();
@@ -104,6 +104,7 @@ public class EditBatchesControllerWeekly {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorModifyPopup.fxml")));
         }
     }
+     */
 
     private void openError(FXMLLoader fxmlLoader) {
         try {

@@ -65,15 +65,23 @@ public class Batch {
         properties[8] = new SimpleStringProperty(description);
         return properties;
     }
+    public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate needDate, Types type, String description) {
+        this.nBatch = nBatch;
+        this.planningClass = planningClass;
+        this.plant = plant;
+        this.item = item;
+        this.quantity = quantity;
+        this.needDate = needDate;
+        this.type = type;
+        this.description = description;
+    }
 
     public String getDescription() {
         return description;
     }
-
     public int getnBatch() {
         return nBatch;
     }
-
     public int getQuantity() {
         return quantity;
     }
@@ -86,8 +94,8 @@ public class Batch {
     public String getPlannigClass() {
         return this.planningClass;
     }
-    public String getStatus() {
-        return status.getValue();
+    public Statuses getStatus() {
+        return status;
     }
     public String getItem() {
         return this.item;
@@ -103,6 +111,9 @@ public class Batch {
     }
     public LocalDate getNeedDate() {
         return this.needDate;
+    }
+    public String getDescription() {
+        return description;
     }
     public long getDuration() {
         return this.duration;

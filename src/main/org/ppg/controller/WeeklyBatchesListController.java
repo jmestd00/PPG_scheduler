@@ -140,10 +140,10 @@ public class WeeklyBatchesListController {
                     Batch selectedBatch = getTableView().getItems().get(getIndex());
 
                     // Solo mostrar el gráfico si el Batch tiene un color válido en su estado
-                    if (selectedBatch != null && selectedBatch.status() != null) {
+                    if (selectedBatch != null && selectedBatch.getStatus() != null) {
                         LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
-                                new Stop(0, Color.web(selectedBatch.status().getHexColorPrimary())),
-                                new Stop(1, Color.web(selectedBatch.status().getHexColorSecondary())));
+                                new Stop(0, Color.web(selectedBatch.getStatus().getHexColorPrimary())),
+                                new Stop(1, Color.web(selectedBatch.getStatus().getHexColorSecondary())));
 
                         Circle circle = new Circle(15);  // Radio del círculo
                         circle.setFill(gradient);        // Color de relleno
@@ -173,7 +173,7 @@ public class WeeklyBatchesListController {
                     if (selectedBatch == null) {
                         setText(null);
                     } else {
-                        setText(selectedBatch.status().getValue());
+                        setText(selectedBatch.getStatus().getValue());
                     }
                     setStyle("-fx-alignment: center_left;-fx-font-weight: normal; -fx-font-size: 24px; -fx-font-family: Futura medium");
                 }
@@ -341,7 +341,7 @@ public class WeeklyBatchesListController {
 
     @FXML
     private void openEditBatch(Batch sampleBatch) {
-        if (sampleBatch.status() == Statuses.FINALIZADO || sampleBatch.status() == Statuses.EN_PROCESO) {
+        if (sampleBatch.getStatus() == Statuses.FINALIZADO || sampleBatch.getStatus() == Statuses.EN_PROCESO) {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorBatchInProgress.fxml")));
         } else {
             try {

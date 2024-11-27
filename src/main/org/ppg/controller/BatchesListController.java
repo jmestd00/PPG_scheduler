@@ -144,10 +144,10 @@ public void initialize() throws PPGSchedulerException {
                 Batch selectedBatch = getTableView().getItems().get(getIndex());
 
                 // Solo mostrar el gráfico si el Batch tiene un color válido en su estado
-                if (selectedBatch != null && selectedBatch.status() != null) {
+                if (selectedBatch != null && selectedBatch.getStatus() != null) {
                     LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
-                            new Stop(0, Color.web(selectedBatch.status().getHexColorPrimary())),
-                            new Stop(1, Color.web(selectedBatch.status().getHexColorSecondary())));
+                            new Stop(0, Color.web(selectedBatch.getStatus().getHexColorPrimary())),
+                            new Stop(1, Color.web(selectedBatch.getStatus().getHexColorSecondary())));
 
                     Circle circle = new Circle(15);  // Radio del círculo
                     circle.setFill(gradient);        // Color de relleno
@@ -177,7 +177,7 @@ public void initialize() throws PPGSchedulerException {
                 if (selectedBatch == null) {
                     setText(null);
                 } else {
-                    setText(selectedBatch.status().getValue());
+                    setText(selectedBatch.getStatus().getValue());
                 }
                 setStyle("-fx-alignment: center_left;-fx-font-weight: normal; -fx-font-size: 24px; -fx-font-family: Futura medium");
             }
@@ -258,10 +258,10 @@ public void initialize() throws PPGSchedulerException {
 }
 
 private void setupData() {
-    batchData.add(new Batch(1, "ZP01", "ZP01", "ZP01", 100, LocalDate.now(), LocalDate.now(), Statuses.FINALIZADO, "Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción", Types.PIMM, new Dilutor(1, "Dilutor 1", 100)));
+    batchData.add(new Batch(1, "ZP01", "ZP01", "ZP01", 100, LocalDate.now(), LocalDate.now(), LocalDate.now().plusDays(2), Statuses.FINALIZADO, "Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción Descripción", Types.PIMM, 1, 3));
     for (int i = 0; i < 1; i++) {
 
-    batchData.add(new Batch(2, "ZP01", "ZP01", "ZP01", 100, LocalDate.now(), LocalDate.now(), Statuses.EN_DEMORA, "Descripción", Types.PIMM, new Dilutor(1, "Dilutor 1", 100)));
+    batchData.add(new Batch(2, "ZP01", "ZP01", "ZP01", 100, LocalDate.now(), LocalDate.now(), LocalDate.now().plusDays(2), Statuses.EN_DEMORA, "Descripción", Types.PIMM, 1, 2));
     }
     batchData.addAll(databaseManager.getBatchesListDB());
 }
@@ -384,7 +384,7 @@ private void openNewBatch(ObservableList<Batch> batchData) {
 
 @FXML
 private void openEditBatch(Batch sampleBatch) {
-    if (sampleBatch.status() == Statuses.FINALIZADO || sampleBatch.status() == Statuses.EN_PROCESO) {
+    if (sampleBatch.getStatus() == Statuses.FINALIZADO || sampleBatch.getStatus() == Statuses.EN_PROCESO) {
         openError(new FXMLLoader(getClass().getResource("/fxml/errorBatchInProgress.fxml")));
     } else {
         try {
