@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane fx:id="rootPane" prefHeight="1080.0" prefWidth="1920.0" styleClass="rootPane" stylesheets="@../css/batchesList.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.WeeklyBatchesListController">
-    <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="1920.0" styleClass="titleLabel" stylesheets="@../css/batchesList.css" text="LISTADO DE LOTES ">
+    <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="1920.0" styleClass="titleLabel" stylesheets="@../css/batchesList.css" text="LISTADO DE LOTES SEMANAL">
     </Label>
     <TableView fx:id="tableView" focusTraversable="false" layoutX="5.0" layoutY="103.0" prefHeight="885.0" prefWidth="1914.0" styleClass="pagination" stylesheets="@../css/batchesList.css">
         <columns>
