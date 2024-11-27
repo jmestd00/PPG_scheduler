@@ -127,15 +127,14 @@ public class PPGScheduler {
                     guardarEstado(diluidores, lotes, indiceLote);
                     // Actualizar estado para esta iteración
                     diluidor.setFechaFin(fechaFinTemp);
-                    loteActual.setDilutor(diluidor);
+                    loteActual.setDilutor(diluidor.getId());
                     loteActual.setEndDate(fechaFinTemp);
                     indiceLote++;
                     // Llamada recursiva
                     planificarRec();
                     // Retroceso: restaurar estado desde archivo
                     restaurarEstado();
-                    System.out.println(
-                            "Retroceso: Estado restaurado tras intentar asignar Lote ID: " + loteActual.getId());
+                    System.out.println("Retroceso: Estado restaurado tras intentar asignar Lote ID: " + loteActual.getId());
                 }
             }
         }

@@ -38,6 +38,16 @@ public class Batch {
         this.duration = duration;
     }
 
+    public Batch(int nBatch, String planningClass, String plant, String item, int quantity, String description, Types type, LocalDate needDate) {
+        this.nBatch = nBatch;
+        this.planningClass = planningClass;
+        this.plant = plant;
+        this.item = item;
+        this.quantity = quantity;
+        this.description = description;
+        this.type = type;
+        this.needDate = needDate;
+    }
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -55,7 +65,6 @@ public class Batch {
         properties[8] = new SimpleStringProperty(description);
         return properties;
     }
-    
     public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate needDate, Types type, String description) {
         this.nBatch = nBatch;
         this.planningClass = planningClass;
@@ -66,7 +75,10 @@ public class Batch {
         this.type = type;
         this.description = description;
     }
-    
+
+    public String getDescription() {
+        return description;
+    }
     public int getnBatch() {
         return nBatch;
     }
