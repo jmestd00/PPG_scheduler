@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 public class Batch {
 
-
     private final int nBatch;
     private final String planningClass;
     private final String plant;
