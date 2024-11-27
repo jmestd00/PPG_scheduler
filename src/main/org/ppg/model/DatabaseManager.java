@@ -211,6 +211,21 @@ public class DatabaseManager {
     }
     */
 
+    public LocalDate getFreeDilutorDate(int idDilutor)throws PPGSchedulerException{
+        String query = "SELECT MAX(Fecha_fin) FROM Lote WHERE ID_diluidor = ? AND Estado like 'EN_PROCESO'";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, idDilutor);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getDate("Fecha_fin").toLocalDate();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     /*
     public ArrayList<Dilutor> getFilledDilutors() throws PPGSchedulerException {
         HashMap<Integer, Dilutor> diluidoresHashMap = new HashMap<>();
