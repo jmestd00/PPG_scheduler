@@ -5,23 +5,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.ppg.model.Batch;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.shape.Polygon;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import org.ppg.model.*;
-
-public class EditBatchesController {
+public class EditBatchesControllerWeekly {
     private ObservableList<Batch> batchData;
-    private BatchesListController batchesListController;
     private WeeklyBatchesListController weeklyBatchesListController;
     private Stage stage;
     private Batch batch;
@@ -76,14 +73,11 @@ public class EditBatchesController {
     @FXML
     private void removeBatch() {
         batchData.remove(batchData.indexOf(batch));
-        batchesListController.refreshTable();
         weeklyBatchesListController.refreshTable();
         this.stage.hide();
     }
 
-    public void setBatchesListController(BatchesListController batchesListController) {
-        this.batchesListController = batchesListController;
-    }
+
     public void setBatchesListController(WeeklyBatchesListController weeklyBatchesListController) {
         this.weeklyBatchesListController = weeklyBatchesListController;
     }
@@ -105,7 +99,6 @@ public class EditBatchesController {
             batchData.remove(index);
             batchData.add(index, modifiedBatch);
             this.stage.hide();
-            batchesListController.refreshTable();
             weeklyBatchesListController.refreshTable();
         } else {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorModifyPopup.fxml")));

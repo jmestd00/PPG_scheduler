@@ -31,6 +31,7 @@ public class BatchesListController {
 Image logoPPG = new Image(String.valueOf(getClass().getResource("/images/PPG_Logo512_512.png")));
 
 private ObservableList<Batch> batchData = FXCollections.observableArrayList();
+private ObservableList<Batch> weeklyBatchData = FXCollections.observableArrayList();
 private static DatabaseManager databaseManager;
 private final int ROWS_PER_PAGE = 11;
 
@@ -446,4 +447,42 @@ private void openError(FXMLLoader fxmlLoader) {
         e.printStackTrace();
     }
 }
+
+@FXML
+private void openWeeklyList() {
+    try {
+            // Cargar el archivo FXML del popup
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/weeklyBatchesList.fxml"));
+            Parent popupRoot = fxmlLoader.load();
+            Stage popupStage = new Stage();
+            WeeklyBatchesListController weeklyList = fxmlLoader.getController();
+            weeklyList.setBatchesList(batchData); //Añadir mañana weeklyBatchData
+            popupStage.resizableProperty().setValue(Boolean.FALSE);
+            popupStage.setTitle("Lista Semanal");
+            popupStage.getIcons().add(logoPPG);
+            popupStage.initModality(Modality.APPLICATION_MODAL); // Bloquear la ventana principal
+            popupStage.setScene(new Scene(popupRoot));
+            popupStage.setOnShown(event -> {
+                // Obtener dimensiones de la ventana principal o pantalla
+                double centerX = addButton.getScene().getWindow().getX() + addButton.getScene().getWindow().getWidth() / 2;
+                double centerY = addButton.getScene().getWindow().getY() + addButton.getScene().getWindow().getHeight() / 2;
+                // Calcular posición para centrar el popup
+                popupStage.setX(centerX - popupStage.getWidth() / 2);
+                popupStage.setY(centerY - popupStage.getHeight() / 2);
+            });
+            // Mostrar el popup
+            popupStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getWeeklyData() {
+        try{
+            databaseManager = DatabaseManager.getInstance();
+        } catch (PPGSchedulerException e) {
+            e.printStackTrace();
+        }
+        //weeklyBatchData.addAll(databaseManager.getWeeklyBatchesListDB()); Completar con el método
+    }
 }
