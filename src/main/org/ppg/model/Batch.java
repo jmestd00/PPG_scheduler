@@ -76,9 +76,6 @@ public class Batch {
         this.description = description;
     }
 
-    public String getDescription() {
-        return description;
-    }
     public int getnBatch() {
         return nBatch;
     }

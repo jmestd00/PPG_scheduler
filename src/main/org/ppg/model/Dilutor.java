@@ -49,8 +49,8 @@ public class Dilutor implements Comparable<Dilutor> {
     @Override
     public String toString() {
         return "id: " + this.id+'\n'+
-                "name: " + this.name + '\n'+
-                "capacity: " + this.capacity+'\n'+
-                "Lotes: {\n" + lotes + "\n}";
+                "Name: " + this.name + '\n'+
+                "Capacity: " + this.capacity+'\n'+
+                "Batches: {\n" + lotes + "\n}";
     }
 }
