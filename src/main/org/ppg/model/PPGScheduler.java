@@ -15,18 +15,20 @@ import static java.lang.Math.abs;
 import static java.sql.DriverManager.getConnection;
 
 public class PPGScheduler {
-    private final DatabaseConnection connection;
+
+
+    private final DatabaseManager connection;
     private ArrayList<Dilutor> diluidores = new ArrayList<>();
     private HashMap<String, Boolean> mapSoluciones = new HashMap<>();
     private final int toleranciaRetraso = 2;
     // Nuevos atributos de clase para evitar pasar como parámetros
-    private ArrayList<Solucion> soluciones = new ArrayList<>();
+    private ArrayList<Solution> soluciones = new ArrayList<>();
     private ArrayList<Batch> lotes = new ArrayList<>();
     private int indiceLote = 0;
     private final String estadoFile = "estado.txt";
 
     public PPGScheduler() throws PPGSchedulerException {
-        connection = DatabaseConnection.getInstance();
+        connection = DatabaseManager.getInstance();
     }
 
     public ArrayList<Dilutor> sortDilutors() {
@@ -34,10 +36,11 @@ public class PPGScheduler {
         return this.diluidores;
     }
 
-    private Solucion getBestSolution(ArrayList<Solucion> soluciones) {
+
+    private Solution getBestSolution(ArrayList<Solution> soluciones) {
         int min = Integer.MAX_VALUE;
-        Solucion best = null;
-        for (Solucion solucion : soluciones) {
+        Solution best = null;
+        for (Solution solucion : soluciones) {
             int sum = 0;
             for (Dilutor diluidor : diluidores) {
                 for (Batch lote : diluidor.getLotes()) {
@@ -52,6 +55,7 @@ public class PPGScheduler {
         return best;
     }
 
+
     /**
      * Metodo donde se ejecuta el algoritmo de backtracking necesario para obtener
      * un
@@ -62,7 +66,9 @@ public class PPGScheduler {
      * @param lotesPrevios Lotes ya existentes obtenidos de la base de datos
      * @param nuevosLotes  Lotes nuevos introducidos por el usuario
      */
+
     private void planificar(ArrayList<Batch> lotesPrevios, ArrayList<Batch> nuevosLotes) {
+
         lotes.clear();
         lotes.addAll(lotesPrevios);
         lotes.addAll(nuevosLotes);
@@ -79,15 +85,18 @@ public class PPGScheduler {
         planificarRec();
     }
 
+
     /**
      * Método recursivo para el algoritmo de backtracking.
      *
      * @return true si encuentra una solución válida, false en caso contrario
      */
+
     public boolean planificarRec() {
+
         if (indiceLote == lotes.size()) {
             System.out.println("Caso base alcanzado. Generando solución...");
-            Solucion sol = new Solucion(new ArrayList<>(lotes)); // Crear copia de los lotes
+            Solution sol = new Solution(new ArrayList<>(lotes)); // Crear copia de los lotes
             try {
                 calcularFechasInicio(sol);
                 if (ajustarSolucionesConHashMap(sol)) {
@@ -133,7 +142,9 @@ public class PPGScheduler {
         return false;
     }
 
+
     private void guardarEstado(ArrayList<Dilutor> diluidores, ArrayList<Batch> lotes, int indiceLote) {
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(estadoFile, true))) {
             StringBuilder sb = new StringBuilder();
             for (Dilutor diluidor : diluidores) {
@@ -155,6 +166,7 @@ public class PPGScheduler {
             e.printStackTrace();
         }
     }
+
 
     private void restaurarEstado() {
         try {
@@ -197,9 +209,11 @@ public class PPGScheduler {
         }
     }
 
+
     public void actualizarLotes(ArrayList<Batch> nuevosLotes) {
         this.lotes = nuevosLotes;
     }
+
 
     /**
      * Calcula las fechas de inicio para todos los lotes en una solución.
@@ -208,7 +222,9 @@ public class PPGScheduler {
      * @throws PPGSchedulerException Si algún lote no tiene suficiente información
      *                               para calcular su fecha de inicio.
      */
-    private void calcularFechasInicio(Solucion solucion) throws PPGSchedulerException {
+
+
+    private void calcularFechasInicio(Solution solucion) throws PPGSchedulerException {
         for (Batch lote : solucion.getLotes()) {
             if (lote.getEndDate() == null || lote.getDuration() <= 0) {
                 throw new PPGSchedulerException(
@@ -220,12 +236,14 @@ public class PPGScheduler {
         }
     }
 
+
     /**
      * Recorre todas las soluciones y ajusta las fechas de los lotes, si es posible,
      * para que terminen justo en su fecha de necesidad.
      * Organiza los lotes por diluidor para facilitar la verificación de colisiones.
      */
-    public boolean ajustarSolucionesConHashMap(Solucion solucion) {
+
+    public boolean ajustarSolucionesConHashMap(Solution solucion) {
         System.out.println("Ajustando solución...");
         // Agrupar lotes por diluidor en un HashMap
         HashMap<Integer, ArrayList<Batch>> lotesPorDiluidor = agruparLotesPorDiluidor(solucion);
@@ -267,6 +285,7 @@ public class PPGScheduler {
         return true;
     }
 
+
     /**
      * Agrupa los lotes de una solución por diluidor.
      *
@@ -274,7 +293,8 @@ public class PPGScheduler {
      * @return Un HashMap donde la clave es el ID del diluidor y el valor es la
      * lista de lotes asignados a ese diluidor.
      */
-    private HashMap<Integer, ArrayList<Batch>> agruparLotesPorDiluidor(Solucion solucion) {
+
+    private HashMap<Integer, ArrayList<Batch>> agruparLotesPorDiluidor(Solution solucion) {
         HashMap<Integer, ArrayList<Batch>> lotesPorDiluidor = new HashMap<>();
         System.out.println("Agrupando lotes por diluidor...");
         for (Batch lote : solucion.getLotes()) {
@@ -287,6 +307,7 @@ public class PPGScheduler {
         return lotesPorDiluidor;
     }
 
+
     /**
      * Verifica si un ajuste de fecha es válido dentro de los lotes asignados a un
      * diluidor.
@@ -296,6 +317,7 @@ public class PPGScheduler {
      * @param nuevaFechaInicio La nueva fecha de inicio propuesta.
      * @return true si el ajuste es válido, false en caso contrario.
      */
+
     private boolean esAjusteValido(ArrayList<Batch> lotesDelDiluidor, Batch lote, LocalDate nuevaFechaInicio) {
         System.out.println("Verificando si el ajuste es válido para Lote ID: " + lote.getId() +
                 ", Nueva Fecha Inicio: " + nuevaFechaInicio);
@@ -317,6 +339,7 @@ public class PPGScheduler {
         System.out.println("Ajuste válido para Lote ID: " + lote.getId());
         return true;
     }
+
 
     private boolean puedeMoverLote(Batch lote, int dias) {
         LocalDate nuevaFechaInicio = lote.getStartDate();
@@ -347,9 +370,12 @@ public class PPGScheduler {
         return true;
     }
 
+
     /**
      * Metodo temporal para pruebas de imprimir lotes
      */
+
+
     private void imprimirLotes(ArrayList<Batch> lotes) {
         System.out.println("Lotes:");
         for (int i = 0; i < lotes.size(); i++) {
@@ -363,6 +389,7 @@ public class PPGScheduler {
         }
     }
 
+
     public void guardarSolucionesEnArchivo() {
         String nombreArchivo = "soluciones.txt";
 
@@ -373,7 +400,7 @@ public class PPGScheduler {
             }
 
             int solucionNumero = 1;
-            for (Solucion solucion : soluciones) {
+            for (Solution solucion : soluciones) {
                 writer.write("Solución #" + solucionNumero + ":\n");
                 for (Batch lote : solucion.getLotes()) {
                     writer.write(" - Lote ID: " + lote.getId() +
@@ -391,6 +418,7 @@ public class PPGScheduler {
             e.printStackTrace();
         }
     }
+
 
     private void imprimirEstadoDiluidores() {
         StringBuilder estado = new StringBuilder();
@@ -417,4 +445,6 @@ public class PPGScheduler {
         }
         System.out.println(estado);
     }
+
+
 }

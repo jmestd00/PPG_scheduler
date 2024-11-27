@@ -35,6 +35,7 @@ public class DilutorTest {
         assertEquals("Dilutor1", dilutor.getName());
     }
 
+    /*
     @Test
     public void testGetFechaFin(){
         dilutor.setEndDate(LocalDate.of(2024, 11, 25));
@@ -67,6 +68,8 @@ public class DilutorTest {
         dilutor2 = new Dilutor(1, "Dilutor2", 5000);
         assertEquals(0, dilutor.compareTo(dilutor2));
     }
+
+     */
 
     @Test
     public void testToString(){

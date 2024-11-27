@@ -20,10 +20,10 @@ public class Batch {
     private Statuses status;
     private final String description;
     private final Types type;
-    private Dilutor dilutor;
+    private int dilutor;
     private int duration;
 
-    public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate startDate, LocalDate endDate, LocalDate needDate, Statuses status, String description, Types type, Dilutor dilutor, int duration) {
+    public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate startDate, LocalDate endDate, LocalDate needDate, Statuses status, String description, Types type, int dilutor, int duration) {
         this.nBatch = nBatch;
         this.planningClass = planningClass;
         this.plant = plant;
@@ -89,7 +89,7 @@ public class Batch {
     public long getDuration() {
         return this.duration;
     }
-    public void setDilutor(Dilutor dilutor) {
+    public void setDilutor(int dilutor) {
         this.dilutor = dilutor;
     }
 
@@ -98,7 +98,7 @@ public class Batch {
     }
 
     public int getDilutorId() {
-        return dilutor.getId();
+        return dilutor;
     }
 
     public void setStartDate(LocalDate fechaInicio) {
@@ -108,6 +108,7 @@ public class Batch {
     //Override
     @Override
     public Batch clone() {
+        return null;
         //return new Batch(nBatch, planningClass, plant, item, quantity, startDate, needDate, status, description, type, dilutor);
     }
 }
