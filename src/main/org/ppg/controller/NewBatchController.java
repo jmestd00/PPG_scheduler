@@ -39,6 +39,9 @@ public class NewBatchController {
 
     @FXML
     private ComboBox combo_box;
+    
+    @FXML
+    private TextField itemText;
 
     private DatabaseManager databaseManager;
 
@@ -75,8 +78,8 @@ public class NewBatchController {
                     int paginationIndex = batchesListController.getPagination().getCurrentPageIndex();
                     String type = combo_box.getValue().toString();
                     Types typeBatch = Types.valueOf(type);
-                    Batch batchToAdd = new Batch(Integer.parseInt(nBatchText.getText()), planningClassText.getText(), plantText.getText(), getItem(typeBatch) , Integer.parseInt(quantityText.getText()),
-                            LocalDate.of(0, 1, 1), datePicker.getValue(), Statuses.EN_ESPERA, descriptionText.getText(), typeBatch, new Dilutor(0, "X", 0));
+                    Batch batchToAdd = new Batch(Integer.parseInt(nBatchText.getText()), planningClassText.getText(), plantText.getText(), itemText.getText(), Integer.parseInt(quantityText.getText()),
+                            datePicker.getValue(), typeBatch, descriptionText.getText());
                     batchData.add(batchToAdd);
 
                     if (batchesListController != null) {
@@ -90,20 +93,9 @@ public class NewBatchController {
         }
     }
 
-    private String getItem(Types type) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(planningClassText.getText());
-        sb.append("-");
-        sb.append(plantText.getText());
-        sb.append("-");
-        sb.append(type.getValue());
-        return sb.toString();
-    }
-
-
     private boolean contains(ObservableList<Batch> batchData, int nBatch, int quantity) {
         for (Batch batch : batchData) {
-            if (batch.nBatch() == nBatch && batch.quantity() == quantity) {
+            if (batch.getnBatch() == nBatch && batch.getQuantity() == quantity) {
                 return true;
             }
         }
