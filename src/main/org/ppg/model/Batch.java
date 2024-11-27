@@ -112,9 +112,7 @@ public class Batch {
     public LocalDate getNeedDate() {
         return this.needDate;
     }
-    public String getDescription() {
-        return description;
-    }
+
     public long getDuration() {
         return this.duration;
     }
@@ -139,5 +137,24 @@ public class Batch {
     public Batch clone() {
         return null;
         //return new Batch(nBatch, planningClass, plant, item, quantity, startDate, needDate, status, description, type, dilutor);
+    }
+
+    @Override
+    public String toString() {
+        return "Batch{" +
+                "nBatch=" + nBatch +
+                ", planningClass='" + planningClass + '\'' +
+                ", plant='" + plant + '\'' +
+                ", item='" + item + '\'' +
+                ", quantity=" + quantity +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", needDate=" + needDate +
+                ", status=" + status +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", dilutor=" + dilutor +
+                ", duration=" + duration +
+                '}';
     }
 }

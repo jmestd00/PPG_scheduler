@@ -22,8 +22,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.ppg.model.*;
-import org.ppg.view.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 
@@ -263,7 +263,11 @@ private void setupData() {
 
     batchData.add(new Batch(2, "ZP01", "ZP01", "ZP01", 100, LocalDate.now(), LocalDate.now(), LocalDate.now().plusDays(2), Statuses.EN_DEMORA, "Descripción", Types.PIMM, 1, 2));
     }
-    batchData.addAll(databaseManager.getBatchesListDB());
+    try {
+        batchData.addAll(databaseManager.getBatches(1, 5));
+    }catch (PPGSchedulerException e){
+        //Todo notify the user
+    }
 }
 
     private void changeTableView(int index, int limit) {
