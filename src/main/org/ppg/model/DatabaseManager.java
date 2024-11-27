@@ -87,8 +87,8 @@ public class DatabaseManager {
                 String description = resultSet.getString("Descripcion");
                 int nBatch = resultSet.getInt("N_Lote");
                 String item = resultSet.getString("Item");
-                Dilutor dilutor = diluidores.get(dilutorID);
-                Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutor, duration);
+                int duration = resultSet.getInt("");
+                Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutorID, duration);
                 diluidores.get(dilutorID).addLote(batch);
             }
         } catch (SQLException e) {
@@ -102,19 +102,21 @@ public class DatabaseManager {
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
+                int nBatch = resultSet.getInt("N_Lote");
                 String planningClass = resultSet.getString("Planning_class");
                 String plant = resultSet.getString("Plant");
                 String item = resultSet.getString("Item");
                 int quantity = resultSet.getInt("Cantidad");
                 LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
                 LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
+                LocalDate endDate = resultSet.getDate("Fecha_fin").toLocalDate();
                 Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
                 String description = resultSet.getString("Descripcion");
                 Types type = Types.fromValue(resultSet.getString("Tipo"));
                 int idDilutor = resultSet.getInt("ID_diluidor");
-
-                Dilutor dilutor = getDilutorDB(idDilutor);
-                batches.add(new Batch(id, planningClass, plant, item, quantity, startDate, needDate, status, description, type, dilutor));
+                int duration = resultSet.getInt("duration");
+                Batch batch = new Batch(nBatch,planningClass, plant, item, quantity, startDate, endDate, needDate, status, description, type, idDilutor, duration);
+                batches.add(batch);
             }
         } catch (SQLException e) {
             e.printStackTrace();
