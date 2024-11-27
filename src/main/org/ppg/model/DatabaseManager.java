@@ -134,7 +134,7 @@ public class DatabaseManager {
             statement.setString(6, batch.getPlant());
             statement.setInt(7, batch.getQuantity());
             statement.setString(8, batch.getPlannigClass());
-            statement.setString(9, batch.getStatus());
+            statement.setString(9, batch.getStatus().getValue().replace(' ', '_'));
             statement.setString(10, batch.getDescription());
             statement.setInt(11, batch.getnBatch());
             statement.setString(12, batch.getItem());
