@@ -1,0 +1,19 @@
+.customLabel {
+    -fx-font-family: "Futura medium";
+    -fx-font-size: 20px;
+    -fx-text-alignment: left;
+    -fx-text-fill: black;
+    -fx-background-color: #FFFFFF;
+
+}
+
+.image {
+    -fx-background-image: url('/images/warning.png');
+    -fx-background-size: 140px 140px;
+    -fx-background-color: #FFFFFF;
+
+}
+
+.anchorPane {
+    -fx-background-color: #FFFFFF;
+}

@@ -29,7 +29,8 @@
 
 .deleteButton {
     -fx-background-image: url('/images/Bin_Icon.png');
-    -fx-background-size: 48px 48px;
+    -fx-background-size: 96px 96px;
+    -fx-background-color: #FFFFFF;
 }
 
 .deleteButton:hover {
