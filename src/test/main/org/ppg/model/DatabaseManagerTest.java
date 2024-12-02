@@ -81,4 +81,10 @@ public class DatabaseManagerTest {
         Batch b = dbManager.getBatchDB(2);
         System.out.println(b);
     }
+
+    @Test
+    public void testGetBatchesWeekly() throws PPGSchedulerException {
+        ArrayList<Batch> batches = dbManager.getBatchesWeekly();
+        System.out.println(batches.toString());
+    }
 }

@@ -61,9 +61,15 @@ public class SchedulingAlgorithm {
      */
 
     public void schedule(ArrayList<Batch> lotesPrevios, ArrayList<Batch> nuevosLotes) {
+
+        System.out.println(lotesPrevios);
+
+
+
         lotes.clear();
         lotes.addAll(lotesPrevios);
         lotes.addAll(nuevosLotes);
+        actualizarLotes(lotes);
         soluciones.clear();
         indiceLote = 0;
         // Limpiar el archivo de estado
@@ -408,6 +414,7 @@ public class SchedulingAlgorithm {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 

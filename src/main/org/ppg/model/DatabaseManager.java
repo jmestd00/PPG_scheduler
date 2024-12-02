@@ -284,4 +284,38 @@ public class DatabaseManager {
         return dilutorArrayList;
     }
 
+
+    public ArrayList<Batch> getBatchesWeekly() throws PPGSchedulerException {
+        ArrayList<Batch> batches = new ArrayList<>();
+        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Fecha_inicio >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND Fecha_inicio < CURDATE() - INTERVAL (WEEKDAY(CURDATE()) - 6) DAY";
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(query);
+        }catch (SQLException e){
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        try{
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
+                LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
+                LocalDate endDate = resultSet.getDate("Fecha_fin").toLocalDate();
+                int dilutorID = resultSet.getInt("ID_diluidor");
+                Types type = Types.fromValue(resultSet.getString("Tipo"));
+                String plant = resultSet.getString("Plant");
+                int quantity = resultSet.getInt("Cantidad");
+                String planningClass = resultSet.getString("Planning_class");
+                Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
+                String description = resultSet.getString("Descripcion");
+                int nBatch = resultSet.getInt("N_Lote");
+                String item = resultSet.getString("Item");
+                int duration = resultSet.getInt("duration");
+                Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutorID, duration);
+                batches.add(batch);
+            }
+        }catch (SQLException e){
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        return batches;
+    }
 }
