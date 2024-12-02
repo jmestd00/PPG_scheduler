@@ -263,7 +263,7 @@ private void setupData() {
 
     batchData.add(new Batch(2, "ZP01", "ZP01", "ZP01", 100, LocalDate.now(), LocalDate.now(), LocalDate.now().plusDays(2), Statuses.EN_DEMORA, "Descripción", Types.PIMM, 1, 2));
     }
-    batchData.addAll(databaseManager.getBatchesListDB());
+    //batchData.addAll(databaseManager.getBatchesListDB());
 }
 
     private void changeTableView(int index, int limit) {

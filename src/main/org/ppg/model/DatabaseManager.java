@@ -123,8 +123,8 @@ public class DatabaseManager {
     }
 
 
-    public List<Batch> getAllBatches() throws PPGSchedulerException {
-        LinkedList<Batch> batches = new LinkedList<>();
+    public ArrayList<Batch> getAllBatches() throws PPGSchedulerException {
+        ArrayList<Batch> batches = new ArrayList<>();
         String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item";
         PreparedStatement statement;
         try {
@@ -157,7 +157,7 @@ public class DatabaseManager {
         return batches;
     }
 
-    public List<Batch> getBatches(int start, int offset) throws PPGSchedulerException {
+    public ArrayList<Batch> getBatches(int start, int offset) throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
         String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote INNER JOIN Item ON Item.Item = Lote.Item LIMIT ?, ?";
         PreparedStatement statement;
@@ -269,7 +269,7 @@ public class DatabaseManager {
 
     public ArrayList<Dilutor> getFilledDilutors() throws PPGSchedulerException {
         HashMap<Integer, Dilutor> dilutors = getDilutorsDB();
-        LinkedList<Batch> batches = (LinkedList<Batch>) getAllBatches();
+        ArrayList<Batch> batches = getAllBatches();
         for (Batch b : batches) {
             if(dilutors.get(b.getDilutorId()) != null){
                 dilutors.get(b.getDilutorId()).addLote(b);
