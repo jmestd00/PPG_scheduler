@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="150.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.InfoController" styleClass="anchorPane" stylesheets="@../css/info.css">
+   <children>
+       <Label fx:id="imageView" prefHeight="140.0" prefWidth="140.0" layoutX="5.0" layoutY="5.0" mouseTransparent="true" pickOnBounds="true" stylesheets="@../css/info.css" styleClass="image"/>
+       <Label contentDisplay="CENTER" layoutX="160.0" layoutY="10" prefHeight="140.0" prefWidth="280.0" styleClass="customLabel" stylesheets="@../css/info.css" text="Este proceso puede&#10; tardar algo de tiempo &#10;" textAlignment="CENTER"/>
+   </children>
+</AnchorPane>

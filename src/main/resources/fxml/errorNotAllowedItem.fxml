@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="200.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.ErrorController" styleClass="anchorPane" stylesheets="@../css/error.css">
+   <children>
+       <Label fx:id="imageViewBig" prefHeight="190.0" prefWidth="190.0" layoutX="5.0" layoutY="5.0" mouseTransparent="true" pickOnBounds="true" stylesheets="@../css/error.css" styleClass="imageBig"/>
+       <Label contentDisplay="CENTER" layoutX="200.0" layoutY="10" prefHeight="190.0" prefWidth="330.0" styleClass="customLabel" stylesheets="@../css/error.css" text="ERROR, no se puede añadir el lote &#10;debido a que el item no se &#10;encuentra en los aceptados por &#10;la base de datos. Para más &#10;información revisa la &#10;base de datos." textAlignment="CENTER"/>
+   </children>
+</AnchorPane>

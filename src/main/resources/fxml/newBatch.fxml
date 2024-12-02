@@ -14,8 +14,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1080" maxWidth="1000" prefHeight="540.0" prefWidth="1100.0" styleClass="anchorPane" stylesheets="@../css/newBatch.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.NewBatchController">
-   <VBox alignment="CENTER" layoutX="-2.0" prefHeight="540.0" prefWidth="1080.0" spacing="15.0" styleClass="" stylesheets="@../css/newBatch.css">
+<AnchorPane prefHeight="660.0" prefWidth="1340.0" styleClass="anchorPane" stylesheets="@../css/newBatch.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.NewBatchController">
+   <VBox alignment="CENTER" layoutX="-2.0" prefHeight="660.0" prefWidth="1340.0" spacing="15.0" styleClass="" stylesheets="@../css/newBatch.css">
       <Label fx:id="titleLabel" styleClass="titleLabel" stylesheets="@../css/newBatch.css" text="INSERTAR NUEVO LOTE">
          <font>
             <Font name="Futura Medium" size="40.0" />
@@ -54,6 +54,13 @@
                </font>
             </TextField>
          </VBox>
+         <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="210.0" spacing="15.0">
+            <children>
+               <Label fx:id="itemLabel" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="ITEM">
+               </Label>
+               <TextField fx:id="itemText" alignment="CENTER" prefHeight="55.0" prefWidth="150.0" promptText="(A-RXX3359-DD)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
+            </children>
+         </VBox>
          <VBox alignment="BOTTOM_CENTER" prefHeight="166.0" prefWidth="168.0" spacing="15.0">
             <Label styleClass="customLabel" stylesheets="@../css/newBatch.css" text="TIPO">
                <font>
@@ -90,17 +97,15 @@
             <DatePicker fx:id="datePicker" editable="false" prefHeight="55.0" prefWidth="196.0" promptText="31/12/3333" styleClass="datePicker" stylesheets="@../css/newBatch.css" />
          </VBox>
       </HBox>
-      <Pane prefHeight="130.0" prefWidth="1280.0" styleClass="anchorPane" stylesheets="@../css/newBatch.css">
-         <TextArea fx:id="descriptionText" layoutX="40.0" layoutY="14.0" prefHeight="89.0" prefWidth="1000.0" promptText="Descripción" styleClass="text-area" stylesheets="@../css/newBatch.css">
+      <Pane prefHeight="171.0" prefWidth="1340.0" styleClass="anchorPane" stylesheets="@../css/newBatch.css">
+         <TextArea fx:id="descriptionText" layoutX="80.0" layoutY="14.0" prefHeight="135.0" prefWidth="1180.0" promptText="Descripción" styleClass="text-area" stylesheets="@../css/newBatch.css">
             <font>
                <Font size="18.0" />
             </font>
          </TextArea>
       </Pane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="25.0">
-         <Button fx:id="planButton" alignment="CENTER" maxHeight="60" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="264.0" styleClass="planButton" stylesheets="@../css/newBatch.css" text="PLANIFICAR">
-         </Button>
-         <Button fx:id="plusButton" alignment="TOP_CENTER" contentDisplay="CENTER" maxHeight="60.0" minHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="202.0" styleClass="plusButton" onAction="#addBatch" stylesheets="@../css/newBatch.css" text="+" textAlignment="CENTER">
+         <Button fx:id="plusButton" alignment="CENTER" maxHeight="60" minHeight="60.0" mnemonicParsing="false" onAction="#addBatch" prefHeight="60.0" prefWidth="450.0" styleClass="planButton" stylesheets="@../css/newBatch.css" text="AÑADIR LOTE">
          </Button>
       </HBox>
    </VBox>
