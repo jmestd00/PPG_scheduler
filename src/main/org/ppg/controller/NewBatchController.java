@@ -90,7 +90,7 @@ public class NewBatchController {
                     String type = combo_box.getValue().toString();
                     Types typeBatch = Types.valueOf(type);
                     Batch batchToAdd = new Batch(Integer.parseInt(nBatchText.getText()), planningClassText.getText(), plantText.getText(), itemText.getText(), Integer.parseInt(quantityText.getText()),
-                            descriptionText.getText(), typeBatch, LocalDate.now() ,datePicker.getValue());
+                            descriptionText.getText(), typeBatch ,datePicker.getValue());
                     batchToAdd.setStatus(Statuses.FINALIZADO);
                     batchData.add(batchToAdd);
 
@@ -151,8 +151,8 @@ public class NewBatchController {
     }
 
     private boolean allowedItem(String item) {
-        for (int i = 0; i < allowedItems.size(); i++) {
-            if (allowedItems.get(i).equals(item)) {
+        for (String allowedItem : allowedItems) {
+            if (allowedItem.equals(item)) {
                 return true;
             }
         }

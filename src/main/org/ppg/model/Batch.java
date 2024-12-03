@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Batch {
-
     private final int nBatch;
     private final String planningClass;
     private final String plant;
@@ -21,7 +20,10 @@ public class Batch {
     private final Types type;
     private int dilutor;
     private int duration;
-
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    
+    
+    //Constructors
     public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate startDate, LocalDate endDate, LocalDate needDate, Statuses status, String description, Types type, int dilutor, int duration) {
         this.nBatch = nBatch;
         this.planningClass = planningClass;
@@ -37,7 +39,6 @@ public class Batch {
         this.dilutor = dilutor;
         this.duration = duration;
     }
-
     public Batch(int nBatch, String planningClass, String plant, String item, int quantity, String description, Types type, LocalDate needDate) {
         this.nBatch = nBatch;
         this.planningClass = planningClass;
@@ -48,8 +49,17 @@ public class Batch {
         this.type = type;
         this.needDate = needDate;
     }
-
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate needDate, Types type, String description) {
+        this.nBatch = nBatch;
+        this.planningClass = planningClass;
+        this.plant = plant;
+        this.item = item;
+        this.quantity = quantity;
+        this.needDate = needDate;
+        this.type = type;
+        this.description = description;
+    }
+    
 
     //Getters
     public StringProperty[] getProperties() {
@@ -64,16 +74,6 @@ public class Batch {
         properties[7] = new SimpleStringProperty(status.getValue());
         properties[8] = new SimpleStringProperty(description);
         return properties;
-    }
-    public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate needDate, Types type, String description) {
-        this.nBatch = nBatch;
-        this.planningClass = planningClass;
-        this.plant = plant;
-        this.item = item;
-        this.quantity = quantity;
-        this.needDate = needDate;
-        this.type = type;
-        this.description = description;
     }
 
     public int getnBatch() {
@@ -109,26 +109,27 @@ public class Batch {
     public LocalDate getNeedDate() {
         return this.needDate;
     }
-
-    public long getDuration() {
-        return this.duration;
-    }
-    public void setDilutor(int dilutor) {
-        this.dilutor = dilutor;
-    }
-
-    public void setEndDate(LocalDate fechaFin) {
-        this.endDate = fechaFin;
-    }
-
     public int getDilutorId() {
         return dilutor;
     }
-
+    public long getDuration() {
+        return this.duration;
+    }
+    
+    //Setters
+    public void setDilutor(int dilutor) {
+        this.dilutor = dilutor;
+    }
+    public void setEndDate(LocalDate fechaFin) {
+        this.endDate = fechaFin;
+    }
     public void setStartDate(LocalDate fechaInicio) {
         this.startDate = fechaInicio;
     }
-
+    public void setStatus(Statuses status) {
+        this.status = status;
+    }
+    
     //Override
     @Override
     public Batch clone() {
