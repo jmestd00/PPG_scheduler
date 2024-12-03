@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="rootPane" maxHeight="1080" maxWidth="1920" prefHeight="1080.0" prefWidth="1920.0" styleClass="rootPane" stylesheets="@../css/batchesList.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.BatchesListController">
-    <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="-12.0" prefHeight="100.0" prefWidth="1920.0" styleClass="titleLabel" stylesheets="@../css/batchesList.css" text="LISTADO DE LOTES">
+<AnchorPane fx:id="rootPane" prefHeight="1080.0" prefWidth="1920.0" styleClass="rootPane" stylesheets="@../css/batchesList.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.BatchesListController">
+    <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="1920.0" styleClass="titleLabel" stylesheets="@../css/batchesList.css" text="LISTADO DE LOTES SEMANAL">
     </Label>
-    <Button fx:id="addButton" layoutX="5.0" layoutY="47.85" mnemonicParsing="false" prefHeight="43.0" prefWidth="220.0" styleClass="addButton" stylesheets="@../css/batchesList.css" text="+ AÑADIR LOTE">
-    </Button>
-   <Button fx:id="weeklyList" layoutX="1590.0" layoutY="47.85" mnemonicParsing="false" prefHeight="53.0" prefWidth="325.0" onAction="#openWeeklyList" styleClass="weeklyList" stylesheets="@../css/batchesList.css" text="VER LISTADO SEMANAL" />
     <TableView fx:id="tableView" focusTraversable="false" layoutX="5.0" layoutY="103.0" prefHeight="885.0" prefWidth="1914.0" styleClass="pagination" stylesheets="@../css/batchesList.css">
         <columns>
             <TableColumn fx:id="nBatchCol" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220" sortable="false" styleClass="font" text="Nº DE LOTE" />

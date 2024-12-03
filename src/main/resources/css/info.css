@@ -8,15 +8,8 @@
 }
 
 .image {
-    -fx-background-image: url('/images/warning.png');
+    -fx-background-image: url('/images/info_icon.png');
     -fx-background-size: 140px 140px;
-    -fx-background-color: #FFFFFF;
-
-}
-
-.imageBig {
-    -fx-background-image: url('/images/warning.png');
-    -fx-background-size: 190px 190px;
     -fx-background-color: #FFFFFF;
 
 }

@@ -114,7 +114,7 @@
     -fx-translate-x: 5.0;
 
 }
-.weeklyList {
+.planBatches {
     -fx-text-fill: black;
     -fx-background-color:white;
     -fx-border-color: black;
@@ -122,7 +122,23 @@
     -fx-font-family: "Futura Medium";
     -fx-font-size: 24px;
 }
-.weeklyList:hover {
+.planBatches:hover {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-translate-x: 5.0;
+
+}
+.fullList {
+    -fx-text-fill: black;
+    -fx-background-color:white;
+    -fx-border-color: black;
+    -fx-font-weight: bold;
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 24px;
+}
+.fullList:hover {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-scale-x: 1.05;

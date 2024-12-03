@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1200.0" styleClass="anchorPane" stylesheets="@../css/editBatches.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.EditBatchesController">
-    <VBox alignment="CENTER" layoutX="-2.0" prefHeight="675.0" prefWidth="1200.0" spacing="15.0">
+<AnchorPane maxHeight="1080" maxWidth="1920" prefHeight="675.0" prefWidth="1320.0" styleClass="anchorPane" stylesheets="@../css/editBatches.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.EditBatchesController">
+    <VBox alignment="CENTER" layoutX="-2.0" prefHeight="675.0" prefWidth="1320.0" spacing="15.0">
         <Label styleClass="titleLabel" stylesheets="@../css/editBatches.css" text="EDITAR LOTE">
         </Label>
         <HBox alignment="CENTER" prefHeight="166.0" prefWidth="965.0" spacing="20.0">
@@ -30,7 +30,7 @@
                 </Label>
                 <TextField fx:id="plantField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="150.0" promptText="(VDW)" styleClass="custom_text-field" stylesheets="@../css/editBatches.css" />
             </VBox>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="125.0" spacing="15.0">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="210.0" spacing="15.0">
             <children>
                <Label fx:id="itemLabel" styleClass="customLabel" stylesheets="@../css/editBatches.css" text="ITEM">
                </Label>
@@ -57,19 +57,19 @@
         </HBox>
         <Pane prefHeight="112.0" prefWidth="965.0">
             <children>
-                <TextArea fx:id="descriptionField" editable="false" layoutX="130.0" layoutY="14.0" prefHeight="89.0" prefWidth="940.0" promptText="Descripción" styleClass="text-area" stylesheets="@../css/editBatches.css">
+                <TextArea fx:id="descriptionField" editable="false" layoutX="130.0" layoutY="14.0" prefHeight="89.0" prefWidth="1060.0" promptText="Descripción" styleClass="text-area" stylesheets="@../css/editBatches.css">
                 </TextArea>
             </children>
         </Pane>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
             <children>
-                <Button fx:id="modifyData" alignment="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="237.0" styleClass="modifyButton" onAction="#modifyBatch" stylesheets="@../css/editBatches.css" text="CAMBIAR DATOS">
+                <Button fx:id="modifyData" alignment="CENTER" mnemonicParsing="false" onAction="#modifyBatch" prefHeight="60.0" prefWidth="237.0" styleClass="modifyButton" stylesheets="@../css/editBatches.css" text="CAMBIAR DATOS">
                 </Button>
             </children>
         </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0">
          <children>
-            <Button fx:id="deleteButton" alignment="CENTER" mnemonicParsing="false" prefHeight="96.0" prefWidth="96.0" styleClass="deleteButton" onAction="#removeBatch" stylesheets="@../css/editBatches.css">
+            <Button fx:id="deleteButton" alignment="CENTER" mnemonicParsing="false" onAction="#removeBatch" prefHeight="96.0" prefWidth="96.0" styleClass="deleteButton" stylesheets="@../css/editBatches.css">
             </Button>
          </children>
       </HBox>
