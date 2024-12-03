@@ -1,28 +1,29 @@
 package org.ppg.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.ppg.model.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.shape.Polygon;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import org.ppg.model.*;
-
 public class EditBatchesController {
     private ObservableList<Batch> batchData;
     private BatchesListController batchesListController;
-    private WeeklyBatchesListController weeklyBatchesListController;
+    private WeeklyBatchesListController WeeklyBatchesListController;
     private Stage stage;
     private Batch batch;
 
@@ -43,6 +44,7 @@ public class EditBatchesController {
     @FXML
     private TextArea descriptionField;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private DatabaseManager databaseManager;
 
     public void setBatch(Batch batch) {
         nBatchField.setText(String.valueOf(batch.getnBatch()));
@@ -58,6 +60,11 @@ public class EditBatchesController {
 
     public void initialize() {
         // Inicializa los campos de texto
+        try {
+            databaseManager = databaseManager.getInstance();
+        } catch (PPGSchedulerException e) {
+            e.printStackTrace();
+        }
         startDatePicker.setShowWeekNumbers(false);
         startDatePicker.getEditor().setContextMenu(new ContextMenu());
         nBatchField.setContextMenu(new ContextMenu());
@@ -75,44 +82,46 @@ public class EditBatchesController {
 
     @FXML
     private void removeBatch() {
+        this.stage.close();
         batchData.remove(batchData.indexOf(batch));
         batchesListController.refreshTable();
-        weeklyBatchesListController.refreshTable();
-        this.stage.hide();
+        WeeklyBatchesListController.refreshTable();
     }
 
-    public void setBatchesListController(BatchesListController batchesListController) {
+
+    public void setBatchesListController(BatchesListController batchesListController, WeeklyBatchesListController WeeklyBatchesListController) {
         this.batchesListController = batchesListController;
-    }
-    public void setBatchesListController(WeeklyBatchesListController weeklyBatchesListController) {
-        this.weeklyBatchesListController = weeklyBatchesListController;
+        this.WeeklyBatchesListController = WeeklyBatchesListController;
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    /*
     @FXML
     private void modifyBatch() {
         if (startDatePicker.getValue().isBefore(LocalDate.parse(needDateField.getText(), formatter))) {
             if (startDatePicker.getValue().isBefore(LocalDate.now())) {
                 openError(new FXMLLoader(getClass().getResource("/fxml/errorDate.fxml")));
-            }
-            int index = batchData.indexOf(batch);
-            Batch modifiedBatch = new Batch(batch.getnBatch(), pClassField.getText(), plantField.getText(), itemField.getText(),
-                    Integer.parseInt(quantityField.getText()), startDatePicker.getValue(), LocalDate.parse(needDateField.getText(), formatter),
-                    batch.getStartDate(), descriptionField.getText(), batch.getType(), batch.getDilutor());
-            batchData.remove(index);
-            batchData.add(index, modifiedBatch);
+            } else {
+                try{
+                    databaseManager.getAllBatches();
+                    databaseManager.updateBatchDB(batch);
+                    updateBatch(batch);
+                } catch (PPGSchedulerException e) {
+                    e.printStackTrace();
+                }
             this.stage.hide();
-            batchesListController.refreshTable();
-            weeklyBatchesListController.refreshTable();
+            WeeklyBatchesListController.refreshTable();
+            }
         } else {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorModifyPopup.fxml")));
         }
     }
-     */
+
+    private void updateBatch(Batch batch) {
+        batch.setStartDate(startDatePicker.getValue());
+    }
 
     private void openError(FXMLLoader fxmlLoader) {
         try {
@@ -132,7 +141,13 @@ public class EditBatchesController {
                 popupStage.setX(centerX - popupStage.getWidth() / 2);
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
-            popupStage.showAndWait();
+            popupStage.show();
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.seconds(3), // Duración antes de ejecutar la acción
+                    event -> popupStage.close() // Acción para cerrar la ventana
+            ));
+            timeline.setCycleCount(1); // Ejecutar solo una vez
+            timeline.play();
         } catch (Exception e) {
             e.printStackTrace();
         }

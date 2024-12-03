@@ -1,5 +1,7 @@
 package org.ppg.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,15 +12,17 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.ppg.model.*;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class NewBatchController {
-   // private static final DatabaseManager databaseManager;
+    private DatabaseManager databaseManager;
     private ObservableList<Batch> batchData;
-    private BatchesListController batchesListController;
+    private ArrayList<String> allowedItems;
+    private WeeklyBatchesListController WeeklyBatchesListController;
     @FXML
     private DatePicker datePicker;
 
@@ -43,10 +47,15 @@ public class NewBatchController {
     @FXML
     private TextField itemText;
 
-    private DatabaseManager databaseManager;
 
     public void initialize() {
         // TODO
+        try {
+        databaseManager = DatabaseManager.getInstance();
+        } catch (PPGSchedulerException e) {
+            e.printStackTrace();
+        }
+        //allowedItems.addAll(databaseManager.getAllowedItems());
         datePicker.setShowWeekNumbers(false);
         datePicker.getEditor().setContextMenu(new ContextMenu());
         nBatchText.setContextMenu(new ContextMenu());
@@ -65,6 +74,8 @@ public class NewBatchController {
     private void addBatch() throws PPGSchedulerException {
         if (nBatchText.getText().isEmpty() || planningClassText.getText().isEmpty() || plantText.getText().isEmpty() || quantityText.getText().isEmpty() || descriptionText.getText().isEmpty() || combo_box.getValue() == null || datePicker.getValue() == null) {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorNotFullBatch.fxml")));
+        } else if (!allowedItem(itemText.getText())) {
+            openError(new FXMLLoader(getClass().getResource("/fxml/errorNotAllowedItem.fxml")));
         } else {
             if (!contains(batchData, Integer.parseInt(nBatchText.getText()), Integer.parseInt(quantityText.getText()))) {
                 if (datePicker.getValue().isBefore(LocalDate.now())) {
@@ -75,16 +86,17 @@ public class NewBatchController {
                     } catch (PPGSchedulerException e) {
                         e.printStackTrace();
                     }
-                    int paginationIndex = batchesListController.getPagination().getCurrentPageIndex();
+                    int paginationIndex = WeeklyBatchesListController.getPagination().getCurrentPageIndex();
                     String type = combo_box.getValue().toString();
                     Types typeBatch = Types.valueOf(type);
                     Batch batchToAdd = new Batch(Integer.parseInt(nBatchText.getText()), planningClassText.getText(), plantText.getText(), itemText.getText(), Integer.parseInt(quantityText.getText()),
-                            datePicker.getValue(), typeBatch, descriptionText.getText());
+                            descriptionText.getText(), typeBatch, LocalDate.now() ,datePicker.getValue());
+                    batchToAdd.setStatus(Statuses.FINALIZADO);
                     batchData.add(batchToAdd);
 
-                    if (batchesListController != null) {
-                        batchesListController.refreshTable();
-                        batchesListController.getPagination().setCurrentPageIndex(paginationIndex);
+                    if (WeeklyBatchesListController != null) {
+                        WeeklyBatchesListController.refreshTable();
+                        WeeklyBatchesListController.getPagination().setCurrentPageIndex(paginationIndex);
                     }
                 }
             } else {
@@ -102,8 +114,8 @@ public class NewBatchController {
         return false;
     }
 
-    public void setBatchesListController(BatchesListController batchesListController) {
-        this.batchesListController = batchesListController;
+    public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
+        this.WeeklyBatchesListController = WeeklyBatchesListController;
     }
 
 
@@ -126,9 +138,24 @@ public class NewBatchController {
                 popupStage.setX(centerX - popupStage.getWidth() / 2);
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
-            popupStage.showAndWait();
+            popupStage.show();
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.seconds(3), // Duración antes de ejecutar la acción
+                    event -> popupStage.close() // Acción para cerrar la ventana
+            ));
+            timeline.setCycleCount(1); // Ejecutar solo una vez
+            timeline.play();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean allowedItem(String item) {
+        for (int i = 0; i < allowedItems.size(); i++) {
+            if (allowedItems.get(i).equals(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
