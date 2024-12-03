@@ -25,33 +25,25 @@ public class NewBatchController {
     private WeeklyBatchesListController WeeklyBatchesListController;
     @FXML
     private DatePicker datePicker;
-
     @FXML
     private TextField nBatchText;
-
     @FXML
     private TextField planningClassText;
-
     @FXML
     private TextField plantText;
-
     @FXML
     private TextField quantityText;
-
     @FXML
     private TextArea descriptionText;
-
     @FXML
     private ComboBox combo_box;
-    
     @FXML
     private TextField itemText;
-
-
+    
     public void initialize() {
         // TODO
         try {
-        databaseManager = DatabaseManager.getInstance();
+            databaseManager = DatabaseManager.getInstance();
         } catch (PPGSchedulerException e) {
             e.printStackTrace();
         }
@@ -63,13 +55,13 @@ public class NewBatchController {
         plantText.setContextMenu(new ContextMenu());
         quantityText.setContextMenu(new ContextMenu());
         descriptionText.setContextMenu(new ContextMenu());
-
+        
     }
-
+    
     public void setBatchData(ObservableList<Batch> batchData) {
         this.batchData = batchData;
     }
-
+    
     @FXML
     private void addBatch() throws PPGSchedulerException {
         if (nBatchText.getText().isEmpty() || planningClassText.getText().isEmpty() || plantText.getText().isEmpty() || quantityText.getText().isEmpty() || descriptionText.getText().isEmpty() || combo_box.getValue() == null || datePicker.getValue() == null) {
@@ -89,11 +81,10 @@ public class NewBatchController {
                     int paginationIndex = WeeklyBatchesListController.getPagination().getCurrentPageIndex();
                     String type = combo_box.getValue().toString();
                     Types typeBatch = Types.valueOf(type);
-                    Batch batchToAdd = new Batch(Integer.parseInt(nBatchText.getText()), planningClassText.getText(), plantText.getText(), itemText.getText(), Integer.parseInt(quantityText.getText()),
-                            descriptionText.getText(), typeBatch ,datePicker.getValue());
+                    Batch batchToAdd = new Batch(Integer.parseInt(nBatchText.getText()), planningClassText.getText(), plantText.getText(), itemText.getText(), Integer.parseInt(quantityText.getText()), descriptionText.getText(), typeBatch, datePicker.getValue());
                     batchToAdd.setStatus(Statuses.FINALIZADO);
                     batchData.add(batchToAdd);
-
+                    
                     if (WeeklyBatchesListController != null) {
                         WeeklyBatchesListController.refreshTable();
                         WeeklyBatchesListController.getPagination().setCurrentPageIndex(paginationIndex);
@@ -104,7 +95,7 @@ public class NewBatchController {
             }
         }
     }
-
+    
     private boolean contains(ObservableList<Batch> batchData, int nBatch, int quantity) {
         for (Batch batch : batchData) {
             if (batch.getnBatch() == nBatch && batch.getQuantity() == quantity) {
@@ -113,13 +104,11 @@ public class NewBatchController {
         }
         return false;
     }
-
+    
     public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
         this.WeeklyBatchesListController = WeeklyBatchesListController;
     }
-
-
-
+    
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup
@@ -139,8 +128,7 @@ public class NewBatchController {
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
             popupStage.show();
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(3), // Duración antes de ejecutar la acción
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), // Duración antes de ejecutar la acción
                     event -> popupStage.close() // Acción para cerrar la ventana
             ));
             timeline.setCycleCount(1); // Ejecutar solo una vez
@@ -149,7 +137,7 @@ public class NewBatchController {
             e.printStackTrace();
         }
     }
-
+    
     private boolean allowedItem(String item) {
         for (String allowedItem : allowedItems) {
             if (allowedItem.equals(item)) {

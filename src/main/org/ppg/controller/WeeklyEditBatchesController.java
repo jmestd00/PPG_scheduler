@@ -18,16 +18,13 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.ppg.model.*;
 
-import javax.xml.crypto.Data;
-
-
 public class WeeklyEditBatchesController {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private ObservableList<Batch> batchData;
     private WeeklyBatchesListController WeeklyBatchesListController;
     private Stage stage;
     private Batch batch;
     private DatabaseManager databaseManager;
-
     @FXML
     private TextField nBatchField;
     @FXML
@@ -44,10 +41,10 @@ public class WeeklyEditBatchesController {
     private TextField needDateField;
     @FXML
     private TextArea descriptionField;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    
     /**
      * Method that stablish the batch to be modified stablishing the fields of the batch
+     *
      * @param batch
      */
     public void setBatch(Batch batch) {
@@ -61,15 +58,15 @@ public class WeeklyEditBatchesController {
         descriptionField.setText(batch.getDescription());
         this.batch = batch;
     }
-
+    
     /**
      * Method that initialize this view.
      * It removes the context menu from the fields and set the date picker to not show the week numbers
      */
     public void initialize() {
         // Inicializa los campos de texto
-        try{
-        databaseManager = databaseManager.getInstance();
+        try {
+            databaseManager = databaseManager.getInstance();
         } catch (PPGSchedulerException e) {
             e.printStackTrace();
         }
@@ -83,11 +80,11 @@ public class WeeklyEditBatchesController {
         needDateField.setContextMenu(new ContextMenu());
         descriptionField.setContextMenu(new ContextMenu());
     }
-
+    
     public void setBatchData(ObservableList<Batch> batchData) {
         this.batchData = batchData;
     }
-
+    
     @FXML
     private void removeBatch() {
         this.stage.close();
@@ -96,36 +93,34 @@ public class WeeklyEditBatchesController {
         //databaseManager.removeBatch(batch);
         WeeklyBatchesListController.refreshTable();
     }
-
+    
     public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
         this.WeeklyBatchesListController = WeeklyBatchesListController;
     }
-
+    
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-
+    
     @FXML
     private void modifyBatch() {
         if (startDatePicker.getValue().isBefore(LocalDate.parse(needDateField.getText(), formatter))) {
             if (startDatePicker.getValue().isBefore(LocalDate.now())) {
                 openError(new FXMLLoader(getClass().getResource("/fxml/errorDate.fxml")));
             } else {
-                try{
+                try {
                     databaseManager.updateBatchDB(batch);
-                    } catch (PPGSchedulerException e) {
-                        e.printStackTrace();
-                    }
-            this.stage.hide();
-            WeeklyBatchesListController.refreshTable();
+                } catch (PPGSchedulerException e) {
+                    e.printStackTrace();
+                }
+                this.stage.hide();
+                WeeklyBatchesListController.refreshTable();
             }
         } else {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorModifyPopup.fxml")));
         }
     }
-
-
+    
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup
@@ -145,8 +140,7 @@ public class WeeklyEditBatchesController {
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
             popupStage.show();
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(3), // Duración antes de ejecutar la acción
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), // Duración antes de ejecutar la acción
                     event -> popupStage.close() // Acción para cerrar la ventana
             ));
             timeline.setCycleCount(1); // Ejecutar solo una vez

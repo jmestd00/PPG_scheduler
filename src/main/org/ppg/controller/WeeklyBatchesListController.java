@@ -1,6 +1,5 @@
 package org.ppg.controller;
 
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,15 +30,13 @@ import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Locale;
 
-
 public class WeeklyBatchesListController {
-    Image logoPPG = new Image(String.valueOf(getClass().getResource("/images/PPG_Logo512_512.png")));
-
-    private ObservableList<Batch> batchData = FXCollections.observableArrayList();
-    private ObservableList<Batch> weeklyBatchData = FXCollections.observableArrayList();
     private static DatabaseManager databaseManager;
     private final int ROWS_PER_PAGE = 11;
-
+    Image logoPPG = new Image(String.valueOf(getClass().getResource("/images/PPG_Logo512_512.png")));
+    private ObservableList<Batch> batchData = FXCollections.observableArrayList();
+    private ObservableList<Batch> weeklyBatchData = FXCollections.observableArrayList();
+    
     @FXML
     private Button addButton;
     @FXML
@@ -70,8 +67,7 @@ public class WeeklyBatchesListController {
     private Label titleLabel;
     @FXML
     private Button fullList;
-
-
+    
     public void initialize() throws PPGSchedulerException {
         LocalDate date = LocalDate.now();
         databaseManager = DatabaseManager.getInstance();
@@ -149,7 +145,7 @@ public class WeeklyBatchesListController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-
+                
                 // Si la fila está vacía o la celda está vacía (null), no se renderiza nada
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                     setGraphic(null);  // No mostrar gráfico
@@ -157,17 +153,15 @@ public class WeeklyBatchesListController {
                 } else {
                     // Si la fila tiene un objeto Batch válido, renderizamos el gráfico
                     Batch selectedBatch = getTableView().getItems().get(getIndex());
-
+                    
                     // Solo mostrar el gráfico si el Batch tiene un color válido en su estado
                     if (selectedBatch != null && selectedBatch.getStatus() != null) {
-                        LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
-                                new Stop(0, Color.web(selectedBatch.getStatus().getHexColorPrimary())),
-                                new Stop(1, Color.web(selectedBatch.getStatus().getHexColorSecondary())));
-
+                        LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web(selectedBatch.getStatus().getHexColorPrimary())), new Stop(1, Color.web(selectedBatch.getStatus().getHexColorSecondary())));
+                        
                         Circle circle = new Circle(15);  // Radio del círculo
                         circle.setFill(gradient);        // Color de relleno
                         circle.setStroke(Color.BLACK);   // Color del borde
-
+                        
                         // Establecer el gráfico en la celda
                         setGraphic(circle);
                         setText(null);  // Asegurarse de no mostrar texto en la celda
@@ -178,8 +172,7 @@ public class WeeklyBatchesListController {
                 }
             }
         });
-
-
+        
         // Configuración del botón en buttonNameColumn
         statusCol.setCellFactory(param -> new TableCell<>() {
             protected void updateItem(String item, boolean empty) {
@@ -198,10 +191,10 @@ public class WeeklyBatchesListController {
             }
         });
         statusCol.setReorderable(false);
-
+        
         editCol.setCellFactory(param -> new TableCell<Batch, Void>() {
             private final Button btn = new Button("");
-
+            
             {
                 // Define la acción del botón
                 btn.setOnAction(event -> {
@@ -210,39 +203,20 @@ public class WeeklyBatchesListController {
                         openEditBatch(selectedBatch);
                     }
                 });
-                btn.setStyle("/*-fx-background-color: #ffffff;*/ -fx-background-radius: 0; -fx-alignment: center;" +
-                        " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" +
-                        " -fx-background-image: url('/images/Engine128_128.png');" +
-                        " -fx-background-size: 60px 60px;" +
-                        " -fx-background-color: transparent;" +
-                        " -fx-background-position: center;" +
-                        " -fx-border-color: black;");
-
+                btn.setStyle("/*-fx-background-color: #ffffff;*/ -fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black;");
+                
                 // Estilos para el botón al pasar el ratón
-                btn.setOnMouseEntered(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" +
-                        " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" +
-                        " -fx-background-image: url('/images/Engine128_128.png');" +
-                        " -fx-background-size: 60px 60px;" +
-                        " -fx-background-color: transparent;" +
-                        " -fx-background-position: center;" +
-                        " -fx-border-color: black; -fx-scale-x: 1.05;" +
-                        " -fx-scale-y: 1.05;"));
-
-                btn.setOnMouseExited(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" +
-                        " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" +
-                        " -fx-background-image: url('/images/Engine128_128.png');" +
-                        " -fx-background-size: 60px 60px;" +
-                        " -fx-background-color: transparent;" +
-                        " -fx-background-position: center;" +
-                        " -fx-border-color: black; "));
-
+                btn.setOnMouseEntered(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black; -fx-scale-x: 1.05;" + " -fx-scale-y: 1.05;"));
+                
+                btn.setOnMouseExited(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black; "));
+                
                 btn.setPrefHeight(Double.MAX_VALUE);
             }
-
+            
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-
+                
                 // Verificar si la fila está vacía o si el Batch es nulo
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                     setGraphic(null);  // No mostrar el botón si está vacío
@@ -257,21 +231,20 @@ public class WeeklyBatchesListController {
                 }
             }
         });
-
+        
         editCol.setReorderable(false);
-
+        
         // Configuración de la paginación
         int totalPage = (int) (Math.ceil(batchData.size() * 1.0 / ROWS_PER_PAGE));
         pagination.setPageCount(totalPage);
         pagination.setCurrentPageIndex(0);
         changeTableView(0, ROWS_PER_PAGE);
-        pagination.currentPageIndexProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    changeTableView(newValue.intValue(), ROWS_PER_PAGE);
-                });
+        pagination.currentPageIndexProperty().addListener((observable, oldValue, newValue) -> {
+            changeTableView(newValue.intValue(), ROWS_PER_PAGE);
+        });
         getFullData();
     }
-
+    
     private void setupData() {
         try {
             databaseManager.getInstance();
@@ -281,28 +254,28 @@ public class WeeklyBatchesListController {
             e.printStackTrace();
         }
     }
-
+    
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
         int toIndex = Math.min(fromIndex + limit, weeklyBatchData.size());
         int minIndex = Math.min(toIndex, weeklyBatchData.size());
-
+        
         // Crea una lista de lotes para la página actual
         ObservableList<Batch> pageData = FXCollections.observableArrayList(weeklyBatchData.subList(fromIndex, minIndex));
-
+        
         // Si hay espacio restante en la página, agrega filas vacías
         int remainingRows = limit - pageData.size();
         for (int i = 0; i < remainingRows; i++) {
             pageData.add(null);  // Añade una fila vacía representada por "null"
         }
-
+        
         // Crear una SortedList para asegurar que se ordenen correctamente
         SortedList<Batch> sortedData = new SortedList<>(pageData);
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-
+        
         tableView.setItems(sortedData);
     }
-
+    
     private void addTooltipToCells(TableColumn<Batch, String> column, int propertyIndex) {
         column.setCellFactory(new Callback<>() {
             @Override
@@ -327,16 +300,14 @@ public class WeeklyBatchesListController {
                             String text = divideText(tooltipText.getValue(), 50);
                             Tooltip tooltip = new Tooltip(text);
                             setTooltip(tooltip);
-                            tooltip.setStyle("-fx-font-size: 20px; -fx-font-family: Futura medium;" +
-                                    "-fx-background-color: #ffffff; -fx-text-fill: black; " +
-                                    "-fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 0px;");
+                            tooltip.setStyle("-fx-font-size: 20px; -fx-font-family: Futura medium;" + "-fx-background-color: #ffffff; -fx-text-fill: black; " + "-fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 0px;");
                         }
                     }
                 };
             }
         });
     }
-
+    
     private String divideText(String text, int maxLineLength) {
         StringBuilder wrappedText = new StringBuilder();
         int start = 0;
@@ -357,14 +328,15 @@ public class WeeklyBatchesListController {
         }
         return wrappedText.toString().trim();
     }
-
+    
     public void refreshTable() {
         int totalPage = (int) Math.ceil(weeklyBatchData.size() * 1.0 / ROWS_PER_PAGE);
         pagination.setPageCount(totalPage);
-
+        
         // Recargar los datos de la tabla
         changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
     }
+    
     //Ventanas auxiliares
     @FXML
     private void openNewBatch(ObservableList<Batch> batchData) {
@@ -396,7 +368,7 @@ public class WeeklyBatchesListController {
             e.printStackTrace();
         }
     }
-
+    
     @FXML
     private void openEditBatch(Batch sampleBatch) {
         if (sampleBatch.getStatus() == Statuses.FINALIZADO || sampleBatch.getStatus() == Statuses.EN_PROCESO) {
@@ -434,11 +406,11 @@ public class WeeklyBatchesListController {
             }
         }
     }
-
+    
     public Pagination getPagination() {
         return this.pagination;
     }
-
+    
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup
@@ -458,8 +430,7 @@ public class WeeklyBatchesListController {
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
             popupStage.show();
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(3), // Duración antes de ejecutar la acción
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), // Duración antes de ejecutar la acción
                     event -> popupStage.close() // Acción para cerrar la ventana
             ));
             timeline.setCycleCount(1); // Ejecutar solo una vez
@@ -468,7 +439,7 @@ public class WeeklyBatchesListController {
             e.printStackTrace();
         }
     }
-
+    
     private void openInfo(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup
@@ -488,8 +459,7 @@ public class WeeklyBatchesListController {
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
             popupStage.show();
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(3), // Duración antes de ejecutar la acción
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), // Duración antes de ejecutar la acción
                     event -> popupStage.close() // Acción para cerrar la ventana
             ));
             timeline.setCycleCount(1); // Ejecutar solo una vez
@@ -498,7 +468,7 @@ public class WeeklyBatchesListController {
             e.printStackTrace();
         }
     }
-
+    
     @FXML
     private void openFullBatchesList() {
         try {
@@ -524,22 +494,22 @@ public class WeeklyBatchesListController {
             });
             // Mostrar el popup
             popupStage.showAndWait();
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
     private ObservableList<Batch> getFullData() {
-            //batchData.clear();
+        //batchData.clear();
         try {
             batchData.addAll(databaseManager.getAllBatches());
-        }catch (PPGSchedulerException e) {
+        } catch (PPGSchedulerException e) {
             e.printStackTrace();
         }
         return batchData;
     }
-
+    
     //Planificar lotes
     @FXML
     public void planBatches() throws PPGSchedulerException {
