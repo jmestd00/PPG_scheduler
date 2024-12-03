@@ -4,8 +4,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -287,7 +285,7 @@ public class DatabaseManager {
 
     public ArrayList<Batch> getBatchesWeekly() throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
-        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Fecha_inicio >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND Fecha_inicio < CURDATE() - INTERVAL (WEEKDAY(CURDATE()) - 6) DAY";
+        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Fecha_inicio >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND Fecha_inicio < CURDATE() - INTERVAL (WEEKDAY(CURDATE()) - 6) DAY";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(query);
@@ -309,7 +307,7 @@ public class DatabaseManager {
                 String description = resultSet.getString("Descripcion");
                 int nBatch = resultSet.getInt("N_Lote");
                 String item = resultSet.getString("Item");
-                int duration = resultSet.getInt("duration");
+                int duration = resultSet.getInt("Duración");
                 Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutorID, duration);
                 batches.add(batch);
             }

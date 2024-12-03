@@ -8,7 +8,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -76,7 +75,7 @@ public class WeeklyBatchesListController {
     public void initialize() throws PPGSchedulerException {
         LocalDate date = LocalDate.now();
         databaseManager = DatabaseManager.getInstance();
-        setupData();
+        weeklyBatchData.addAll(databaseManager.getBatchesWeekly());
         int weekNumber = date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
         String text = titleLabel.getText();
         titleLabel.setText("LISTADO DE LOTES SEMANAL #" + weekNumber);
@@ -276,8 +275,8 @@ public class WeeklyBatchesListController {
     private void setupData() {
         try {
             databaseManager.getInstance();
-            weeklyBatchData = getFullData();
-            //weeklyBatchData.addAll(databaseManager.getWeeklyBatchData());
+            //weeklyBatchData = getFullData();
+            weeklyBatchData.addAll(databaseManager.getBatchesWeekly());
         } catch (PPGSchedulerException e) {
             e.printStackTrace();
         }
@@ -285,11 +284,11 @@ public class WeeklyBatchesListController {
 
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
-        int toIndex = Math.min(fromIndex + limit, batchData.size());
-        int minIndex = Math.min(toIndex, batchData.size());
+        int toIndex = Math.min(fromIndex + limit, weeklyBatchData.size());
+        int minIndex = Math.min(toIndex, weeklyBatchData.size());
 
         // Crea una lista de lotes para la página actual
-        ObservableList<Batch> pageData = FXCollections.observableArrayList(batchData.subList(fromIndex, minIndex));
+        ObservableList<Batch> pageData = FXCollections.observableArrayList(weeklyBatchData.subList(fromIndex, minIndex));
 
         // Si hay espacio restante en la página, agrega filas vacías
         int remainingRows = limit - pageData.size();
@@ -360,7 +359,7 @@ public class WeeklyBatchesListController {
     }
 
     public void refreshTable() {
-        int totalPage = (int) Math.ceil(batchData.size() * 1.0 / ROWS_PER_PAGE);
+        int totalPage = (int) Math.ceil(weeklyBatchData.size() * 1.0 / ROWS_PER_PAGE);
         pagination.setPageCount(totalPage);
 
         // Recargar los datos de la tabla
