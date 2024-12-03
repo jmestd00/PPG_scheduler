@@ -285,7 +285,7 @@ public class DatabaseManager {
 
     public ArrayList<Batch> getBatchesWeekly() throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
-        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Fecha_inicio >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND Fecha_inicio < CURDATE() - INTERVAL (WEEKDAY(CURDATE()) - 6) DAY";
+        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Fecha_inicio >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND Fecha_inicio < CURDATE() - INTERVAL (WEEKDAY(CURDATE()) - 6) DAY ORDER BY Fecha_inicio";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(query);

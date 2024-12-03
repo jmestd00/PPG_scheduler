@@ -1,13 +1,12 @@
-package main.org.ppg.model;
+package org.ppg.model;
 
 import org.junit.Test;
-import org.ppg.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class PPGSchedulerTest {
-
+    
     @Test
     public void testSchedule() throws PPGSchedulerException {
         PPGScheduler scheduler = new PPGScheduler();

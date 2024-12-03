@@ -6,21 +6,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.util.Objects;
 
 public class BatchesList extends Application {
     Image logoPPG = new Image(String.valueOf(getClass().getResource("/images/PPG_Logo512_512.png")));
-
+    
     /**
      * Method to start the JavaFX Application
+     *
      * @param args
      */
-    public static void main(String[] args){
+    public static void main(String[] args) {
         launch(args);
     }
     
     /**
      * JavaFX First Window Init
+     *
      * @param primaryStage
      * @throws Exception
      */
