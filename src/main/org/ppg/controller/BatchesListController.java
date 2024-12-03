@@ -250,7 +250,8 @@ public class BatchesListController {
         refreshTable();
         tableView.refresh();
     }
-
+    //batchData.addAll(databaseManager.getBatchesListDB());
+}
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
         int toIndex = Math.min(fromIndex + limit, weeklyBatchData.size());
