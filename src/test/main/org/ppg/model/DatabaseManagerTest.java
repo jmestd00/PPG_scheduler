@@ -1,5 +1,6 @@
 package org.ppg.model;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,5 +71,10 @@ public class DatabaseManagerTest {
     @Test
     public void testGetBatchesWeekly() throws PPGSchedulerException {
         dbManager.getBatchesWeekly();
+    }
+    
+    @Test
+    public void testDeleteBatch() throws PPGSchedulerException {
+        dbManager.deleteBatch(12);
     }
 }
