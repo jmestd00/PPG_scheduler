@@ -36,7 +36,7 @@ public class DilutorTest {
 
     @Test
     public void testGetBatches() throws PPGSchedulerException {
-        dilutor.addLote(new Batch(1, "1", "colores", "rojo",
+        dilutor.addLote(new BatchTemp(1, "1", "colores", "rojo",
                 1000, LocalDate.of(2024,11,21),
                 LocalDate.of(2024,11,25), Statuses.EN_ESPERA,
                 "Este lote crea el color rojo", Types.PIMM, dilutor));
@@ -49,15 +49,15 @@ public class DilutorTest {
                 "Estado " + "EN ESPERA" + "\n" +
                 "Descripción " + "Este lote crea el color rojo" + "\n" +
                 "Tipo " + "PIMM" + "\n" +
-                "Dilutor " + "Dilutor1"), dilutor.getBatches().getFirst().toString());
+                "DilutorTemp " + "Dilutor1"), dilutor.getBatches().getFirst().toString());
     }
 
     @Test
     public void testCompareTo(){
-        Dilutor dilutor2 = new Dilutor(2, "Dilutor2", 5000);
+        DilutorTemp dilutor2 = new DilutorTemp(2, "Dilutor2", 5000);
         assertEquals(-1, dilutor.compareTo(dilutor2));
         assertEquals(1, dilutor2.compareTo(dilutor));
-        dilutor2 = new Dilutor(1, "Dilutor2", 5000);
+        dilutor2 = new DilutorTemp(1, "Dilutor2", 5000);
         assertEquals(0, dilutor.compareTo(dilutor2));
     }
 
