@@ -240,45 +240,19 @@ public class SchedulingAlgorithm {
      * Organiza los lotes por diluidor para facilitar la verificación de colisiones.
      */
 
-    public boolean ajustarSolucionesConHashMap(Solution solucion) {
+     public boolean ajustarSolucionesConHashMap(Solucion solucion) {
         System.out.println("Ajustando solución...");
         // Agrupar lotes por diluidor en un HashMap
-        HashMap<Integer, ArrayList<Batch>> lotesPorDiluidor = agruparLotesPorDiluidor(solucion);
-        System.out.println("Lotes agrupados por diluidor: " + lotesPorDiluidor.keySet());
-        for (HashMap.Entry<Integer, ArrayList<Batch>> entry : lotesPorDiluidor.entrySet()) {
+        HashMap<Integer, ArrayList<Lote>> lotesPorDiluidor = agruparLotesPorDiluidor(solucion);
+
+        for (HashMap.Entry<Integer, ArrayList<Lote>> entry : lotesPorDiluidor.entrySet()) {
             int diluidorId = entry.getKey();
-            ArrayList<Batch> lotesDelDiluidor = entry.getValue();
-            System.out.println("Ajustando lotes del Diluidor ID: " + diluidorId);
-            for (Batch lote : lotesDelDiluidor) {
-                LocalDate fechaFin = lote.getEndDate();
-                LocalDate fechaNecesidad = lote.getNeedDate();
-                System.out.println("Lote ID: " + lote.getId() +
-                        ", Fecha Fin: " + fechaFin +
-                        ", Fecha Necesidad: " + fechaNecesidad);
-                // Si ya cumple, continuar con el siguiente lote
-                if (fechaFin.equals(fechaNecesidad)) {
-                    System.out.println("Lote ID: " + lote.getId() + " ya cumple con la fecha de necesidad.");
-                    continue;
-                }
-                boolean ajustado = false;
-                for (int i = 0; i <= toleranciaRetraso; i++) {
-                    if (puedeMoverLote(lote, -i)) { // Intentar adelantar el lote
-                        System.out.println("Lote ID: " + lote.getId() + " ajustado con adelanto de " + i + " días.");
-                        ajustado = true;
-                        break;
-                    } else if (puedeMoverLote(lote, i)) { // Intentar retrasar el lote
-                        System.out.println("Lote ID: " + lote.getId() + " ajustado con retraso de " + i + " días.");
-                        ajustado = true;
-                        break;
-                    }
-                }
-                if (!ajustado) {
-                    System.out.println("No se pudo ajustar el Lote ID: " + lote.getId() + " dentro de la tolerancia.");
-                    return false; // Si no se pudo ajustar un lote, retorna falso
-                }
+            ArrayList<Lote> lotesDelDiluidor = entry.getValue();
+            if(!ajustarDiluidor(lotesDelDiluidor)) {
+                return false;
             }
+
         }
-        System.out.println("Ajuste completado para la solución.");
         return true;
     }
 
@@ -305,68 +279,101 @@ public class SchedulingAlgorithm {
     }
 
 
-    /**
-     * Verifica si un ajuste de fecha es válido dentro de los lotes asignados a un
-     * diluidor.
-     *
-     * @param lotesDelDiluidor La lista de lotes asignados al mismo diluidor.
-     * @param lote             El lote que se intenta ajustar.
-     * @param nuevaFechaInicio La nueva fecha de inicio propuesta.
-     * @return true si el ajuste es válido, false en caso contrario.
-     */
-
-    private boolean esAjusteValido(ArrayList<Batch> lotesDelDiluidor, Batch lote, LocalDate nuevaFechaInicio) {
-        System.out.println("Verificando si el ajuste es válido para Lote ID: " + lote.getId() +
-                ", Nueva Fecha Inicio: " + nuevaFechaInicio);
-        for (Batch otroLote : lotesDelDiluidor) {
-            if (!otroLote.equals(lote)) {
-                LocalDate otroInicio = otroLote.getStartDate();
-                LocalDate otroFin = otroLote.getEndDate();
-                if (otroInicio == null || otroFin == null) {
-                    System.out.println("El Lote ID: " + otroLote.getId() + " tiene fechas nulas. Ignorando.");
-                    continue;
+    public boolean ajustarDiluidor(ArrayList<Lote> lotesPorDiluidor) {
+        // Llamada inicial al método recursivo, comenzando desde el último lote
+        return ajustarDiluidorRec(lotesPorDiluidor, lotesPorDiluidor.size() - 1, 0); // Estado inicial: 0 (en fecha de necesidad)
+    }
+    
+    private boolean ajustarDiluidorRec(ArrayList<Lote> lotesPorDiluidor, int posicion, int estadoPrevio) {
+        // Si hemos procesado todos los lotes, la recursión termina exitosamente
+        if (posicion < 0) {
+            return true;
+        }
+    
+        // Obtener el lote actual
+        Lote loteActual = lotesPorDiluidor.get(posicion);
+        LocalDate fechaFin = loteActual.getFechaFin();
+        LocalDate fechaNecesidad = loteActual.getFechaNecesidad();
+    
+        // Comprobar si el lote está en su fecha de necesidad o retrasado
+        if (!fechaFin.isBefore(fechaNecesidad)) {
+            // Está en fecha o retrasado, pasar al siguiente lote
+            long dias = ChronoUnit.DAYS.between(fechaFin, fechaNecesidad);
+            int n = (int) dias;
+            return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, n); // Estado actual: 0
+        }
+    
+        // Si no está en fecha, moverlo a su fecha de necesidad
+        loteActual.setFechaFin(fechaNecesidad);
+        loteActual.setFechaInicio(loteActual.getFechaFin().minusDays(loteActual.getDuracion() - 1));
+    
+        if (posicion + 1 >= lotesPorDiluidor.size()) {
+            return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, 0);
+        }
+    
+        // Comprobar si hay solapamiento con el lote previo
+        Lote lotePrevio = lotesPorDiluidor.get(posicion + 1);
+        LocalDate fechaFinActual = loteActual.getFechaFin();
+        LocalDate fechaInicioPrevio = lotePrevio.getFechaInicio();
+    
+        // Bucle para ajustar solapamientos mediante retrasos
+        while (estadoPrevio <= toleranciaRetraso) {
+            if (!fechaFinActual.isBefore(fechaInicioPrevio)&&(estadoPrevio<toleranciaRetraso)) {
+                boolean sePudoRetrasarPrevio = retrasarPrevio(lotesPorDiluidor, posicion + 1, estadoPrevio);
+                if (!sePudoRetrasarPrevio) {
+                    break;
                 }
-                if ((nuevaFechaInicio.isBefore(otroFin) && nuevaFechaInicio.isAfter(otroInicio)) ||
-                        nuevaFechaInicio.equals(otroInicio) || nuevaFechaInicio.equals(otroFin)) {
-                    System.out.println("Ajuste no válido: solapamiento con Lote ID: " + otroLote.getId());
-                    return false; // Hay solapamiento
-                }
+                fechaInicioPrevio = lotePrevio.getFechaInicio();
+                estadoPrevio++;
+            } else if (fechaFinActual.isBefore(fechaInicioPrevio)){
+                return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, 0);
+            } else {estadoPrevio++;}
+        }
+    
+        // Intentar ajustes mediante adelantos
+        for (int i = 1; i <= toleranciaRetraso; i++) {
+            loteActual.setFechaFin(fechaNecesidad.minusDays(i));
+            loteActual.setFechaInicio(loteActual.getFechaFin().minusDays(loteActual.getDuracion() - 1));
+            fechaFinActual = loteActual.getFechaFin();
+            fechaInicioPrevio = lotePrevio.getFechaInicio();
+    
+            if (!fechaFinActual.isBefore(fechaInicioPrevio)) {
+                continue;
+            } else {
+                return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, toleranciaRetraso);
             }
         }
-        System.out.println("Ajuste válido para Lote ID: " + lote.getId());
-        return true;
+    
+        return false;
     }
-
-
-    private boolean puedeMoverLote(Batch lote, int dias) {
-        LocalDate nuevaFechaInicio = lote.getStartDate();
-        LocalDate nuevaFechaFin = lote.getEndDate();
-        if (nuevaFechaInicio == null || nuevaFechaFin == null) {
-            System.out.println("El Lote ID: " + lote.getId() + " tiene fechas nulas. No se puede mover.");
-            return false; // No se puede mover si las fechas son nulas
+    
+    private boolean retrasarPrevio(ArrayList<Lote> lotesPorDiluidor, int posicion, int estadoRetraso) {
+        if (posicion >= lotesPorDiluidor.size()) {
+            return false;
         }
-        nuevaFechaInicio = nuevaFechaInicio.plusDays(dias);
-        nuevaFechaFin = nuevaFechaFin.plusDays(dias);
-        for (Batch otroLote : lotes) {
-            if (!otroLote.equals(lote)) {
-                LocalDate otroInicio = otroLote.getStartDate();
-                LocalDate otroFin = otroLote.getEndDate();
-                if (otroInicio == null || otroFin == null) {
-                    System.out.println("El Lote ID: " + otroLote.getId() + " tiene fechas nulas. Ignorando.");
-                    continue;
-                }
-                if ((nuevaFechaInicio.isBefore(otroFin) && nuevaFechaInicio.isAfter(otroInicio)) ||
-                        nuevaFechaInicio.equals(otroInicio) || nuevaFechaInicio.equals(otroFin)) {
-                    return false; // Hay solapamiento
+    
+        Lote lotePrevio = lotesPorDiluidor.get(posicion);
+    
+        if (estadoRetraso < toleranciaRetraso) {
+            lotePrevio.setFechaInicio(lotePrevio.getFechaInicio().plusDays(1));
+            lotePrevio.setFechaFin(lotePrevio.getFechaFin().plusDays(1));
+    
+            if (posicion + 1 < lotesPorDiluidor.size()) {
+                Lote loteSiguiente = lotesPorDiluidor.get(posicion + 1);
+                if (!lotePrevio.getFechaFin().isBefore(loteSiguiente.getFechaInicio())) {
+                    boolean sePuedeRetrasarSiguiente = retrasarPrevio(lotesPorDiluidor, posicion + 1, estadoRetraso + 1);
+                    if (!sePuedeRetrasarSiguiente) {
+                        lotePrevio.setFechaInicio(lotePrevio.getFechaInicio().minusDays(1));
+                        lotePrevio.setFechaFin(lotePrevio.getFechaFin().minusDays(1));
+                        return false;
+                    }
                 }
             }
+            return true;
+        } else {
+            return false;
         }
-        // Si no hay conflictos, actualiza las fechas del lote
-        lote.setStartDate(nuevaFechaInicio);
-        lote.setEndDate(nuevaFechaFin);
-        return true;
     }
-
 
     /**
      * Metodo temporal para pruebas de imprimir lotes
