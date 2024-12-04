@@ -34,6 +34,7 @@ public class DatabaseManager {
         return instance;
     }
 
+    //Batch
     public Batch getBatchDB(int nBatch) throws PPGSchedulerException {
         Batch batch;
         String query = "SELECT Planning_class, plant, Item.Item , Cantidad, Fecha_inicio, Fecha_fin, Fecha_necesidad, Estado , Descripcion ,Tipo , ID_diluidor, Item.Duración as 'duration' FROM Lote INNER JOIN Item ON Lote.Item LIKE Item.Item WHERE N_Lote = ?";
@@ -113,14 +114,13 @@ public class DatabaseManager {
             statement.setInt(12, batch.getnBatch());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
-                throw new PPGSchedulerException("Error. No se ha modificado ningun registro en la base de datos");
+                throw new PPGSchedulerException("Error. No se ha modificado ningún registro en la base de datos");
             }
         } catch (SQLException e) {
             throw new PPGSchedulerException("No se ha podido actualizar la base de datos debido a un error en la conexión");
         }
     }
-
-
+    
     public ArrayList<Batch> getAllBatches() throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
         String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item";
@@ -154,7 +154,41 @@ public class DatabaseManager {
         }
         return batches;
     }
-
+    
+    public ArrayList<Batch> getBatchesWeekly() throws PPGSchedulerException {
+        ArrayList<Batch> batches = new ArrayList<>();
+        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Fecha_inicio >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND Fecha_inicio < CURDATE() - INTERVAL (WEEKDAY(CURDATE()) - 6) DAY ORDER BY Fecha_inicio";
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(query);
+        }catch (SQLException e){
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        try{
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
+                LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
+                LocalDate endDate = resultSet.getDate("Fecha_fin").toLocalDate();
+                int dilutorID = resultSet.getInt("ID_diluidor");
+                Types type = Types.fromValue(resultSet.getString("Tipo"));
+                String plant = resultSet.getString("Plant");
+                int quantity = resultSet.getInt("Cantidad");
+                String planningClass = resultSet.getString("Planning_class");
+                Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
+                String description = resultSet.getString("Descripcion");
+                int nBatch = resultSet.getInt("N_Lote");
+                String item = resultSet.getString("Item");
+                int duration = resultSet.getInt("Duración");
+                Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutorID, duration);
+                batches.add(batch);
+            }
+        }catch (SQLException e){
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        return batches;
+    }
+    
     public ArrayList<Batch> getBatches(int start, int offset) throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
         String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote INNER JOIN Item ON Item.Item = Lote.Item LIMIT ?, ?";
@@ -189,7 +223,21 @@ public class DatabaseManager {
         }
         return batches;
     }
-
+    
+    public void deleteBatch(int nBatch) throws PPGSchedulerException {
+        String query = "DELETE FROM Lote WHERE N_Lote = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, nBatch);
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new PPGSchedulerException("Error. No se ha eliminado ningun registro en la base de datos");
+            }
+        } catch (SQLException e) {
+            throw new PPGSchedulerException("No se ha podido eliminar el lote de la base de datos debido a un error en la conexión");
+        }
+    }
+    
+    //Dilutor
     public Dilutor getDilutorDB(int id) throws PPGSchedulerException {
         String query = "SELECT * FROM Diluidores WHERE ID = ?";
         PreparedStatement statement;
@@ -214,8 +262,7 @@ public class DatabaseManager {
         }
         return dilutor;
     }
-
-
+    
     public HashMap<Integer, Dilutor> getDilutorsDB() throws PPGSchedulerException {
         HashMap<Integer, Dilutor> dilutors = new HashMap<>();
         String query = "SELECT ID, Name, Capacity FROM Diluidores";
@@ -239,8 +286,7 @@ public class DatabaseManager {
         }
         return dilutors;
     }
-
-
+    
     public LocalDate getFreeDilutorDate(int idDilutor) throws PPGSchedulerException {
         String query = "SELECT MAX(Fecha_fin) as 'Fecha_fin' FROM Lote WHERE ID_diluidor = ? AND Estado like 'EN_PROCESO'";
         LocalDate freeDilutorDate;
@@ -263,8 +309,7 @@ public class DatabaseManager {
         }
         return freeDilutorDate;
     }
-
-
+    
     public ArrayList<Dilutor> getFilledDilutors() throws PPGSchedulerException {
         HashMap<Integer, Dilutor> dilutors = getDilutorsDB();
         ArrayList<Batch> batches = getAllBatches();
@@ -280,40 +325,5 @@ public class DatabaseManager {
             }
         }
         return dilutorArrayList;
-    }
-
-
-    public ArrayList<Batch> getBatchesWeekly() throws PPGSchedulerException {
-        ArrayList<Batch> batches = new ArrayList<>();
-        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Fecha_inicio >= CURDATE() - INTERVAL WEEKDAY(CURDATE()) DAY AND Fecha_inicio < CURDATE() - INTERVAL (WEEKDAY(CURDATE()) - 6) DAY ORDER BY Fecha_inicio";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(query);
-        }catch (SQLException e){
-            throw new PPGSchedulerException(e.getMessage());
-        }
-        try{
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
-                LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
-                LocalDate endDate = resultSet.getDate("Fecha_fin").toLocalDate();
-                int dilutorID = resultSet.getInt("ID_diluidor");
-                Types type = Types.fromValue(resultSet.getString("Tipo"));
-                String plant = resultSet.getString("Plant");
-                int quantity = resultSet.getInt("Cantidad");
-                String planningClass = resultSet.getString("Planning_class");
-                Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
-                String description = resultSet.getString("Descripcion");
-                int nBatch = resultSet.getInt("N_Lote");
-                String item = resultSet.getString("Item");
-                int duration = resultSet.getInt("Duración");
-                Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutorID, duration);
-                batches.add(batch);
-            }
-        }catch (SQLException e){
-            throw new PPGSchedulerException(e.getMessage());
-        }
-        return batches;
     }
 }
