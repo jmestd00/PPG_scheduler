@@ -1,5 +1,6 @@
 package org.ppg.model;
 
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -23,35 +24,15 @@ public class PPGScheduler {
         ArrayList<Batch> previewslyScheduledBatches = connection.getAllBatches();
         System.out.println(previewslyScheduledBatches.toString());
         algorithm.schedule(previewslyScheduledBatches, batchesToInsert);
-        algorithm.guardarSolucionesEnArchivo();
+        algorithm.saveSolutionsInFile();
         batchesToInsert.clear();
     }
     
-    public void insert(ArrayList<Batch> batches) {
-        batchesToInsert.addAll(batches);
-    }
-    
-    public void undo() {
-        //TODO lo haremos?
-    }
-    
-    public void redo() {
-        //TODO lo haremos?
-    }
-    
-    public void remove() {
-        //TODO lo haremos?
-    }
-    
-    public void changeDate() {
-        //TODO lo haremos?
-    }
-    
-    public void filter() {
-        //TODO lo haremos?
-    }
-    
-    public void search() {
-        //TODO lo haremos?
+    public void insert(ArrayList<Batch> batches) throws PPGSchedulerException, CantAddException {
+        ArrayList<Dilutor> dilutors = connection.getFilledDilutors();
+        Scheduler scheduler = new Scheduler(dilutors);
+        for (Batch batch : batches) {
+            scheduler.add(batch);
+        }
     }
 }

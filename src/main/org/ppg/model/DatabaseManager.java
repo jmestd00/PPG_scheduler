@@ -8,9 +8,9 @@ import java.util.HashMap;
 import static java.sql.DriverManager.getConnection;
 
 public class DatabaseManager {
-    private final Connection connection;
     private static DatabaseManager instance;
-
+    private final Connection connection;
+    
     //Constructor
     private DatabaseManager() throws PPGSchedulerException {
         String hostname = "josedm64rpi.ddns.net";
@@ -25,7 +25,7 @@ public class DatabaseManager {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
+    
     //Singleton
     public static DatabaseManager getInstance() throws PPGSchedulerException {
         if (instance == null) {
@@ -33,7 +33,7 @@ public class DatabaseManager {
         }
         return instance;
     }
-
+    
     //Batch
     public Batch getBatchDB(int nBatch) throws PPGSchedulerException {
         Batch batch;
@@ -70,7 +70,7 @@ public class DatabaseManager {
         }
         return batch;
     }
-
+    
     public void insertBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "INSERT INTO Lote (Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Item) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -81,7 +81,7 @@ public class DatabaseManager {
             statement.setString(5, batch.getType().getValue());
             statement.setString(6, batch.getPlant());
             statement.setInt(7, batch.getQuantity());
-            statement.setString(8, batch.getPlannigClass());
+            statement.setString(8, batch.getPlanningClass());
             statement.setString(9, batch.getStatus().getValue());
             statement.setString(10, batch.getDescription());
             statement.setInt(11, batch.getnBatch());
@@ -96,7 +96,7 @@ public class DatabaseManager {
             throw new PPGSchedulerException(e.getMessage());
         }
     }
-
+    
     public void updateBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "UPDATE Lote SET Fecha_inicio = ?, Fecha_fin=?, Fecha_necesidad=?, ID_diluidor=?, Tipo=?, Plant=?, Cantidad=?, Planning_class=?, Estado=?, Descripcion=?, Item=? WHERE Lote.N_Lote = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -107,7 +107,7 @@ public class DatabaseManager {
             statement.setString(5, batch.getType().getValue());
             statement.setString(6, batch.getPlant());
             statement.setInt(7, batch.getQuantity());
-            statement.setString(8, batch.getPlannigClass());
+            statement.setString(8, batch.getPlanningClass());
             statement.setString(9, batch.getStatus().getValue());
             statement.setString(10, batch.getDescription());
             statement.setString(11, batch.getItem());
@@ -127,10 +127,10 @@ public class DatabaseManager {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(query);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
-        try{
+        try {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
@@ -146,10 +146,10 @@ public class DatabaseManager {
                 int nBatch = resultSet.getInt("N_Lote");
                 String item = resultSet.getString("Item");
                 int duration = resultSet.getInt("duration");
-                Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutorID, duration);
+                Batch batch = new Batch(nBatch, planningClass, plant, item, quantity, startDate, endDate, needDate, status, description, type, dilutorID, duration);
                 batches.add(batch);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
         return batches;
@@ -161,10 +161,10 @@ public class DatabaseManager {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(query);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
-        try{
+        try {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
@@ -180,10 +180,10 @@ public class DatabaseManager {
                 int nBatch = resultSet.getInt("N_Lote");
                 String item = resultSet.getString("Item");
                 int duration = resultSet.getInt("Duración");
-                Batch batch = new Batch(nBatch, planningClass, plant,item, quantity, startDate, endDate, needDate, status, description, type,dilutorID, duration);
+                Batch batch = new Batch(nBatch, planningClass, plant, item, quantity, startDate, endDate, needDate, status, description, type, dilutorID, duration);
                 batches.add(batch);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
         return batches;
@@ -242,19 +242,19 @@ public class DatabaseManager {
         String query = "SELECT * FROM Diluidores WHERE ID = ?";
         PreparedStatement statement;
         Dilutor dilutor;
-        try{
+        try {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
         } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
-        try{
+        try {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 String name = resultSet.getString("Name");
                 int capacity = resultSet.getInt("Capacity");
                 dilutor = new Dilutor(id, name, capacity);
-            }else{
+            } else {
                 throw new PPGSchedulerException("");
             }
         } catch (SQLException e) {
@@ -267,12 +267,12 @@ public class DatabaseManager {
         HashMap<Integer, Dilutor> dilutors = new HashMap<>();
         String query = "SELECT ID, Name, Capacity FROM Diluidores";
         Statement statement;
-        try{
+        try {
             statement = connection.createStatement();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
-        try{
+        try {
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
@@ -281,7 +281,7 @@ public class DatabaseManager {
                 Dilutor dilutor = new Dilutor(id, name, capacidad);
                 dilutors.put(id, dilutor);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
         return dilutors;
@@ -291,7 +291,7 @@ public class DatabaseManager {
         String query = "SELECT MAX(Fecha_fin) as 'Fecha_fin' FROM Lote WHERE ID_diluidor = ? AND Estado like 'EN_PROCESO'";
         LocalDate freeDilutorDate;
         PreparedStatement statement;
-        try{
+        try {
             statement = connection.prepareStatement(query);
             statement.setInt(1, idDilutor);
         } catch (SQLException e) {
@@ -301,10 +301,10 @@ public class DatabaseManager {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 freeDilutorDate = resultSet.getDate("Fecha_fin").toLocalDate();
-            }else{
+            } else {
                 throw new PPGSchedulerException("");
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new PPGSchedulerException(e.getMessage());
         }
         return freeDilutorDate;
@@ -314,13 +314,13 @@ public class DatabaseManager {
         HashMap<Integer, Dilutor> dilutors = getDilutorsDB();
         ArrayList<Batch> batches = getAllBatches();
         for (Batch b : batches) {
-            if(dilutors.get(b.getDilutorId()) != null){
-                dilutors.get(b.getDilutorId()).addLote(b);
+            if (dilutors.get(b.getDilutorId()) != null) {
+                dilutors.get(b.getDilutorId()).add(b);
             }
         }
         ArrayList<Dilutor> dilutorArrayList = new ArrayList<>();
         for (Dilutor dilutor : dilutors.values()) {
-            if (!dilutor.getLotes().isEmpty()) { // Filtrar solo diluidores con lotes asignados
+            if (!dilutor.getBatches().isEmpty()) { // Filtrar solo diluidores con lotes asignados
                 dilutorArrayList.add(dilutor);
             }
         }
