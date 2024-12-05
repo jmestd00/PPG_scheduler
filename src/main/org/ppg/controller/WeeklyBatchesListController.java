@@ -508,10 +508,8 @@ public class WeeklyBatchesListController {
             timeline = new Timeline(
                     new KeyFrame(Duration.seconds(2), event -> {
                         new Thread(() -> {
-                            //TODO CONECTAR ALGORITMO
-                            /*
                             try {
-                            PPGScheduler scheduler = new PPGScheduler(operationCompleted);
+                            PPGScheduler scheduler = new PPGScheduler();
                             try {
                                 scheduler.insert(new ArrayList<>(batchData));
                             } catch (CantAddException e) {
@@ -520,7 +518,7 @@ public class WeeklyBatchesListController {
                             } catch (PPGSchedulerException e) {
                                 e.printStackTrace();
                             }
-                             */
+                            
                             //HACER CAMBIO EN EL CONSTRUCTOR DEL ALGORITMO
                         }).start();
                         if (operationCompleted.get()) {
@@ -538,8 +536,8 @@ public class WeeklyBatchesListController {
     }
 
     public boolean contains(Batch batch, ObservableList<Batch> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getnBatch() == batch.getnBatch()) {
+        for (Batch value : list) {
+            if (value.getnBatch() == batch.getnBatch()) {
                 return true;
             }
         }
@@ -556,16 +554,15 @@ public class WeeklyBatchesListController {
     }
 
     private void startBatches(ObservableList<Batch> list) {
-        for (int i = 0; i < list.size(); i++) {
-            Batch batchToStart = list.get(i);
+        for (Batch batchToStart : list) {
             if (batchToStart.getStartDate().plusDays(batchToStart.getDuration()).isBefore(LocalDate.now())) {
                 batchToStart.setStatus(Statuses.FINALIZADO);
             }
             if (batchToStart.getStatus() == Statuses.EN_ESPERA && batchToStart.getStartDate().isBefore(LocalDate.now()) && (batchToStart.getStartDate().plusDays(batchToStart.getDuration()).isBefore(batchToStart.getNeedDate()))) {
                 batchToStart.setStatus(Statuses.EN_ADELANTO);
-            }else if (batchToStart.getStatus() == Statuses.EN_ESPERA && batchToStart.getStartDate().isBefore(LocalDate.now()) && batchToStart.getStartDate().plusDays(batchToStart.getDuration()).isAfter(batchToStart.getNeedDate())) {
+            } else if (batchToStart.getStatus() == Statuses.EN_ESPERA && batchToStart.getStartDate().isBefore(LocalDate.now()) && batchToStart.getStartDate().plusDays(batchToStart.getDuration()).isAfter(batchToStart.getNeedDate())) {
                 batchToStart.setStatus(Statuses.EN_DEMORA);
-            }else if (batchToStart.getStatus() == Statuses.EN_ESPERA && batchToStart.getStartDate().isBefore(LocalDate.now())) {
+            } else if (batchToStart.getStatus() == Statuses.EN_ESPERA && batchToStart.getStartDate().isBefore(LocalDate.now())) {
                 batchToStart.setStatus(Statuses.EN_PROCESO);
             }
             //Faltaria actualizar la bbdd

@@ -88,7 +88,7 @@ public class NewBatchController {
                     batchToAdd.setStartDate(LocalDate.now());
                     batchData.add(batchToAdd);
                     weeklyBatchData.add(batchToAdd);
-/*
+                    /*
                     try {
                     DESCOMENTAR ESTA LÍNEA PONE EN RIESGO LA INTEGRIDAD DE LA BBDD PUESTO QUE AÑADE EL LOTE SELECCIONADO
                         databaseManager.insertBatchDB(batchToAdd);

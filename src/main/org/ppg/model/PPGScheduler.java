@@ -1,15 +1,20 @@
 package org.ppg.model;
 
 
+import javafx.beans.property.BooleanProperty;
+
 import java.io.File;
 import java.util.ArrayList;
 
 public class PPGScheduler {
     private final DatabaseManager connection;
     private final ArrayList<Batch> batchesToInsert = new ArrayList<>();
+    private BooleanProperty operationCompleted;
     
-    public PPGScheduler() throws PPGSchedulerException {
+    public PPGScheduler(BooleanProperty operationCompleted) throws PPGSchedulerException {
         connection = DatabaseManager.getInstance();
+        operationCompleted.set(false);
+        this.operationCompleted = operationCompleted;
     }
     
     public void schedule() throws PPGSchedulerException {
