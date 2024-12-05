@@ -509,6 +509,7 @@ public class WeeklyBatchesListController {
                     new KeyFrame(Duration.seconds(2), event -> {
                         new Thread(() -> {
                             //TODO CONECTAR ALGORITMO
+                            /*
                             try {
                             PPGScheduler scheduler = new PPGScheduler(operationCompleted);
                             try {
@@ -519,6 +520,7 @@ public class WeeklyBatchesListController {
                             } catch (PPGSchedulerException e) {
                                 e.printStackTrace();
                             }
+                             */
                             //HACER CAMBIO EN EL CONSTRUCTOR DEL ALGORITMO
                         }).start();
                         if (operationCompleted.get()) {
@@ -566,7 +568,7 @@ public class WeeklyBatchesListController {
             }else if (batchToStart.getStatus() == Statuses.EN_ESPERA && batchToStart.getStartDate().isBefore(LocalDate.now())) {
                 batchToStart.setStatus(Statuses.EN_PROCESO);
             }
-
+            //Faltaria actualizar la bbdd
         }
     }
 }
