@@ -1,7 +1,7 @@
 package org.ppg.model;
 
 public enum Statuses {
-    EN_ESPERA("EN ESPERA", "#42aaff", "#0057d9"), EN_PROCESO("EN PROCESO", "#ffa726", "#f57c00"), FINALIZADO("FINALIZADO", "#a8e6a3", "#56c453"), EN_DEMORA("EN DEMORA", "#e0e0e0", "#9e9e9e");
+    EN_ESPERA("EN ESPERA", "#42aaff", "#0057d9"), EN_PROCESO("EN PROCESO", "#ffa726", "#f57c00"), FINALIZADO("FINALIZADO", "#a8e6a3", "#56c453"), EN_DEMORA("RETARDADO", "#e0e0e0", "#9e9e9e"), EN_ADELANTO("ADELANTADO", "#e0e0e0", "#9e9e9e");
     
     private final String value;
     private final String hex_color_primary;

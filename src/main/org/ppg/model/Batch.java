@@ -51,6 +51,7 @@ public class Batch implements Comparable<Batch> {
         this.description = description;
         this.type = type;
         this.needDate = needDate;
+        this.endDate = needDate;
     }
     
     public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate needDate, Types type, String description) {
@@ -62,6 +63,7 @@ public class Batch implements Comparable<Batch> {
         this.needDate = needDate;
         this.type = type;
         this.description = description;
+        this.endDate = needDate;
     }
     
     public Batch(int nBatch, int duration, LocalDate needDate, int quantity, boolean isLocked) {
@@ -71,6 +73,7 @@ public class Batch implements Comparable<Batch> {
         this.delay = 0;
         this.isLocked = isLocked;
         this.nBatch = nBatch;
+        this.endDate = needDate;
     }
     
     //Getters
