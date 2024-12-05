@@ -29,13 +29,18 @@ public class BatchesList extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        try {
+
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/weeklyBatchesList.fxml")));
         Scene scene = new Scene(root);
-        
+
         primaryStage.setTitle("Lista de Lotes Semanal");
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(logoPPG);
         primaryStage.resizableProperty().setValue(Boolean.FALSE);
         primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

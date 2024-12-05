@@ -23,13 +23,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import org.ppg.model.*;
+import org.ppg.model.Batch;
+import org.ppg.model.PPGSchedulerException;
+import org.ppg.model.Statuses;
 
 public class BatchesListController {
     private final int ROWS_PER_PAGE = 11;
     Image logoPPG = new Image(String.valueOf(getClass().getResource("/images/PPG_Logo512_512.png")));
     private WeeklyBatchesListController WeeklyBatchesListController;
+    private ObservableList<Batch> batchData = FXCollections.observableArrayList();
     private ObservableList<Batch> weeklyBatchData = FXCollections.observableArrayList();
+
     @FXML
     private TableView<Batch> tableView;
     @FXML
@@ -56,10 +60,9 @@ public class BatchesListController {
     private Pagination pagination;
     @FXML
     private Label titleLabel;
-    
+
+    //REVISADO
     public void initialize() throws PPGSchedulerException {
-        titleLabel.setText("LISTADO DE LOTES");
-        
         tableView.setSelectionModel(null);
         // Configuración de las columnas
         nBatchCol.setCellValueFactory(data -> {
@@ -124,7 +127,7 @@ public class BatchesListController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                
+
                 // Si la fila está vacía o la celda está vacía (null), no se renderiza nada
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                     setGraphic(null);  // No mostrar gráfico
@@ -132,15 +135,15 @@ public class BatchesListController {
                 } else {
                     // Si la fila tiene un objeto Batch válido, renderizamos el gráfico
                     Batch selectedBatch = getTableView().getItems().get(getIndex());
-                    
+
                     // Solo mostrar el gráfico si el Batch tiene un color válido en su estado
                     if (selectedBatch != null && selectedBatch.getStatus() != null) {
                         LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web(selectedBatch.getStatus().getHexColorPrimary())), new Stop(1, Color.web(selectedBatch.getStatus().getHexColorSecondary())));
-                        
+
                         Circle circle = new Circle(15);  // Radio del círculo
                         circle.setFill(gradient);        // Color de relleno
                         circle.setStroke(Color.BLACK);   // Color del borde
-                        
+
                         // Establecer el gráfico en la celda
                         setGraphic(circle);
                         setText(null);  // Asegurarse de no mostrar texto en la celda
@@ -151,8 +154,7 @@ public class BatchesListController {
                 }
             }
         });
-        
-        
+
         // Configuración del botón en buttonNameColumn
         statusCol.setCellFactory(param -> new TableCell<>() {
             protected void updateItem(String item, boolean empty) {
@@ -166,15 +168,15 @@ public class BatchesListController {
                     } else {
                         setText(selectedBatch.getStatus().getValue());
                     }
-                    setStyle("-fx-alignment: center_left;-fx-font-weight: normal; -fx-font-size: 24px; -fx-font-family: Futura medium");
+                    setStyle("-fx-alignment: center_left;-fx-font-weight: normal; -fx-font-size: 24px; -fx-font-family: 'Futura medium';");
                 }
             }
         });
         statusCol.setReorderable(false);
-        
+
         editCol.setCellFactory(param -> new TableCell<Batch, Void>() {
             private final Button btn = new Button("");
-            
+
             {
                 // Define la acción del botón
                 btn.setOnAction(event -> {
@@ -184,19 +186,19 @@ public class BatchesListController {
                     }
                 });
                 btn.setStyle("/*-fx-background-color: #ffffff;*/ -fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black;");
-                
+
                 // Estilos para el botón al pasar el ratón
                 btn.setOnMouseEntered(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black; -fx-scale-x: 1.05;" + " -fx-scale-y: 1.05;"));
-                
+
                 btn.setOnMouseExited(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black; "));
-                
+
                 btn.setPrefHeight(Double.MAX_VALUE);
             }
-            
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                
+
                 // Verificar si la fila está vacía o si el Batch es nulo
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                     setGraphic(null);  // No mostrar el botón si está vacío
@@ -211,11 +213,11 @@ public class BatchesListController {
                 }
             }
         });
-        
+
         editCol.setReorderable(false);
-        
+
         // Configuración de la paginación
-        int totalPage = (int) (Math.ceil(weeklyBatchData.size() * 1.0 / ROWS_PER_PAGE));
+        int totalPage = (int) (Math.ceil(batchData.size() * 1.0 / ROWS_PER_PAGE));
         pagination.setPageCount(totalPage);
         pagination.setCurrentPageIndex(0);
         changeTableView(0, ROWS_PER_PAGE);
@@ -225,29 +227,30 @@ public class BatchesListController {
         refreshTable();
         tableView.refresh();
     }
-    //batchData.addAll(databaseManager.getBatchesListDB());
-    
+
+    //REVISADO
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
-        int toIndex = Math.min(fromIndex + limit, weeklyBatchData.size());
-        int minIndex = Math.min(toIndex, weeklyBatchData.size());
-        
+        int toIndex = Math.min(fromIndex + limit, batchData.size());
+        int minIndex = Math.min(toIndex, batchData.size());
+
         // Crea una lista de lotes para la página actual
-        ObservableList<Batch> pageData = FXCollections.observableArrayList(weeklyBatchData.subList(fromIndex, minIndex));
-        
+        ObservableList<Batch> pageData = FXCollections.observableArrayList(batchData.subList(fromIndex, minIndex));
+
         // Si hay espacio restante en la página, agrega filas vacías
         int remainingRows = limit - pageData.size();
         for (int i = 0; i < remainingRows; i++) {
             pageData.add(null);  // Añade una fila vacía representada por "null"
         }
-        
+
         // Crear una SortedList para asegurar que se ordenen correctamente
         SortedList<Batch> sortedData = new SortedList<>(pageData);
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-        
+
         tableView.setItems(sortedData);
     }
-    
+
+    //REVISADO
     private void addTooltipToCells(TableColumn<Batch, String> column, int propertyIndex) {
         column.setCellFactory(new Callback<>() {
             @Override
@@ -279,7 +282,8 @@ public class BatchesListController {
             }
         });
     }
-    
+
+    //REVISADO
     private String divideText(String text, int maxLineLength) {
         StringBuilder wrappedText = new StringBuilder();
         int start = 0;
@@ -300,15 +304,18 @@ public class BatchesListController {
         }
         return wrappedText.toString().trim();
     }
-    
+
+    //REVISADO
     public void refreshTable() {
-        int totalPage = (int) Math.ceil(weeklyBatchData.size() * 1.0 / ROWS_PER_PAGE);
+        int totalPage = (int) Math.ceil(batchData.size() * 1.0 / ROWS_PER_PAGE);
         pagination.setPageCount(totalPage);
-        
+
         // Recargar los datos de la tabla
         changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
+        tableView.refresh();
     }
-    
+
+    //REVISADO
     @FXML
     private void openEditBatch(Batch sampleBatch) {
         if (sampleBatch.getStatus() == Statuses.FINALIZADO || sampleBatch.getStatus() == Statuses.EN_PROCESO) {
@@ -321,7 +328,7 @@ public class BatchesListController {
                 EditBatchesController editBatches = fxmlLoader.getController();
                 // Pasar el objeto batch al controlador de la ventana de edición
                 editBatches.setBatch(sampleBatch);
-                editBatches.setBatchData(weeklyBatchData);
+                editBatches.setBatchData(batchData, weeklyBatchData);
                 editBatches.setBatchesListController(this, WeeklyBatchesListController);
                 // Crear una nueva ventana para el popup
                 Stage popupStage = new Stage();
@@ -346,7 +353,8 @@ public class BatchesListController {
             }
         }
     }
-    
+
+    //REVISADO
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup
@@ -375,14 +383,34 @@ public class BatchesListController {
             e.printStackTrace();
         }
     }
-    
-    public void setBatchesList(ObservableList<Batch> batchData) {
-        this.weeklyBatchData = batchData;
-        tableView.refresh();
-        refreshTable();
+
+
+    public void setBatchesList(ObservableList<Batch> batchData, ObservableList<Batch> weeklyBatchData) {
+        this.batchData = batchData;
+        this.weeklyBatchData = weeklyBatchData;
+        this.refreshTable();
+
     }
-    
+
     public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
         this.WeeklyBatchesListController = WeeklyBatchesListController;
+    }
+
+    public boolean contains(Batch batch) {
+        for (int i = 0; i < batchData.size(); i++) {
+            if (batchData.get(i).getnBatch() == batch.getnBatch()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getIndex(Batch batch) {
+        for (int i = 0; i < batchData.size(); i++) {
+            if (batchData.get(i).getnBatch() == batch.getnBatch()) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

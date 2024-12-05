@@ -15,46 +15,42 @@
     -fx-font-weight: bold;
 }
 .pagination .toggle-button {
-    -fx-background-color:#505050; /* Mismo fondo que .addButton */
-    -fx-border-color: black; /* Color del borde */
-    -fx-font-weight: bold; /* Peso de la fuente */
-    -fx-font-family: "Futura Medium"; /* Fuente personalizada */
-    -fx-font-size: 24px; /* Tamaño de la fuente */
+    -fx-background-color:#505050;
+    -fx-border-color: black;
+    -fx-font-weight: bold;
+    -fx-font-family: "Futura Medium";
+    -fx-font-size: 24px;
     -fx-text-fill: white;
 }
 
-/* Efecto al pasar el mouse sobre los botones */
 .pagination .toggle-button:hover {
     -fx-background-color: #2F2F2F;
-    -fx-scale-x: 1.05; /* Escala horizontal */
-    -fx-scale-y: 1.05; /* Escala vertical */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
-/* Opcional: Cambiar el estilo del botón seleccionado */
 .pagination .toggle-button:selected {
-    -fx-background-color: black; /* Color de fondo para el botón seleccionado */
-    -fx-text-fill: white; /* Color del texto */
+    -fx-background-color: black;
+    -fx-text-fill: white;
 }
 
 .pagination .left-arrow, .pagination .right-arrow {
-    -fx-background-color: white; /* Fondo gris oscuro */
-    -fx-text-fill: white; /* Color blanco para las flechas */
-    -fx-border-color: #A9A9A9; /* (Opcional) Borde gris claro */
-    -fx-border-width: 1px; /* Ancho del borde */
-    -fx-padding: 5px; /* Espaciado interno */
-    -fx-font-size: 16px; /* Tamaño de la flecha */
+    -fx-background-color: white;
+    -fx-text-fill: white;
+    -fx-border-color: #A9A9A9;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+    -fx-font-size: 16px;
 }
 
-/* Cambiar el fondo de las flechas al pasar el ratón */
 .pagination .left-arrow:hover, .pagination .right-arrow:hover {
-    -fx-background-color: white; /* Fondo más claro al hacer hover */
-    -fx-text-fill: white; /* Mantener el color blanco de las flechas */
+    -fx-background-color: white;
+    -fx-text-fill: white;
 }
 
-/* Opcional: Cambiar el aspecto de las flechas cuando se presionan */
 .pagination .left-arrow:pressed, .pagination .right-arrow:pressed {
-    -fx-background-color: white; /* Fondo más oscuro */
-    -fx-text-fill: white; /* Mantener el color blanco */
+    -fx-background-color: white;
+    -fx-text-fill: white;
 }
 
 .pagination .button {
@@ -72,17 +68,18 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: white; /* Fondo gris oscuro */
-    -fx-text-fill: black; /* Texto blanco */
-    -fx-font-size: 24px; /* Tamaño de la fuente */
-    -fx-font-weight: bold; /* Negrita para el texto */
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
 }
 
 .table-view .table-cell {
-    -fx-background-color: white; /* Fondo gris claro */
-    -fx-text-fill: black; /* Color del texto */
-    -fx-border-color: transparent; /* Borde gris oscuro */
-    -fx-alignment: CENTER; /* Centrar texto en la celda */
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: transparent;
+    -fx-alignment: CENTER;
+    -fx-font-family: "Futura Medium";
 }
 
 .table-view {
@@ -91,7 +88,6 @@
     -fx-font-weight: normal;
     -fx-alignment: CENTER;
     -fx-background-color: white;
-    /* Sin borde */
 }
 
 .font {

@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,9 +19,10 @@ import java.util.ArrayList;
 
 public class NewBatchController {
     private DatabaseManager databaseManager;
-    private ObservableList<Batch> batchData;
     private ArrayList<String> allowedItems;
-    private WeeklyBatchesListController WeeklyBatchesListController;
+    private ObservableList<Batch> batchData;
+    private ObservableList<Batch> weeklyBatchData;
+    private WeeklyBatchesListController weeklyBatchesListController;
     @FXML
     private DatePicker datePicker;
     @FXML
@@ -42,12 +42,13 @@ public class NewBatchController {
     
     public void initialize() {
         // TODO
+        allowedItems = new ArrayList<String>();
         try {
             databaseManager = DatabaseManager.getInstance();
+            allowedItems.addAll(databaseManager.getItems());
         } catch (PPGSchedulerException e) {
             e.printStackTrace();
         }
-        //allowedItems.addAll(databaseManager.getAllowedItems());
         datePicker.setShowWeekNumbers(false);
         datePicker.getEditor().setContextMenu(new ContextMenu());
         nBatchText.setContextMenu(new ContextMenu());
@@ -58,8 +59,9 @@ public class NewBatchController {
         
     }
     
-    public void setBatchData(ObservableList<Batch> batchData) {
+    public void setBatchData(ObservableList<Batch> batchData, ObservableList<Batch> weeklyBatchData) {
         this.batchData = batchData;
+        this.weeklyBatchData = weeklyBatchData;
     }
     
     @FXML
@@ -69,7 +71,7 @@ public class NewBatchController {
         } else if (!allowedItem(itemText.getText())) {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorNotAllowedItem.fxml")));
         } else {
-            if (!contains(batchData, Integer.parseInt(nBatchText.getText()), Integer.parseInt(quantityText.getText()))) {
+            if (!contains(batchData, Integer.parseInt(nBatchText.getText()))) {
                 if (datePicker.getValue().isBefore(LocalDate.now())) {
                     openError(new FXMLLoader(getClass().getResource("/fxml/errorDate.fxml")));
                 } else {
@@ -78,16 +80,25 @@ public class NewBatchController {
                     } catch (PPGSchedulerException e) {
                         e.printStackTrace();
                     }
-                    int paginationIndex = WeeklyBatchesListController.getPagination().getCurrentPageIndex();
+                    int paginationIndex = weeklyBatchesListController.getPagination().getCurrentPageIndex();
                     String type = combo_box.getValue().toString();
                     Types typeBatch = Types.valueOf(type);
                     Batch batchToAdd = new Batch(Integer.parseInt(nBatchText.getText()), planningClassText.getText(), plantText.getText(), itemText.getText(), Integer.parseInt(quantityText.getText()), descriptionText.getText(), typeBatch, datePicker.getValue());
-                    batchToAdd.setStatus(Statuses.FINALIZADO);
+                    batchToAdd.setStatus(Statuses.EN_ESPERA);
+                    batchToAdd.setStartDate(LocalDate.now());
                     batchData.add(batchToAdd);
-                    
-                    if (WeeklyBatchesListController != null) {
-                        WeeklyBatchesListController.refreshTable();
-                        WeeklyBatchesListController.getPagination().setCurrentPageIndex(paginationIndex);
+                    weeklyBatchData.add(batchToAdd);
+/*
+                    try {
+                    DESCOMENTAR ESTA LÍNEA PONE EN RIESGO LA INTEGRIDAD DE LA BBDD PUESTO QUE AÑADE EL LOTE SELECCIONADO
+                        databaseManager.insertBatchDB(batchToAdd);
+                    } catch (PPGSchedulerException e) {
+                        e.printStackTrace();
+                    }
+                    */
+                    if (weeklyBatchesListController != null) {
+                        weeklyBatchesListController.refreshTable();
+                        weeklyBatchesListController.getPagination().setCurrentPageIndex(paginationIndex);
                     }
                 }
             } else {
@@ -96,9 +107,9 @@ public class NewBatchController {
         }
     }
     
-    private boolean contains(ObservableList<Batch> batchData, int nBatch, int quantity) {
+    private boolean contains(ObservableList<Batch> batchData, int nBatch) {
         for (Batch batch : batchData) {
-            if (batch.getnBatch() == nBatch && batch.getQuantity() == quantity) {
+            if (batch.getnBatch() == nBatch) {
                 return true;
             }
         }
@@ -106,7 +117,7 @@ public class NewBatchController {
     }
     
     public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
-        this.WeeklyBatchesListController = WeeklyBatchesListController;
+        this.weeklyBatchesListController = WeeklyBatchesListController;
     }
     
     private void openError(FXMLLoader fxmlLoader) {

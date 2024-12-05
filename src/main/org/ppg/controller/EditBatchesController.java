@@ -15,7 +15,9 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.ppg.model.*;
+import org.ppg.model.Batch;
+import org.ppg.model.DatabaseManager;
+import org.ppg.model.PPGSchedulerException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,8 +25,9 @@ import java.time.format.DateTimeFormatter;
 public class EditBatchesController {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private ObservableList<Batch> batchData;
+    private ObservableList<Batch> weeklyBatchData;
     private BatchesListController batchesListController;
-    private WeeklyBatchesListController WeeklyBatchesListController;
+    private WeeklyBatchesListController weeklyBatchesListController;
     private Stage stage;
     private Batch batch;
     @FXML
@@ -44,10 +47,10 @@ public class EditBatchesController {
     @FXML
     private TextArea descriptionField;
     private DatabaseManager databaseManager;
-    
+
     public void setBatch(Batch batch) {
         nBatchField.setText(String.valueOf(batch.getnBatch()));
-        pClassField.setText(batch.getPlannigClass());
+        pClassField.setText(batch.getPlanningClass());
         plantField.setText(batch.getPlant());
         itemField.setText(batch.getItem());
         quantityField.setText(String.valueOf(batch.getQuantity()));
@@ -56,7 +59,7 @@ public class EditBatchesController {
         descriptionField.setText(batch.getDescription());
         this.batch = batch;
     }
-    
+
     public void initialize() {
         // Inicializa los campos de texto
         try {
@@ -74,53 +77,73 @@ public class EditBatchesController {
         needDateField.setContextMenu(new ContextMenu());
         descriptionField.setContextMenu(new ContextMenu());
     }
-    
-    public void setBatchData(ObservableList<Batch> batchData) {
+
+    public void setBatchData(ObservableList<Batch> batchData, ObservableList<Batch> weeklyBatchData) {
         this.batchData = batchData;
+        this.weeklyBatchData = weeklyBatchData;
     }
-    
+
+    public void setBatchesListController(BatchesListController batchesListController, WeeklyBatchesListController WeeklyBatchesListController) {
+        this.batchesListController = batchesListController;
+        this.weeklyBatchesListController = WeeklyBatchesListController;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    private void updateBatch(Batch batch) {
+        batch.setStartDate(startDatePicker.getValue());
+    }
+
     @FXML
     private void removeBatch() {
         this.stage.close();
         batchData.remove(batchData.indexOf(batch));
+        if (weeklyBatchesListController.contains(batch, weeklyBatchData)) {
+            int index = weeklyBatchesListController.getIndex(batch, weeklyBatchData);
+            weeklyBatchData.remove(index);
+        }
         batchesListController.refreshTable();
-        WeeklyBatchesListController.refreshTable();
+        weeklyBatchesListController.refreshTable();
+            /*
+        try {
+            DESCOMENTAR ESTA LÍNEA PONE EN RIESGO LA INTEGRIDAD DE LA BBDD PUESTO QUE ELIMINA EL LOTE SELECCIONADO
+            databaseManager.deleteBatch(batch.getnBatch());
+        } catch (PPGSchedulerException e) {
+            e.printStackTrace();
+        }
+             */
     }
-    
-    public void setBatchesListController(BatchesListController batchesListController, WeeklyBatchesListController WeeklyBatchesListController) {
-        this.batchesListController = batchesListController;
-        this.WeeklyBatchesListController = WeeklyBatchesListController;
-    }
-    
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-    
     @FXML
     private void modifyBatch() {
         if (startDatePicker.getValue().isBefore(LocalDate.parse(needDateField.getText(), formatter))) {
             if (startDatePicker.getValue().isBefore(LocalDate.now())) {
                 openError(new FXMLLoader(getClass().getResource("/fxml/errorDate.fxml")));
             } else {
+                updateBatch(batch);
+                /*
                 try {
-                    databaseManager.getAllBatches();
+            DESCOMENTAR ESTA LÍNEA PONE EN RIESGO LA INTEGRIDAD DE LA BBDD PUESTO QUE MODIFICA EL LOTE SELECCIONADO
                     databaseManager.updateBatchDB(batch);
-                    updateBatch(batch);
                 } catch (PPGSchedulerException e) {
                     e.printStackTrace();
                 }
+                */
                 this.stage.hide();
-                WeeklyBatchesListController.refreshTable();
+                if (weeklyBatchesListController.contains(batch, weeklyBatchData)) {
+                    int index = weeklyBatchesListController.getIndex(batch, weeklyBatchData);
+                    weeklyBatchData.set(index, batch);
+                }
+                weeklyBatchesListController.refreshTable();
+                batchesListController.refreshTable();
             }
         } else {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorModifyPopup.fxml")));
         }
     }
-    
-    private void updateBatch(Batch batch) {
-        batch.setStartDate(startDatePicker.getValue());
-    }
-    
+
+
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup

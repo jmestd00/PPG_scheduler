@@ -236,7 +236,27 @@ public class DatabaseManager {
             throw new PPGSchedulerException("No se ha podido eliminar el lote de la base de datos debido a un error en la conexión");
         }
     }
-    
+
+    //Items
+    public ArrayList<String> getItems() throws PPGSchedulerException {
+        ArrayList<String> items = new ArrayList<String>();
+        String query = "SELECT Item FROM Item";
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                items.add(resultSet.getString("Item"));
+            }
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        return items;
+    }
+
     //Dilutor
     public Dilutor getDilutorDB(int id) throws PPGSchedulerException {
         String query = "SELECT * FROM Diluidores WHERE ID = ?";

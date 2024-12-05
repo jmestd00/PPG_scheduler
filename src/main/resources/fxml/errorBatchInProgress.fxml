@@ -3,9 +3,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="150.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.ErrorController" styleClass="anchorPane" stylesheets="@../css/error.css">
+<AnchorPane prefHeight="200.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.ErrorController" styleClass="anchorPane" stylesheets="@../css/error.css">
    <children>
-       <Label fx:id="imageView" prefHeight="140.0" prefWidth="140.0" layoutX="5.0" layoutY="5.0" mouseTransparent="true" pickOnBounds="true" stylesheets="@../css/error.css" styleClass="image"/>
-       <Label contentDisplay="CENTER" layoutX="160.0" layoutY="10" prefHeight="140.0" prefWidth="280.0" styleClass="customLabel" stylesheets="@../css/error.css" text="ERROR, no se puede modificar&#10;el lote debido a que se  &#10;encuentra en proceso o &#10;finalizado" textAlignment="CENTER"/>
+       <Label fx:id="imageView" prefHeight="190.0" prefWidth="190.0" layoutX="5.0" layoutY="5.0" mouseTransparent="true" pickOnBounds="true" stylesheets="@../css/error.css" styleClass="imageBig"/>
+       <Label contentDisplay="CENTER" layoutX="200.0" layoutY="10" prefHeight="190.0" prefWidth="330.0" styleClass="customLabel" stylesheets="@../css/error.css" text="ERROR, no se puede modificar&#10;el lote debido a que se  &#10;encuentra en proceso (Tanto&#10; adelantado como atrasado) o &#10;finalizado" textAlignment="CENTER"/>
    </children>
 </AnchorPane>

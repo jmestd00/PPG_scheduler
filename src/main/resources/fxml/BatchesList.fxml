@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane fx:id="rootPane" prefHeight="1080.0" prefWidth="1920.0" styleClass="rootPane" stylesheets="@../css/batchesList.css" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ppg.controller.BatchesListController">
-    <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="1920.0" styleClass="titleLabel" stylesheets="@../css/batchesList.css" text="LISTADO DE LOTES SEMANAL">
+    <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="1920.0" styleClass="titleLabel" stylesheets="@../css/batchesList.css" text="LISTADO DE LOTES">
     </Label>
     <TableView fx:id="tableView" focusTraversable="false" layoutX="5.0" layoutY="103.0" prefHeight="885.0" prefWidth="1914.0" styleClass="pagination" stylesheets="@../css/batchesList.css">
         <columns>
@@ -17,9 +17,9 @@
             <TableColumn fx:id="itemCol" editable="false" maxWidth="270.0" minWidth="270.0" prefWidth="270" sortable="false" styleClass="font" text="ITEM" />
             <TableColumn fx:id="quantityCol" editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170" sortable="false" styleClass="font" text="CANTIDAD" />
             <TableColumn fx:id="startDateCol" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220" sortable="false" styleClass="font" text="FECHA INICIO" />
-            <TableColumn fx:id="needDateCol" editable="false" maxWidth="290.0" minWidth="290.0" prefWidth="290" sortable="false" styleClass="font" text="FECHA NECESIDAD" />
+            <TableColumn fx:id="needDateCol" editable="false" maxWidth="290.0" minWidth="270.0" prefWidth="270" sortable="false" styleClass="font" text="FECHA NECESIDAD" />
             <TableColumn fx:id="colorCol" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40" sortable="false" styleClass="font" text="" />
-            <TableColumn fx:id="statusCol" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160" sortable="false" styleClass="font" text="ESTADO" />
+            <TableColumn fx:id="statusCol" editable="false" maxWidth="180.0" minWidth="160.0" prefWidth="180" sortable="false" styleClass="font" text="ESTADO" />
             <TableColumn fx:id="editCol" editable="false" maxWidth="70" minWidth="70" prefWidth="70" sortable="false" styleClass="font" text="" />
         </columns>
     </TableView>
