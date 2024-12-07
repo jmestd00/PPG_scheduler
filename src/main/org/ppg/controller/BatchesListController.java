@@ -318,7 +318,7 @@ public class BatchesListController {
     //REVISADO
     @FXML
     private void openEditBatch(Batch sampleBatch) {
-        if (sampleBatch.getStatus() == Statuses.FINALIZADO || sampleBatch.getStatus() == Statuses.EN_PROCESO) {
+        if (sampleBatch.getStatus() != Statuses.EN_ESPERA) {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorBatchInProgress.fxml")));
         } else {
             try {

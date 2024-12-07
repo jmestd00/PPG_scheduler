@@ -39,6 +39,7 @@ public class BatchesList extends Application {
         primaryStage.getIcons().add(logoPPG);
         primaryStage.resizableProperty().setValue(Boolean.FALSE);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(event -> System.exit(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
