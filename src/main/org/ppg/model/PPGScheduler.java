@@ -11,12 +11,12 @@ public class PPGScheduler {
     //private BooleanProperty operationCompleted;
 
     public PPGScheduler(/*BooleanProperty operationCompleted*/) throws PPGSchedulerException {
-        connection = org.ppg.model.DatabaseManager.getInstance();
+        connection = DatabaseManager.getInstance();
         //operationCompleted.set(false);
         //this.operationCompleted = operationCompleted;
     }
 
-    public void schedule() throws org.ppg.model.PPGSchedulerException {
+    public void schedule() throws PPGSchedulerException {
         File file = new File("soluciones.txt");
         if (file.exists()) {
             file.delete();
@@ -36,19 +36,31 @@ public class PPGScheduler {
         ArrayList<Dilutor> dilutors = connection.getDilutors();
         ArrayList<Batch> batchesDB = connection.getAllBatches();
         Scheduler scheduler = new Scheduler(dilutors);
+        ArrayList<Batch> notAdded = new ArrayList<>();
         for (Batch b : batchesDB) {
             try {
                 scheduler.add(b);
             } catch (CantAddException e) {
-                break;
+                notAdded.add(b);
             }
         }
-        System.out.println(scheduler);
-        /*
-        for (Batch batch : batches) {
-            scheduler.add(batch);
+
+        for (Batch b : batches) {
+            try {
+                scheduler.add(b);
+            } catch (CantAddException e) {
+                notAdded.add(b);
+            }
         }
-         */
+
+        System.out.println("Total added: " + scheduler.total());
+        System.out.println("Not added: " + notAdded.size());
+        System.out.println("-----Added----");
+        System.out.println(scheduler);
+        System.out.println("-----Not added----");
+        System.out.println(notAdded);
+
+
         //this.operationCompleted.set(true);
     }
 }

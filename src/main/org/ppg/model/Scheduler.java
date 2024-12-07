@@ -259,4 +259,12 @@ public class Scheduler {
     public String toString() {
         return this.dilutors.toString();
     }
+
+    public int total() {
+        int total = 0;
+        for(Dilutor d:dilutors){
+            total+=d.getNumberOfBatches();
+        }
+        return total;
+    }
 }

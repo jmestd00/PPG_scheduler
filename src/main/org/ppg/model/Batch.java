@@ -175,6 +175,7 @@ public class Batch implements Comparable<Batch> {
     }
 
     //Methods
+
     /**
      * Obtiene la fecha de inicio del lote.
      *
@@ -192,44 +193,39 @@ public class Batch implements Comparable<Batch> {
     public LocalDate endDate() {
         return this.needDate.plusDays(this.delay);
     }
-
     //Override
     @Override
     public Batch clone() {
-        Batch cloned = new Batch(nBatch, duration, needDate, quantity, isLocked);
+        LocalDate clonedNeedDay = LocalDate.of(this.needDate.getYear(), this.needDate.getMonth(), this.needDate.getDayOfMonth());
+        Batch cloned = new Batch(nBatch, duration, clonedNeedDay, quantity, isLocked);
         cloned.delay = this.delay;
         return cloned;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        if (!(o instanceof Batch b)) {
-            return false;
-        }
-        return Objects.equals(this.nBatch, b.nBatch);
+        if (o == null) return false;
+        if (!(o instanceof Batch batch)) return false;
+        return Objects.equals(this.nBatch, batch.nBatch);
     }
 
     @Override
-    public int compareTo(Batch b) {
-        if (this.endDate.isAfter(b.endDate)) {
-            return 1;
-        } else if (this.endDate.isBefore(b.endDate)) {
-            return -1;
-        }
-        if (this.duration > b.duration) {
-            return 1;
-        }
-        if (this.nBatch == b.nBatch) {
-            return 0;
-        }
+    public int compareTo(Batch batch) {
+        if (this.endDate().isAfter(batch.endDate())) return 1;
+        else if (this.endDate().isBefore(batch.endDate())) return -1;
+        if (this.duration > batch.duration) return 1;
+        if (this.nBatch == batch.nBatch) return 0;
         return -1;
     }
 
+    public String toString(){
+        return "(n:" + nBatch + ", " + startDate() + ", " + endDate() + ")";
+    }
+
+    /*
     @Override
     public String toString() {
         return "BatchTemp{" + "nBatch=" + nBatch + ", planningClass='" + planningClass + '\'' + ", plant='" + plant + '\'' + ", item='" + item + '\'' + ", quantity=" + quantity + ", startDate=" + startDate + ", endDate=" + endDate + ", needDate=" + needDate + ", status=" + status + ", description='" + description + '\'' + ", type=" + type + ", dilutor=" + dilutor + ", duration=" + duration + '}';
     }
+    */
 }
