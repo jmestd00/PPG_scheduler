@@ -14,29 +14,22 @@ import java.util.List;
 import static java.lang.Math.abs;
 
 public class SchedulingAlgorithm {
-
-    private ArrayList<Dilutor> diluidores = new ArrayList<>();
-    private HashMap<String, Boolean> mapSoluciones = new HashMap<>();
-    private final int toleranciaRetraso = 2;
-    // Nuevos atributos de clase para evitar pasar como parámetros
-    private ArrayList<Solution> soluciones = new ArrayList<>();
-    private ArrayList<Batch> lotes = new ArrayList<>();
-    private int indiceLote = 0;
-    private final String estadoFile = "estado.txt";
-
-    public ArrayList<Dilutor> sortDilutors() {
-        this.diluidores.sort(null);
-        return this.diluidores;
-    }
-
-
+    private final int tolerance = 2;
+    private final String statusFile = "status.txt";
+    private final ArrayList<Dilutor> dilutors = new ArrayList<>();
+    private final HashMap<String, Boolean> mapSolutions = new HashMap<>();
+    private final ArrayList<Solution> solutions = new ArrayList<>();
+    private ArrayList<Batch> batches = new ArrayList<>();
+    private int batchIndex = 0;
+    
+    //Constructor
     private Solution getBestSolution(ArrayList<Solution> soluciones) {
         int min = Integer.MAX_VALUE;
         Solution best = null;
         for (Solution solucion : soluciones) {
             int sum = 0;
-            for (Dilutor diluidor : diluidores) {
-                for (Batch lote : diluidor.getLotes()) {
+            for (Dilutor diluidor : dilutors) {
+                for (Batch lote : diluidor.getBatches()) {
                     sum += abs(lote.getEndDate().getDayOfYear() - lote.getNeedDate().getDayOfYear());
                 }
             }
@@ -47,8 +40,6 @@ public class SchedulingAlgorithm {
         }
         return best;
     }
-
-
     /**
      * Metodo donde se ejecuta el algoritmo de backtracking necesario para obtener
      * un
@@ -56,51 +47,43 @@ public class SchedulingAlgorithm {
      * precondicion: los lotes deben estar ordenados por fecha de necesidad
      * Los diluidores deben estar ordenados de menor a mayor Cantidad.
      *
-     * @param lotesPrevios Lotes ya existentes obtenidos de la base de datos
-     * @param nuevosLotes  Lotes nuevos introducidos por el usuario
+     * @param previousBatches Lotes ya existentes obtenidos de la base de datos
+     * @param newBatches  Lotes nuevos introducidos por el usuario
      */
-
-    public void schedule(ArrayList<Batch> lotesPrevios, ArrayList<Batch> nuevosLotes) {
-
-        System.out.println(lotesPrevios);
-
-
-
-        lotes.clear();
-        lotes.addAll(lotesPrevios);
-        lotes.addAll(nuevosLotes);
-        actualizarLotes(lotes);
-        soluciones.clear();
-        indiceLote = 0;
+    public void schedule(ArrayList<Batch> previousBatches, ArrayList<Batch> newBatches) {
+        System.out.println(previousBatches);  //TODO que es esto
+        
+        batches.clear();
+        batches.addAll(previousBatches);
+        batches.addAll(newBatches);
+        updateBatches(batches);
+        solutions.clear();
+        batchIndex = 0;
+        
         // Limpiar el archivo de estado
         try {
-            Files.deleteIfExists(Paths.get(estadoFile));
+            Files.deleteIfExists(Paths.get(statusFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Iniciar el algoritmo
-        // if()
         scheduleRecursively();
     }
-
-
+    
     /**
      * Método recursivo para el algoritmo de backtracking.
      *
      * @return true si encuentra una solución válida, false en caso contrario
      */
-
     public boolean scheduleRecursively() {
-
-        if (indiceLote == lotes.size()) {
+        if (batchIndex == batches.size()) {
             System.out.println("Caso base alcanzado. Generando solución...");
-            Solution sol = new Solution(new ArrayList<>(lotes)); // Crear copia de los lotes
+            Solution sol = new Solution(new ArrayList<>(batches)); // Crear copia de los lotes
             try {
-                calcularFechasInicio(sol);
-                if (ajustarSolucionesConHashMap(sol)) {
-                    if (!mapSoluciones.containsKey(sol.toString())) {
-                        mapSoluciones.put(sol.toString(), true);
-                        soluciones.add(sol);
+                calculateStartDate(sol);
+                if (adjustSolutionsWithHashMap(sol)) {
+                    if (!mapSolutions.containsKey(sol.toString())) {
+                        mapSolutions.put(sol.toString(), true);
+                        solutions.add(sol);
                     }
                 }
             } catch (PPGSchedulerException e) {
@@ -108,95 +91,88 @@ public class SchedulingAlgorithm {
             }
             return false;
         }
-        Batch loteActual = lotes.get(indiceLote);
-        System.out.println("Procesando Lote ID: " + loteActual.getId());
-        for (int i = 0; i <= toleranciaRetraso; i++) {
-            for (Dilutor diluidor : diluidores) {
-                LocalDate fechaDisponible = diluidor.getFechaFin();
-                LocalDate fechaFinTemp = fechaDisponible.plusDays(loteActual.getDuration());
-                LocalDate fechaNecesidad = loteActual.getNeedDate();
-                if ((fechaFinTemp.isBefore(fechaNecesidad.plusDays(i)) || fechaNecesidad.equals(fechaFinTemp)) &&
-                        diluidor.getCapacity() >= loteActual.getQuantity()) {
-                    if (fechaDisponible == null) {
-                        System.out.println("El Diluidor ID: " + diluidor.getId() + " tiene fecha disponible nula. Saltando.");
+        Batch actualBatch = batches.get(batchIndex);
+        System.out.println("Procesando Lote ID: " + actualBatch.getId());
+        for (int i = 0; i <= tolerance; i++) {
+            for (Dilutor dilutor : dilutors) {
+                LocalDate endDate = dilutor.getFechaFin();
+                LocalDate tempEndDate = endDate.plusDays(actualBatch.getDuration());
+                LocalDate needDate = actualBatch.getNeedDate();
+                if ((tempEndDate.isBefore(needDate.plusDays(i)) || needDate.equals(tempEndDate)) && dilutor.getCapacity() >= actualBatch.getQuantity()) {
+                    if (endDate == null) {
+                        System.out.println("El Diluidor ID: " + dilutor.getId() + " tiene fecha disponible nula. Saltando.");
                         continue;
                     }
                     // Guardar estado actual en archivo
-                    guardarEstado(diluidores, lotes, indiceLote);
+                    saveStatus(dilutors, batches, batchIndex);
                     // Actualizar estado para esta iteración
-                    diluidor.setFechaFin(fechaFinTemp);
-                    loteActual.setDilutor(diluidor.getId());
-                    loteActual.setEndDate(fechaFinTemp);
-                    indiceLote++;
+                    dilutor.setEndDate(tempEndDate);
+                    actualBatch.setDilutor(dilutor.getId());
+                    actualBatch.setEndDate(tempEndDate);
+                    batchIndex++;
                     // Llamada recursiva
                     scheduleRecursively();
                     // Retroceso: restaurar estado desde archivo
-                    restaurarEstado();
-                    System.out.println("Retroceso: Estado restaurado tras intentar asignar Lote ID: " + loteActual.getId());
+                    resetStatus();
+                    System.out.println("Retroceso: Estado restaurado tras intentar asignar Lote ID: " + actualBatch.getId());
                 }
             }
         }
         return false;
     }
-
-
-    private void guardarEstado(ArrayList<Dilutor> diluidores, ArrayList<Batch> lotes, int indiceLote) {
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(estadoFile, true))) {
-            StringBuilder sb = new StringBuilder();
-            for (Dilutor diluidor : diluidores) {
-                sb.append(diluidor.getId()).append(".")
-                        .append(diluidor.getFechaFin()).append(","); // Separar atributos con punto
+    
+    private void saveStatus(ArrayList<Dilutor> dilutors, ArrayList<Batch> batches, int batchIndex) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(statusFile, true))) {
+            StringBuilder builder = new StringBuilder();
+            for (Dilutor dilutor : dilutors) {
+                builder.append(dilutor.getId()).append(".").append(dilutor.getFechaFin()).append(","); // Separar atributos con punto
             }
-            sb.append(";"); // Separar objetos con punto y coma
-
-            for (Batch lote : lotes) {
-                sb.append(lote.getId()).append(".")
-                        .append(lote.getEndDate()).append(".")
-                        .append(lote.getDilutorId()).append(","); // Separar atributos con punto
+            builder.append(";"); // Separar objetos con punto y coma
+            
+            for (Batch batch : batches) {
+                builder.append(batch.getId()).append(".").append(batch.getEndDate()).append(".").append(batch.getDilutorId()).append(","); // Separar atributos con punto
             }
-            sb.append(";").append(indiceLote); // Agregar índice
-
-            writer.write(sb.toString());
+            builder.append(";").append(batchIndex); // Agregar índice
+            
+            writer.write(builder.toString());
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-    private void restaurarEstado() {
+    
+    private void resetStatus() {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(estadoFile));
+            List<String> lines = Files.readAllLines(Paths.get(statusFile));
             if (!lines.isEmpty()) {
-                String lastLine = lines.get(lines.size() - 1);
+                String lastLine = lines.getLast();
                 String[] parts = lastLine.split(";");
-                String[] diluidoresData = parts[0].split(",");
-                String[] lotesData = parts[1].split(",");
-                indiceLote = Integer.parseInt(parts[2]);
-
-                for (int i = 0; i < diluidores.size(); i++) {
-                    String[] diluidorParts = diluidoresData[i].split("\\.");
-                    String fecha = diluidorParts[1];
-                    if (fecha != null && !fecha.isEmpty()) {
-                        diluidores.get(i).setFechaFin(LocalDate.parse(fecha));
+                String[] dilutorsData = parts[0].split(",");
+                String[] batchesData = parts[1].split(",");
+                batchIndex = Integer.parseInt(parts[2]);
+                
+                for (int i = 0; i < dilutors.size(); i++) {
+                    String[] dilutorParts = dilutorsData[i].split("\\.");
+                    String date = dilutorParts[1];
+                    if (date != null && !date.isEmpty()) {
+                        dilutors.get(i).setEndDate(LocalDate.parse(date));
                     } else {
-                        diluidores.get(i).setFechaFin(LocalDate.of(2023, 1, 1)); // Fecha inicial predeterminada
+                        dilutors.get(i).setEndDate(LocalDate.of(2023, 1, 1)); // Fecha inicial predeterminada
                     }
                 }
-
-                for (int i = 0; i < lotes.size(); i++) {
-                    String[] loteParts = lotesData[i].split("\\.");
-                    String fecha = loteParts[1];
-                    if (fecha != null && !fecha.isEmpty()) {
-                        lotes.get(i).setEndDate(LocalDate.parse(fecha));
+                
+                for (int i = 0; i < batches.size(); i++) {
+                    String[] batchParts = batchesData[i].split("\\.");
+                    String date = batchParts[1];
+                    if (date != null && !date.isEmpty()) {
+                        batches.get(i).setEndDate(LocalDate.parse(date));
                     } else {
-                        lotes.get(i).setEndDate(null); // Manejar fechas nulas
+                        batches.get(i).setEndDate(null); // Manejar fechas nulas
                     }
-                    lotes.get(i).setDilutor(Integer.parseInt(loteParts[2]));
+                    batches.get(i).setDilutor(Integer.parseInt(batchParts[2]));
                 }
                 // Eliminar la última línea del archivo
-                Files.write(Paths.get(estadoFile), lines.subList(0, lines.size() - 1));
+                Files.write(Paths.get(statusFile), lines.subList(0, lines.size() - 1));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -205,58 +181,74 @@ public class SchedulingAlgorithm {
             e.printStackTrace();
         }
     }
-
-
-    public void actualizarLotes(ArrayList<Batch> nuevosLotes) {
-        this.lotes = nuevosLotes;
+    
+    public void updateBatches(ArrayList<Batch> newBatches) {
+        this.batches = newBatches;
     }
-
-
+    
     /**
      * Calcula las fechas de inicio para todos los lotes en una solución.
      *
-     * @param solucion La solución que contiene la lista de lotes.
+     * @param solution La solución que contiene la lista de lotes.
      * @throws PPGSchedulerException Si algún lote no tiene suficiente información
      *                               para calcular su fecha de inicio.
      */
-
-
-    private void calcularFechasInicio(Solution solucion) throws PPGSchedulerException {
-        for (Batch lote : solucion.getLotes()) {
-            if (lote.getEndDate() == null || lote.getDuration() <= 0) {
-                throw new PPGSchedulerException(
-                        "Información insuficiente para calcular la fecha de inicio del lote ID: " + lote.getId());
+    private void calculateStartDate(Solution solution) throws PPGSchedulerException {
+        for (Batch batch : solution.getLotes()) {
+            if (batch.getEndDate() == null || batch.getDuration() <= 0) {
+                throw new PPGSchedulerException("Información insuficiente para calcular la fecha de inicio del batch ID: " + batch.getId());
             }
             // Calcular la fecha de inicio restando la duración a la fecha de fin
-            LocalDate fechaInicio = lote.getEndDate().minusDays(lote.getDuration());
-            lote.setStartDate(fechaInicio); // Actualizar la fecha de inicio del lote
+            LocalDate startDate = batch.getEndDate().minusDays(batch.getDuration());
+            batch.setStartDate(startDate); // Actualizar la fecha de inicio del batch
         }
     }
-
-
+    
     /**
      * Recorre todas las soluciones y ajusta las fechas de los lotes, si es posible,
      * para que terminen justo en su fecha de necesidad.
      * Organiza los lotes por diluidor para facilitar la verificación de colisiones.
      */
-
-     public boolean ajustarSolucionesConHashMap(Solucion solucion) {
+    public boolean adjustSolutionsWithHashMap(Solution solucion) {
         System.out.println("Ajustando solución...");
         // Agrupar lotes por diluidor en un HashMap
-        HashMap<Integer, ArrayList<Lote>> lotesPorDiluidor = agruparLotesPorDiluidor(solucion);
-
-        for (HashMap.Entry<Integer, ArrayList<Lote>> entry : lotesPorDiluidor.entrySet()) {
-            int diluidorId = entry.getKey();
-            ArrayList<Lote> lotesDelDiluidor = entry.getValue();
-            if(!ajustarDiluidor(lotesDelDiluidor)) {
-                return false;
+        HashMap<Integer, ArrayList<Batch>> batchInDilutor = groupBatchInDilutor(solucion);
+        System.out.println("Lotes agrupados por diluidor: " + batchInDilutor.keySet());
+        for (HashMap.Entry<Integer, ArrayList<Batch>> entry : batchInDilutor.entrySet()) {
+            int dilutorId = entry.getKey();
+            ArrayList<Batch> batchOfDilutor = entry.getValue();
+            System.out.println("Ajustando lotes del Diluidor ID: " + dilutorId);
+            for (Batch batch : batchOfDilutor) {
+                LocalDate endDate = batch.getEndDate();
+                LocalDate needDate = batch.getNeedDate();
+                System.out.println("Lote ID: " + batch.getId() + ", Fecha Fin: " + endDate + ", Fecha Necesidad: " + needDate);
+                // Si ya cumple, continuar con el siguiente batch
+                if (endDate.equals(needDate)) {
+                    System.out.println("Lote ID: " + batch.getId() + " ya cumple con la fecha de necesidad.");
+                    continue;
+                }
+                boolean adjusted = false;
+                for (int i = 0; i <= tolerance; i++) {
+                    if (canMoveBatch(batch, -i)) { // Intentar adelantar el batch
+                        System.out.println("Lote ID: " + batch.getId() + " ajustado con adelanto de " + i + " días.");
+                        adjusted = true;
+                        break;
+                    } else if (canMoveBatch(batch, i)) { // Intentar retrasar el batch
+                        System.out.println("Lote ID: " + batch.getId() + " ajustado con retraso de " + i + " días.");
+                        adjusted = true;
+                        break;
+                    }
+                }
+                if (!adjusted) {
+                    System.out.println("No se pudo ajustar el Lote ID: " + batch.getId() + " dentro de la tolerancia.");
+                    return false; // Si no se pudo ajustar un batch, retorna falso
+                }
             }
-
         }
+        System.out.println("Ajuste completado para la solución.");
         return true;
     }
-
-
+    
     /**
      * Agrupa los lotes de una solución por diluidor.
      *
@@ -264,190 +256,130 @@ public class SchedulingAlgorithm {
      * @return Un HashMap donde la clave es el ID del diluidor y el valor es la
      * lista de lotes asignados a ese diluidor.
      */
-
-    private HashMap<Integer, ArrayList<Batch>> agruparLotesPorDiluidor(Solution solucion) {
-        HashMap<Integer, ArrayList<Batch>> lotesPorDiluidor = new HashMap<>();
+    private HashMap<Integer, ArrayList<Batch>> groupBatchInDilutor(Solution solucion) {
+        HashMap<Integer, ArrayList<Batch>> batchInDilutor = new HashMap<>();
         System.out.println("Agrupando lotes por diluidor...");
-        for (Batch lote : solucion.getLotes()) {
-            int diluidorId = lote.getDilutorId();
-            lotesPorDiluidor.putIfAbsent(diluidorId, new ArrayList<>());
-            lotesPorDiluidor.get(diluidorId).add(lote);
-            System.out.println("Lote ID: " + lote.getId() + " asignado a Diluidor ID: " + diluidorId);
+        for (Batch batch : solucion.getLotes()) {
+            int dilutorId = batch.getDilutorId();
+            batchInDilutor.putIfAbsent(dilutorId, new ArrayList<>());
+            batchInDilutor.get(dilutorId).add(batch);
+            System.out.println("Lote ID: " + batch.getId() + " asignado a Diluidor ID: " + dilutorId);
         }
-        System.out.println("Lotes agrupados por diluidor: " + lotesPorDiluidor);
-        return lotesPorDiluidor;
-    }
-
-
-    public boolean ajustarDiluidor(ArrayList<Lote> lotesPorDiluidor) {
-        // Llamada inicial al método recursivo, comenzando desde el último lote
-        return ajustarDiluidorRec(lotesPorDiluidor, lotesPorDiluidor.size() - 1, 0); // Estado inicial: 0 (en fecha de necesidad)
+        System.out.println("Lotes agrupados por diluidor: " + batchInDilutor);
+        return batchInDilutor;
     }
     
-    private boolean ajustarDiluidorRec(ArrayList<Lote> lotesPorDiluidor, int posicion, int estadoPrevio) {
-        // Si hemos procesado todos los lotes, la recursión termina exitosamente
-        if (posicion < 0) {
-            return true;
-        }
-    
-        // Obtener el lote actual
-        Lote loteActual = lotesPorDiluidor.get(posicion);
-        LocalDate fechaFin = loteActual.getFechaFin();
-        LocalDate fechaNecesidad = loteActual.getFechaNecesidad();
-    
-        // Comprobar si el lote está en su fecha de necesidad o retrasado
-        if (!fechaFin.isBefore(fechaNecesidad)) {
-            // Está en fecha o retrasado, pasar al siguiente lote
-            long dias = ChronoUnit.DAYS.between(fechaFin, fechaNecesidad);
-            int n = (int) dias;
-            return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, n); // Estado actual: 0
-        }
-    
-        // Si no está en fecha, moverlo a su fecha de necesidad
-        loteActual.setFechaFin(fechaNecesidad);
-        loteActual.setFechaInicio(loteActual.getFechaFin().minusDays(loteActual.getDuracion() - 1));
-    
-        if (posicion + 1 >= lotesPorDiluidor.size()) {
-            return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, 0);
-        }
-    
-        // Comprobar si hay solapamiento con el lote previo
-        Lote lotePrevio = lotesPorDiluidor.get(posicion + 1);
-        LocalDate fechaFinActual = loteActual.getFechaFin();
-        LocalDate fechaInicioPrevio = lotePrevio.getFechaInicio();
-    
-        // Bucle para ajustar solapamientos mediante retrasos
-        while (estadoPrevio <= toleranciaRetraso) {
-            if (!fechaFinActual.isBefore(fechaInicioPrevio)&&(estadoPrevio<toleranciaRetraso)) {
-                boolean sePudoRetrasarPrevio = retrasarPrevio(lotesPorDiluidor, posicion + 1, estadoPrevio);
-                if (!sePudoRetrasarPrevio) {
-                    break;
+    /**
+     * Verifica si un ajuste de fecha es válido dentro de los lotes asignados a un
+     * diluidor.
+     *
+     * @param batchInDilutor La lista de lotes asignados al mismo diluidor.
+     * @param batch             El lote que se intenta ajustar.
+     * @param newStartDate La nueva fecha de inicio propuesta.
+     * @return true si el ajuste es válido, false en caso contrario.
+     */
+    private boolean isValidAdjust(ArrayList<Batch> batchInDilutor, Batch batch, LocalDate newStartDate) {
+        System.out.println("Verificando si el ajuste es válido para Lote ID: " + batch.getId() + ", Nueva Fecha Inicio: " + newStartDate);
+        for (Batch anotherBatch : batchInDilutor) {
+            if (!anotherBatch.equals(batch)) {
+                LocalDate anotherStart = anotherBatch.getStartDate();
+                LocalDate anotherEnd = anotherBatch.getEndDate();
+                if (anotherStart == null || anotherEnd == null) {
+                    System.out.println("El Lote ID: " + anotherBatch.getId() + " tiene fechas nulas. Ignorando.");
+                    continue;
                 }
-                fechaInicioPrevio = lotePrevio.getFechaInicio();
-                estadoPrevio++;
-            } else if (fechaFinActual.isBefore(fechaInicioPrevio)){
-                return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, 0);
-            } else {estadoPrevio++;}
-        }
-    
-        // Intentar ajustes mediante adelantos
-        for (int i = 1; i <= toleranciaRetraso; i++) {
-            loteActual.setFechaFin(fechaNecesidad.minusDays(i));
-            loteActual.setFechaInicio(loteActual.getFechaFin().minusDays(loteActual.getDuracion() - 1));
-            fechaFinActual = loteActual.getFechaFin();
-            fechaInicioPrevio = lotePrevio.getFechaInicio();
-    
-            if (!fechaFinActual.isBefore(fechaInicioPrevio)) {
-                continue;
-            } else {
-                return ajustarDiluidorRec(lotesPorDiluidor, posicion - 1, toleranciaRetraso);
-            }
-        }
-    
-        return false;
-    }
-    
-    private boolean retrasarPrevio(ArrayList<Lote> lotesPorDiluidor, int posicion, int estadoRetraso) {
-        if (posicion >= lotesPorDiluidor.size()) {
-            return false;
-        }
-    
-        Lote lotePrevio = lotesPorDiluidor.get(posicion);
-    
-        if (estadoRetraso < toleranciaRetraso) {
-            lotePrevio.setFechaInicio(lotePrevio.getFechaInicio().plusDays(1));
-            lotePrevio.setFechaFin(lotePrevio.getFechaFin().plusDays(1));
-    
-            if (posicion + 1 < lotesPorDiluidor.size()) {
-                Lote loteSiguiente = lotesPorDiluidor.get(posicion + 1);
-                if (!lotePrevio.getFechaFin().isBefore(loteSiguiente.getFechaInicio())) {
-                    boolean sePuedeRetrasarSiguiente = retrasarPrevio(lotesPorDiluidor, posicion + 1, estadoRetraso + 1);
-                    if (!sePuedeRetrasarSiguiente) {
-                        lotePrevio.setFechaInicio(lotePrevio.getFechaInicio().minusDays(1));
-                        lotePrevio.setFechaFin(lotePrevio.getFechaFin().minusDays(1));
-                        return false;
-                    }
+                if ((newStartDate.isBefore(anotherEnd) && newStartDate.isAfter(anotherStart)) || newStartDate.equals(anotherStart) || newStartDate.equals(anotherEnd)) {
+                    System.out.println("Ajuste no válido: solapamiento con Lote ID: " + anotherBatch.getId());
+                    return false; // Hay solapamiento
                 }
             }
-            return true;
-        } else {
-            return false;
         }
+        System.out.println("Ajuste válido para Lote ID: " + batch.getId());
+        return true;
     }
-
+    
+    private boolean canMoveBatch(Batch batch, int days) {
+        LocalDate newStartDate = batch.getStartDate();
+        LocalDate newEndDate = batch.getEndDate();
+        if (newStartDate == null || newEndDate == null) {
+            System.out.println("El Lote ID: " + batch.getId() + " tiene fechas nulas. No se puede mover.");
+            return false; // No se puede mover si las fechas son nulas
+        }
+        newStartDate = newStartDate.plusDays(days);
+        newEndDate = newEndDate.plusDays(days);
+        for (Batch anotherBatch : batches) {
+            if (!anotherBatch.equals(batch)) {
+                LocalDate anotherStart = anotherBatch.getStartDate();
+                LocalDate anotherEnd = anotherBatch.getEndDate();
+                if (anotherStart == null || anotherEnd == null) {
+                    System.out.println("El Lote ID: " + anotherBatch.getId() + " tiene fechas nulas. Ignorando.");
+                    continue;
+                }
+                if ((newStartDate.isBefore(anotherEnd) && newStartDate.isAfter(anotherStart)) || newStartDate.equals(anotherStart) || newStartDate.equals(anotherEnd)) {
+                    return false; // Hay solapamiento
+                }
+            }
+        }
+        // Si no hay conflictos, actualiza las fechas del lote
+        batch.setStartDate(newStartDate);
+        batch.setEndDate(newEndDate);
+        return true;
+    }
+    
     /**
      * Metodo temporal para pruebas de imprimir lotes
      */
-
-
-    private void imprimirLotes(ArrayList<Batch> lotes) {
+    private void printBatches(ArrayList<Batch> lotes) {
         System.out.println("Lotes:");
         for (int i = 0; i < lotes.size(); i++) {
-            Batch lote = lotes.get(i);
-            String informacionLote = "l" + (i + 1) +
-                    " (Cantidad: " + lote.getQuantity() + ")" +
-                    " (Duración: " + lote.getDuration() + ")" +
-                    " (Fecha fin: " + lote.getEndDate().toString() + ")" +
-                    " (Diluidor: " + lote.getDilutorId() + ")";
-            System.out.println(informacionLote);
+            Batch batch = lotes.get(i);
+            String batchInfo = "getCollidedBatch" + (i + 1) + " (Cantidad: " + batch.getQuantity() + ")" + " (Duración: " + batch.getDuration() + ")" + " (Fecha fin: " + batch.getEndDate().toString() + ")" + " (Diluidor: " + batch.getDilutorId() + ")";
+            System.out.println(batchInfo);
         }
     }
-
-
-    public void guardarSolucionesEnArchivo() {
-        String nombreArchivo = "soluciones.txt";
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
-            if (soluciones.isEmpty()) {
+    
+    public void saveSolutionsInFile() {
+        String fileName = "soluciones.txt";
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            if (solutions.isEmpty()) {
                 writer.write("No se encontraron soluciones.");
                 return;
             }
-
-            int solucionNumero = 1;
-            for (Solution solucion : soluciones) {
-                writer.write("Solución #" + solucionNumero + ":\n");
-                for (Batch lote : solucion.getLotes()) {
-                    writer.write(" - Lote ID: " + lote.getId() +
-                            ", Cantidad: " + lote.getQuantity() +
-                            ", Duración: " + lote.getDuration() +
-                            ", Fecha Fin: " + (lote.getEndDate() != null ? lote.getEndDate() : "No asignada") +
-                            ", Fecha Necesidad : " + lote.getNeedDate() +
-                            ", Diluidor: " + (lote.getDilutorId() > 0 ? "Diluidor " + lote.getDilutorId() : "No asignado")
-                            + "\n");
+            
+            int nSolution = 1;
+            for (Solution solution : solutions) {
+                writer.write("Solución #" + nSolution + ":\n");
+                for (Batch batch : solution.getLotes()) {
+                    writer.write(" - Lote ID: " + batch.getId() + ", Cantidad: " + batch.getQuantity() + ", Duración: " + batch.getDuration() + ", Fecha Fin: " + (batch.getEndDate() != null ? batch.getEndDate() : "No asignada") + ", Fecha Necesidad : " + batch.getNeedDate() + ", Diluidor: " + (batch.getDilutorId() > 0 ? "Diluidor " + batch.getDilutorId() : "No asignado") + "\n");
                 }
                 writer.write("\n"); // Espacio entre soluciones
-                solucionNumero++;
+                nSolution++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
     }
-
-
-    private void imprimirEstadoDiluidores() {
-        StringBuilder estado = new StringBuilder();
-        for (Dilutor diluidor : diluidores) {
-            estado.append("d")
-                    .append(diluidor.getId())
-                    .append("(")
-                    .append(diluidor.getCapacity())
-                    .append(")(")
-                    .append(diluidor.getFechaFin() != null ? diluidor.getFechaFin().toString() : "Sin fecha")
-                    .append(")");
-
+    
+    private void printDilutorStatus() {
+        StringBuilder status = new StringBuilder();
+        for (Dilutor dilutor : dilutors) {
+            status.append("d").append(dilutor.getId()).append("(").append(dilutor.getCapacity()).append(")(").append(dilutor.getFechaFin() != null ? dilutor.getFechaFin().toString() : "Sin fecha").append(")");
+            
             // Añadir los lotes asignados al diluidor
-            for (Batch lote : lotes) {
-                if (lote.getDilutorId() == diluidor.getId()) {
-                    estado.append("->(l")
-                            .append(lote.getId())
-                            .append(" ")
-                            .append(lote.getEndDate() != null ? lote.getEndDate().toString() : "Sin fecha")
-                            .append(")");
+            for (Batch batch : batches) {
+                if (batch.getDilutorId() == dilutor.getId()) {
+                    status.append("->(getCollidedBatch").append(batch.getId()).append(" ").append(batch.getEndDate() != null ? batch.getEndDate().toString() : "Sin fecha").append(")");
                 }
             }
-            estado.append("\n");
+            status.append("\n");
         }
-        System.out.println(estado);
+        System.out.println(status);
+    }
+    
+    public ArrayList<Dilutor> sortDilutors() {
+        this.dilutors.sort(null);
+        return this.dilutors;
     }
 }

@@ -24,7 +24,7 @@ public class Batch implements Comparable<Batch> {
     private int dilutor;
     private int duration;
     private boolean isLocked;
-    
+
     //Constructors
     public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate startDate, LocalDate endDate, LocalDate needDate, Statuses status, String description, Types type, int dilutor, int duration) {
         this.nBatch = nBatch;
@@ -41,7 +41,7 @@ public class Batch implements Comparable<Batch> {
         this.dilutor = dilutor;
         this.duration = duration;
     }
-    
+
     public Batch(int nBatch, String planningClass, String plant, String item, int quantity, String description, Types type, LocalDate needDate) {
         this.nBatch = nBatch;
         this.planningClass = planningClass;
@@ -53,7 +53,7 @@ public class Batch implements Comparable<Batch> {
         this.needDate = needDate;
         this.endDate = needDate;
     }
-    
+
     public Batch(int nBatch, String planningClass, String plant, String item, int quantity, LocalDate needDate, Types type, String description) {
         this.nBatch = nBatch;
         this.planningClass = planningClass;
@@ -65,7 +65,7 @@ public class Batch implements Comparable<Batch> {
         this.description = description;
         this.endDate = needDate;
     }
-    
+
     public Batch(int nBatch, int duration, LocalDate needDate, int quantity, boolean isLocked) {
         this.quantity = quantity;
         this.duration = duration;
@@ -75,7 +75,7 @@ public class Batch implements Comparable<Batch> {
         this.nBatch = nBatch;
         this.endDate = needDate;
     }
-    
+
     //Getters
     public StringProperty[] getProperties() {
         StringProperty[] properties = new StringProperty[9];
@@ -90,90 +90,90 @@ public class Batch implements Comparable<Batch> {
         properties[8] = new SimpleStringProperty(description);
         return properties;
     }
-    
+
     public int getnBatch() {
         return nBatch;
     }
-    
+
     public int getQuantity() {
         return quantity;
     }
-    
+
     public Types getType() {
         return this.type;
     }
-    
+
     public String getPlant() {
         return this.plant;
     }
-    
+
     public String getPlanningClass() {
         return this.planningClass;
     }
-    
+
     public Statuses getStatus() {
         return status;
     }
-    
+
     public void setStatus(Statuses status) {
         this.status = status;
     }
-    
+
     public String getItem() {
         return this.item;
     }
-    
+
     public int getId() {
         return this.nBatch;
     }
-    
+
     public LocalDate getStartDate() {
         return this.startDate;
     }
-    
+
     public void setStartDate(LocalDate fechaInicio) {
         this.startDate = fechaInicio;
     }
-    
+
     public LocalDate getEndDate() {
         return this.endDate;
     }
-    
+
     public void setEndDate(LocalDate fechaFin) {
         this.endDate = fechaFin;
     }
-    
+
     public LocalDate getNeedDate() {
         return this.needDate;
     }
-    
+
     public int getDilutorId() {
         return dilutor;
     }
-    
+
     public long getDuration() {
         return this.duration;
     }
-    
+
     public int getDelay() {
         return delay;
     }
-    
+
     public void setDelay(int delay) {
         if (!this.isLocked) {
             this.delay = delay;
         }
     }
-    
+
     public String getDescription() {
         return this.description;
     }
-    
+
     //Setter
     public void setDilutor(int dilutor) {
         this.dilutor = dilutor;
     }
-    
+
     //Methods
     /**
      * Obtiene la fecha de inicio del lote.
@@ -181,9 +181,9 @@ public class Batch implements Comparable<Batch> {
      * @return La fecha calculada como (b() - duración).
      */
     public LocalDate startDate() {
-        return endDate.minusDays(this.duration);
+        return endDate().minusDays(this.duration);
     }
-    
+
     /**
      * Obtiene la fecha actualizada requerida del lote, considerando el retraso.
      *
@@ -192,7 +192,7 @@ public class Batch implements Comparable<Batch> {
     public LocalDate endDate() {
         return this.needDate.plusDays(this.delay);
     }
-    
+
     //Override
     @Override
     public Batch clone() {
@@ -200,7 +200,7 @@ public class Batch implements Comparable<Batch> {
         cloned.delay = this.delay;
         return cloned;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (o == null) {
@@ -211,7 +211,7 @@ public class Batch implements Comparable<Batch> {
         }
         return Objects.equals(this.nBatch, b.nBatch);
     }
-    
+
     @Override
     public int compareTo(Batch b) {
         if (this.endDate.isAfter(b.endDate)) {
@@ -227,7 +227,7 @@ public class Batch implements Comparable<Batch> {
         }
         return -1;
     }
-    
+
     @Override
     public String toString() {
         return "BatchTemp{" + "nBatch=" + nBatch + ", planningClass='" + planningClass + '\'' + ", plant='" + plant + '\'' + ", item='" + item + '\'' + ", quantity=" + quantity + ", startDate=" + startDate + ", endDate=" + endDate + ", needDate=" + needDate + ", status=" + status + ", description='" + description + '\'' + ", type=" + type + ", dilutor=" + dilutor + ", duration=" + duration + '}';

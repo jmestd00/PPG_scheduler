@@ -13,9 +13,9 @@ package org.ppg.model;
 public class Collision {
     private final int collisionFactor;
     private final Batch collidedBatch;
-    
+
     //Constructor
-    
+
     /**
      * Crea una nueva instancia de colisión entre dos lotes.
      *
@@ -26,9 +26,9 @@ public class Collision {
         this.collisionFactor = collisionFactor;
         this.collidedBatch = collidedBatch;
     }
-    
+
     //Getter
-    
+
     /**
      * Obtiene el lote asociado en la colisión.
      *
@@ -37,9 +37,9 @@ public class Collision {
     public Batch getCollidedBatch() {
         return collidedBatch;
     }
-    
+
     //Method
-    
+
     /**
      * Obtiene el factor de colisión.
      *
@@ -48,9 +48,9 @@ public class Collision {
     public int factor() {
         return collisionFactor;
     }
-    
+
     //Override
-    
+
     /**
      * Devuelve una representación en texto de la colisión en el formato `(f=factor, getCollidedBatch=lote)`.
      *
@@ -58,6 +58,8 @@ public class Collision {
      */
     @Override
     public String toString() {
-        return "(f=" + collisionFactor + ", getCollidedBatch=" + collidedBatch + ')';
+        return "(factor:" + collisionFactor +
+                ", batch:" + collidedBatch +
+                ')';
     }
 }
