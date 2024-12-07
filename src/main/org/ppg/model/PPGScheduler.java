@@ -60,7 +60,6 @@ public class PPGScheduler {
         System.out.println("-----Not added----");
         System.out.println(notAdded);
 
-
         //this.operationCompleted.set(true);
     }
 }
