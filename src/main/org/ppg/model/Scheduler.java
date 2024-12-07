@@ -221,6 +221,16 @@ public class Scheduler {
         return total;
     }
 
+    public ArrayList<Batch> getAllBatches(){
+
+        ArrayList<Batch> output = new ArrayList<>(total());
+        for(Dilutor d:dilutors){
+            output.addAll(d.getBatches());
+        }
+        output.sort(null);
+        return output;
+    }
+
     //Override
     @Override
     public String toString() {
