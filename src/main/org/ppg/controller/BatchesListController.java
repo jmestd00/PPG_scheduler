@@ -61,10 +61,15 @@ public class BatchesListController {
     @FXML
     private Label titleLabel;
 
-    //REVISADO
+    /**
+     * Initializes the controller and sets up the table view and pagination. Configures the columns with specific
+     * renderers, cell factories, and event handlers.
+     *
+     * @throws PPGSchedulerException if there is an error during initialization.
+     */
     public void initialize() throws PPGSchedulerException {
         tableView.setSelectionModel(null);
-        // Configuración de las columnas
+        // Configures the columns of the table view
         nBatchCol.setCellValueFactory(data -> {
             if (data.getValue() == null) {
                 return new SimpleStringProperty("");
@@ -128,34 +133,34 @@ public class BatchesListController {
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
 
-                // Si la fila está vacía o la celda está vacía (null), no se renderiza nada
+                // If the row is empty or the cell is empty (null), nothing is rendered
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);  // No mostrar gráfico
-                    setText(null);      // No mostrar texto
+                    setGraphic(null);  // Do not show graph
+                    setText(null);      // Do not show text
                 } else {
-                    // Si la fila tiene un objeto Batch válido, renderizamos el gráfico
+                    // If the row has a valid Batch object, we render the graph
                     Batch selectedBatch = getTableView().getItems().get(getIndex());
 
-                    // Solo mostrar el gráfico si el Batch tiene un color válido en su estado
+                    // Only show the graph if the Batch has a valid color in its state
                     if (selectedBatch != null && selectedBatch.getStatus() != null) {
                         LinearGradient gradient = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web(selectedBatch.getStatus().getHexColorPrimary())), new Stop(1, Color.web(selectedBatch.getStatus().getHexColorSecondary())));
 
-                        Circle circle = new Circle(15);  // Radio del círculo
-                        circle.setFill(gradient);        // Color de relleno
-                        circle.setStroke(Color.BLACK);   // Color del borde
+                        Circle circle = new Circle(15);  // circle radius
+                        circle.setFill(gradient);        // Fill Color
+                        circle.setStroke(Color.BLACK);   // Border Color
 
-                        // Establecer el gráfico en la celda
+                        // Set the chart in the cell
                         setGraphic(circle);
-                        setText(null);  // Asegurarse de no mostrar texto en la celda
+                        setText(null);  // Make sure you don't show text in the cell
                     } else {
-                        setGraphic(null);  // Si no tiene un estado válido, no se muestra gráfico
-                        setText(null);      // No mostrar texto
+                        setGraphic(null);  // If it does not have a valid state, no graph is displayed
+                        setText(null);      // Don´t show the graf
                     }
                 }
             }
         });
 
-        // Configuración del botón en buttonNameColumn
+        // Setting the button to buttonNameColumn
         statusCol.setCellFactory(param -> new TableCell<>() {
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -178,7 +183,7 @@ public class BatchesListController {
             private final Button btn = new Button("");
 
             {
-                // Define la acción del botón
+                // Defines the action of the button
                 btn.setOnAction(event -> {
                     Batch selectedBatch = getTableView().getItems().get(getIndex());
                     if (selectedBatch != null) {
@@ -187,7 +192,7 @@ public class BatchesListController {
                 });
                 btn.setStyle("/*-fx-background-color: #ffffff;*/ -fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black;");
 
-                // Estilos para el botón al pasar el ratón
+                //Styles for button on mouseover
                 btn.setOnMouseEntered(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black; -fx-scale-x: 1.05;" + " -fx-scale-y: 1.05;"));
 
                 btn.setOnMouseExited(event -> btn.setStyle("-fx-background-radius: 0; -fx-alignment: center;" + " -fx-max-width: 130px; -fx-pref-height: 64px; -fx-padding: 0;" + " -fx-background-image: url('/images/Engine128_128.png');" + " -fx-background-size: 60px 60px;" + " -fx-background-color: transparent;" + " -fx-background-position: center;" + " -fx-border-color: black; "));
@@ -195,20 +200,26 @@ public class BatchesListController {
                 btn.setPrefHeight(Double.MAX_VALUE);
             }
 
+            /**
+             * Updates the graphical representation of a table cell based on the state of the batch data.
+             *
+             * @param item   Represents the data of the cell.
+             * @param empty  Indicates whether this cell is empty (true) or contains data (false).
+             */
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
 
-                // Verificar si la fila está vacía o si el Batch es nulo
+                // Check if the row is empty or if the Batch is null
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);  // No mostrar el botón si está vacío
+                    setGraphic(null);  // Don't show button if empty
                 } else {
                     Batch selectedBatch = getTableView().getItems().get(getIndex());
                     if (selectedBatch != null) {
-                        setGraphic(btn);  // Mostrar el botón si el Batch es válido
-                        setAlignment(Pos.CENTER);  // Alinear el botón
+                        setGraphic(btn);  // Show the button if the Batch is valid
+                        setAlignment(Pos.CENTER);  // Align the button
                     } else {
-                        setGraphic(null);  // No mostrar el botón si el Batch es nulo
+                        setGraphic(null);  // Don't show the button if the Batch is null
                     }
                 }
             }
@@ -216,7 +227,7 @@ public class BatchesListController {
 
         editCol.setReorderable(false);
 
-        // Configuración de la paginación
+        // Pagination settings
         int totalPage = (int) (Math.ceil(batchData.size() * 1.0 / ROWS_PER_PAGE));
         pagination.setPageCount(totalPage);
         pagination.setCurrentPageIndex(0);
@@ -228,29 +239,41 @@ public class BatchesListController {
         tableView.refresh();
     }
 
-    //REVISADO
+    /**
+     * Updates the table view to display a specific page of batch data, ensuring correct pagination.
+     *
+     * @param index The index of the page to be displayed.
+     * @param limit The number of rows to be displayed per page.
+     */
+
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
         int toIndex = Math.min(fromIndex + limit, batchData.size());
         int minIndex = Math.min(toIndex, batchData.size());
 
-        // Crea una lista de lotes para la página actual
+        //Create a batch list for the current page
         ObservableList<Batch> pageData = FXCollections.observableArrayList(batchData.subList(fromIndex, minIndex));
 
-        // Si hay espacio restante en la página, agrega filas vacías
+        // If there is space left on the page, add empty rows
         int remainingRows = limit - pageData.size();
         for (int i = 0; i < remainingRows; i++) {
-            pageData.add(null);  // Añade una fila vacía representada por "null"
+            pageData.add(null);  //Adds an empty row represented by "null"
         }
 
-        // Crear una SortedList para asegurar que se ordenen correctamente
+        // Create a SortedList to ensure they are sorted correctly
         SortedList<Batch> sortedData = new SortedList<>(pageData);
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedData);
     }
 
-    //REVISADO
+    /**
+     * Adds tooltips to the cells of a specified table column.
+     *
+     * @param column        The table column to which tooltips should be added.
+     * @param propertyIndex The index of the property in the batch data model used for the tooltip.
+     */
+
     private void addTooltipToCells(TableColumn<Batch, String> column, int propertyIndex) {
         column.setCellFactory(new Callback<>() {
             @Override
@@ -264,7 +287,7 @@ public class BatchesListController {
                             setTooltip(null);
                         } else {
                             setText(item);
-                            // Crear y configurar el Tooltip con el valor de la celda
+                            // Create and configure the Tooltip with the cell value
                             Batch batch = getTableView().getItems().get(getIndex());
                             StringProperty tooltipText;
                             if (batch != null) {
@@ -283,70 +306,81 @@ public class BatchesListController {
         });
     }
 
-    //REVISADO
+    /**
+     * Divides a text into multiple lines with a specified maximum line length.
+     *
+     * @param text         The text to divide.
+     * @param maxLineLength The maximum length of each line.
+     * @return The text formatted with line breaks.
+     */
     private String divideText(String text, int maxLineLength) {
         StringBuilder wrappedText = new StringBuilder();
         int start = 0;
         while (start < text.length()) {
             int end = Math.min(start + maxLineLength, text.length());
-            // Si el límite no cae en un espacio, ajusta para no cortar palabras
+            // If the boundary does not fall on a space, adjust so as not to cut off words
             if (end < text.length() && text.charAt(end) != ' ') {
                 while (end > start && text.charAt(end) != ' ') {
                     end--;
                 }
             }
-            // Si no encuentra espacio, corta la línea directamente
+            //If you don't find space, cut the line directly
             if (end == start) {
                 end = Math.min(start + maxLineLength, text.length());
             }
             wrappedText.append(text, start, end).append("\n");
-            start = end + 1; // Avanza al siguiente segmento, saltando el espacio
+            start = end + 1; // Advance to the next segment, jumping space
         }
         return wrappedText.toString().trim();
     }
 
-    //REVISADO
+    /**
+     * Update the data table and pagination.
+     */
     public void refreshTable() {
         int totalPage = (int) Math.ceil(batchData.size() * 1.0 / ROWS_PER_PAGE);
         pagination.setPageCount(totalPage);
 
-        // Recargar los datos de la tabla
+        // Reload table data
         changeTableView(pagination.getCurrentPageIndex(), ROWS_PER_PAGE);
         tableView.refresh();
     }
 
-    //REVISADO
+    /**
+     * Opens a popup window to edit a specific batch.
+     * @param sampleBatch The object to be edited.
+     */
     @FXML
     private void openEditBatch(Batch sampleBatch) {
         if (sampleBatch.getStatus() != Statuses.EN_ESPERA) {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorBatchInProgress.fxml")));
         } else {
             try {
-                // Cargar el archivo FXML del popup
+                // Load the FXML file from the popup
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/EditBatches.fxml"));
                 Parent popupRoot = fxmlLoader.load();
                 EditBatchesController editBatches = fxmlLoader.getController();
-                // Pasar el objeto batch al controlador de la ventana de edición
+                // Pass the batch object to the edit window controller
                 editBatches.setBatch(sampleBatch);
                 editBatches.setBatchData(batchData, weeklyBatchData);
                 editBatches.setBatchesListController(this, WeeklyBatchesListController);
-                // Crear una nueva ventana para el popup
+                // Create a new window for the popup
                 Stage popupStage = new Stage();
                 popupStage.resizableProperty().setValue(Boolean.FALSE);
                 popupStage.setTitle("Editar lote");
                 popupStage.getIcons().add(logoPPG);
-                popupStage.initModality(Modality.APPLICATION_MODAL); // Bloquear la ventana principal
+                popupStage.initModality(Modality.APPLICATION_MODAL); // Lock the main window
                 popupStage.setScene(new Scene(popupRoot));
                 popupStage.setOnShown(event -> {
-                    // Obtener dimensiones de la ventana principal o pantalla
+                    // Get dimensions of the main window or screen
                     double centerX = pagination.getScene().getWindow().getX() + pagination.getScene().getWindow().getWidth() / 2;
                     double centerY = pagination.getScene().getWindow().getY() + pagination.getScene().getWindow().getHeight() / 2;
-                    // Calcular posición para centrar el popup
+                    // Calculate position to center the popup
                     popupStage.setX(centerX - popupStage.getWidth() / 2);
                     popupStage.setY(centerY - popupStage.getHeight() / 2);
                 });
                 editBatches.setStage(popupStage);
-                // Mostrar el popup
+                // Show the popup
                 popupStage.showAndWait();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -354,10 +388,13 @@ public class BatchesListController {
         }
     }
 
-    //REVISADO
+    /**
+     * Opens a popup window to display an error message.
+     * @param fxmlLoader
+     */
     private void openError(FXMLLoader fxmlLoader) {
         try {
-            // Cargar el archivo FXML del popup
+            // Load the FXML file from the popup
             Parent popupRoot = fxmlLoader.load();
             Stage popupStage = new Stage();
             popupStage.resizableProperty().setValue(Boolean.FALSE);
@@ -366,25 +403,29 @@ public class BatchesListController {
             popupStage.setScene(new Scene(popupRoot));
             popupStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/warn_icon.png")));
             popupStage.setOnShown(event -> {
-                // Obtener dimensiones de la ventana principal o pantalla
+                // Get dimensions of the main window or screen
                 double centerX = pagination.getScene().getWindow().getX() + pagination.getScene().getWindow().getWidth() / 2;
                 double centerY = pagination.getScene().getWindow().getY() + pagination.getScene().getWindow().getHeight() / 2;
-                // Calcular posición para centrar el popup
+                // Calculate position to center the popup
                 popupStage.setX(centerX - popupStage.getWidth() / 2);
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
             popupStage.show();
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), // Duración antes de ejecutar la acción
-                    event -> popupStage.close() // Acción para cerrar la ventana
+                    event -> popupStage.close() // Action to close the window
             ));
-            timeline.setCycleCount(1); // Ejecutar solo una vez
+            timeline.setCycleCount(1); // Run only once
             timeline.play();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
+    /**
+     * Sets the lists of batches to be displayed in the table.
+     * @param batchData The list of all batches to be displayed.
+     * @param weeklyBatchData The list of batches for the current week to be displayed.
+     */
     public void setBatchesList(ObservableList<Batch> batchData, ObservableList<Batch> weeklyBatchData) {
         this.batchData = batchData;
         this.weeklyBatchData = weeklyBatchData;
@@ -392,10 +433,20 @@ public class BatchesListController {
 
     }
 
+    /**
+     * Sets the controller for the weekly batches list.
+     * @param WeeklyBatchesListController The controller that handles the interaction with the weekly batches list.
+     */
     public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
         this.WeeklyBatchesListController = WeeklyBatchesListController;
     }
 
+
+    /**
+     * Checks whether the specified batch exists in the list of batches.
+     * @param batch The batch to check for existence in the list.
+     * @return {@code true} if the batch is present in the list, {@code false} otherwise.
+     */
     public boolean contains(Batch batch) {
         for (int i = 0; i < batchData.size(); i++) {
             if (batchData.get(i).getnBatch() == batch.getnBatch()) {
@@ -405,6 +456,11 @@ public class BatchesListController {
         return false;
     }
 
+    /**
+     * Retrieves the index of the specified batch in the list of batches.
+     * @param batch The batch whose index is to be found.
+     * @return The index of the batch in the list.
+     */
     public int getIndex(Batch batch) {
         for (int i = 0; i < batchData.size(); i++) {
             if (batchData.get(i).getnBatch() == batch.getnBatch()) {

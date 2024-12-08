@@ -48,20 +48,26 @@ public class EditBatchesController {
     private TextArea descriptionField;
     private DatabaseManager databaseManager;
 
+    /**
+     * Sets the values of the fields in the batch edit form based on the properties of the provided.
+     * @param batch
+     */
     public void setBatch(Batch batch) {
         nBatchField.setText(String.valueOf(batch.getnBatch()));
         pClassField.setText(batch.getPlanningClass());
         plantField.setText(batch.getPlant());
         itemField.setText(batch.getItem());
         quantityField.setText(String.valueOf(batch.getQuantity()));
-        startDatePicker.setValue(batch.getStartDate());  // Asegúrate de convertir a cadena si es necesario
+        startDatePicker.setValue(batch.getStartDate());
         needDateField.setText(batch.getNeedDate().format(formatter));
         descriptionField.setText(batch.getDescription());
         this.batch = batch;
     }
 
+    /**
+     * Initialize text fields.
+     */
     public void initialize() {
-        // Inicializa los campos de texto
         try {
             databaseManager = databaseManager.getInstance();
         } catch (PPGSchedulerException e) {
@@ -78,24 +84,45 @@ public class EditBatchesController {
         descriptionField.setContextMenu(new ContextMenu());
     }
 
+    /**
+     * Sets the data for the batches.
+     * @param batchData All batches to be used in the application.
+     * @param weeklyBatchData The batches specifically for the current week.
+     */
     public void setBatchData(ObservableList<Batch> batchData, ObservableList<Batch> weeklyBatchData) {
         this.batchData = batchData;
         this.weeklyBatchData = weeklyBatchData;
     }
 
+    /**
+     * Sets the controllers for the batches list.
+     * @param batchesListController The controller that manages the general batches list view.
+     * @param WeeklyBatchesListController The controller that manages the weekly batches list view.
+     */
     public void setBatchesListController(BatchesListController batchesListController, WeeklyBatchesListController WeeklyBatchesListController) {
         this.batchesListController = batchesListController;
         this.weeklyBatchesListController = WeeklyBatchesListController;
     }
 
+    /**
+     * Sets the stage for the current window.
+     * @param stage The object representing the window for this controller.
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     *  Updates the Batch with the new start date.
+     * @param batch
+     */
     private void updateBatch(Batch batch) {
         batch.setStartDate(startDatePicker.getValue());
     }
 
+    /**
+     * Removes the selected batch in the UI.
+     */
     @FXML
     private void removeBatch() {
         this.stage.close();
@@ -108,13 +135,17 @@ public class EditBatchesController {
         weeklyBatchesListController.refreshTable();
             /*
         try {
-            DESCOMENTAR ESTA LÍNEA PONE EN RIESGO LA INTEGRIDAD DE LA BBDD PUESTO QUE ELIMINA EL LOTE SELECCIONADO
+           UNCOMMENTING THIS LINE PUT THE INTEGRITY OF THE DB AT RISK SINCE IT ELIMINATES THE SELECTED LOT
             databaseManager.deleteBatch(batch.getnBatch());
         } catch (PPGSchedulerException e) {
             e.printStackTrace();
         }
              */
     }
+
+    /**
+     * Modifies the selected batch based on the input values in the UI.
+     */
     @FXML
     private void modifyBatch() {
         if (startDatePicker.getValue().isBefore(LocalDate.parse(needDateField.getText(), formatter))) {
@@ -124,7 +155,7 @@ public class EditBatchesController {
                 updateBatch(batch);
                 /*
                 try {
-            DESCOMENTAR ESTA LÍNEA PONE EN RIESGO LA INTEGRIDAD DE LA BBDD PUESTO QUE MODIFICA EL LOTE SELECCIONADO
+            UNCOMMENTING THIS LINE PUT THE INTEGRITY OF THE DB AT RISK SINCE IT MODIFIES THE SELECTED LOT
                     databaseManager.updateBatchDB(batch);
                 } catch (PPGSchedulerException e) {
                     e.printStackTrace();
@@ -143,30 +174,33 @@ public class EditBatchesController {
         }
     }
 
-
+    /**
+     *  Opens an error popup window with a specific message.
+     * @param fxmlLoader The object that loads the FXML file for the popup content.
+     */
     private void openError(FXMLLoader fxmlLoader) {
         try {
-            // Cargar el archivo FXML del popup
+            // Load the FXML file from the popup
             Parent popupRoot = fxmlLoader.load();
             Stage popupStage = new Stage();
             popupStage.resizableProperty().setValue(Boolean.FALSE);
             popupStage.setTitle("ERROR");
-            popupStage.initModality(Modality.APPLICATION_MODAL); // Bloquear la ventana principal
+            popupStage.initModality(Modality.APPLICATION_MODAL); // Lock the main window
             popupStage.setScene(new Scene(popupRoot));
             popupStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/warn_icon.png")));
             popupStage.setOnShown(event -> {
-                // Obtener dimensiones de la ventana principal o pantalla
+                // Get dimensions of the main window or screen
                 double centerX = descriptionField.getScene().getWindow().getX() + descriptionField.getScene().getWindow().getWidth() / 2;
                 double centerY = descriptionField.getScene().getWindow().getY() + descriptionField.getScene().getWindow().getHeight() / 2;
-                // Calcular posición para centrar el popup
+                // Calculate position to center the popup
                 popupStage.setX(centerX - popupStage.getWidth() / 2);
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
             popupStage.show();
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), // Duración antes de ejecutar la acción
-                    event -> popupStage.close() // Acción para cerrar la ventana
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), // Duration before action is executed
+                    event -> popupStage.close() // Action to close the window
             ));
-            timeline.setCycleCount(1); // Ejecutar solo una vez
+            timeline.setCycleCount(1); // Run only once
             timeline.play();
         } catch (Exception e) {
             e.printStackTrace();

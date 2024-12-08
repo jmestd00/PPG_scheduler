@@ -24,6 +24,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
+/**
+ * Controller class for managing the editing of batches within the weekly view. This controller provides functionality for modifying and removing batches, as well as validating dates and handling errors in batch data
+ */
 public class WeeklyEditBatchesController {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private ObservableList<Batch> batchData;
@@ -51,9 +54,9 @@ public class WeeklyEditBatchesController {
     private TextArea descriptionField;
 
     /**
-     * Method that stablish the batch to be modified stablishing the fields of the batch
+     * Sets the batch to be edited and updates the fields with its data
      *
-     * @param batch
+     * @param batch the batch to be edited
      */
     public void setBatch(Batch batch) {
         nBatchField.setText(String.valueOf(batch.getnBatch()));
@@ -68,8 +71,9 @@ public class WeeklyEditBatchesController {
     }
     
     /**
-     * Method that initialize this view.
-     * It removes the context menu from the fields and set the date picker to not show the week numbers
+     * Initializes the view by selecting the current week number and removing context menus
+     * from input fields to prevent unwanted interactions. It also configures the DatePicker
+     * to not display week numbers
      */
     public void initialize() {
         // Inicializa los campos de texto
@@ -91,23 +95,45 @@ public class WeeklyEditBatchesController {
         descriptionField.setContextMenu(new ContextMenu());
     }
 
+    /**
+     * Sets the WeeklyBatchesListController to interact with the list of batches
+     * @param WeeklyBatchesListController the controller to manage the batches list
+     */
     public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
         this.weeklyBatchesListController = WeeklyBatchesListController;
     }
 
+    /**
+     * Sets the stage for the current window
+     * @param stage the current window stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Sets the batch data and weekly batch data
+     *
+     * @param batchData the complete list of batches
+     * @param weeklyBatchData the list of batches for the current week
+     */
     public void setBatchData(ObservableList<Batch> batchData, ObservableList<Batch> weeklyBatchData) {
         this.batchData = batchData;
         this.weeklyBatchData = weeklyBatchData;
     }
 
+    /**
+     * Updates the batch with the current value in the DatePicker
+     *
+     * @param batch the batch to be updated
+     */
     private void updateBatch(Batch batch) {
         batch.setStartDate(startDatePicker.getValue());
     }
 
+    /**
+     * Removes the current batch from the weekly batch data list and the batch data list, and closes the current editing window
+     */
     @FXML
     private void removeBatch() {
         this.stage.close();
@@ -126,6 +152,11 @@ public class WeeklyEditBatchesController {
         }
              */
     }
+
+    /**
+     * Modifies the batch with the updated information and validates the dates. If the start date is
+     * before the need date and is not in the past, the batch is updated. If invalid, an error popup is shown
+     */
     @FXML
     private void modifyBatch() {
         if (startDatePicker.getValue().isBefore(LocalDate.parse(needDateField.getText(), formatter))) {
@@ -156,6 +187,12 @@ public class WeeklyEditBatchesController {
         }
     }
 
+    /**
+     * Opens an error popup with a specified FXML layout.
+     * The error popup will close automatically after 3 seconds
+     *
+     * @param fxmlLoader the FXMLLoader instance to load the error popup layout
+     */
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup

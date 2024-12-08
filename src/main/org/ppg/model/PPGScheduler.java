@@ -71,8 +71,6 @@ public class PPGScheduler {
             } catch (CantAddException e) {
                 throw new PPGSchedulerException("No se ha podido actualzar el lote");
             }
-
-
         } catch (PPGSchedulerException e) {
             throw new PPGSchedulerException("No se ha podido actualzar el lote");
         }

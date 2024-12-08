@@ -17,6 +17,9 @@ import org.ppg.model.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Controller class for managing the creation of new batches
+ */
 public class NewBatchController {
     private DatabaseManager databaseManager;
     private ArrayList<String> allowedItems;
@@ -39,7 +42,10 @@ public class NewBatchController {
     private ComboBox combo_box;
     @FXML
     private TextField itemText;
-    
+
+    /**
+     * Initializes the controller by setting up components and loading initial data
+     */
     public void initialize() {
         // TODO
         allowedItems = new ArrayList<String>();
@@ -58,12 +64,23 @@ public class NewBatchController {
         descriptionText.setContextMenu(new ContextMenu());
         
     }
-    
+
+    /**
+     * Sets the general and weekly batch lists for management
+     *
+     * @param batchData general batch list
+     * @param weeklyBatchData weekly batch list
+     */
     public void setBatchData(ObservableList<Batch> batchData, ObservableList<Batch> weeklyBatchData) {
         this.batchData = batchData;
         this.weeklyBatchData = weeklyBatchData;
     }
-    
+
+    /**
+     * Adds a new batch after validating the input fields
+     *
+     * @throws PPGSchedulerException exception thrown when an error occurs while adding the batch to the database
+     */
     @FXML
     private void addBatch() throws PPGSchedulerException {
         if (nBatchText.getText().isEmpty() || planningClassText.getText().isEmpty() || plantText.getText().isEmpty() || quantityText.getText().isEmpty() || descriptionText.getText().isEmpty() || combo_box.getValue() == null || datePicker.getValue() == null) {
@@ -106,7 +123,14 @@ public class NewBatchController {
             }
         }
     }
-    
+
+    /**
+     * Checks if a batch with a specific identifier exists in the list
+     *
+     * @param batchData batch list
+     * @param nBatch identifier of the batch to search
+     * @return true if the batch exists, false otherwise
+     */
     private boolean contains(ObservableList<Batch> batchData, int nBatch) {
         for (Batch batch : batchData) {
             if (batch.getnBatch() == nBatch) {
@@ -115,11 +139,21 @@ public class NewBatchController {
         }
         return false;
     }
-    
+
+    /**
+     * Assings the weekly batch list controller to update the view
+     *
+     * @param WeeklyBatchesListController weekly batch list controller
+     */
     public void setBatchesListController(WeeklyBatchesListController WeeklyBatchesListController) {
         this.weeklyBatchesListController = WeeklyBatchesListController;
     }
-    
+
+    /**
+     * Opens a popup window to display specific error messages
+     *
+     * @param fxmlLoader FXMLLoader object to load the error window
+     */
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup
@@ -148,7 +182,13 @@ public class NewBatchController {
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * Verifies if an item is allowed to be added to the database
+     *
+     * @param item item to validate
+     * @return true if the item is valid, false otherwise
+     */
     private boolean allowedItem(String item) {
         for (String allowedItem : allowedItems) {
             if (allowedItem.equals(item)) {
