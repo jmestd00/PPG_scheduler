@@ -20,7 +20,9 @@ public class Scheduler {
     }
 
     public boolean dynamicAdd(ArrayList<Dilutor> dilutors, ArrayList<Batch> allBatches, ArrayList<Batch> newBatch, int delay) throws CantAddException {
-        allBatches.addAll(newBatch);
+        if (newBatch != null) {
+            allBatches.addAll(newBatch);
+        }
         allBatches.sort((o1, o2) -> {
             if (o1.getQuantity() > o2.getQuantity()) return 1;
             else if (o1.getQuantity() < o2.getQuantity()) return -1;
