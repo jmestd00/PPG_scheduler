@@ -9,6 +9,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -31,6 +32,8 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WeeklyBatchesListController {
     private static DatabaseManager databaseManager;
@@ -38,8 +41,10 @@ public class WeeklyBatchesListController {
     Image logoPPG = new Image(String.valueOf(getClass().getResource("/images/PPG_Logo512_512.png")));
     private ObservableList<Batch> batchData = FXCollections.observableArrayList();
     private ObservableList<Batch> weeklyBatchData = FXCollections.observableArrayList();
-    private Timeline timeline;
+    ArrayList<Batch> listToUpdate = new ArrayList<>();
+    ArrayList<Batch> batchesToPlan = new ArrayList<>();
     private BooleanProperty operationCompleted;
+    private int weekNumber;
     
     @FXML
     private Button addButton;
@@ -76,7 +81,7 @@ public class WeeklyBatchesListController {
         operationCompleted = new SimpleBooleanProperty(false);
         databaseManager = DatabaseManager.getInstance();
         weeklyBatchData.addAll(databaseManager.getBatchesWeekly());
-        int weekNumber = date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+        weekNumber = date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
         String text = titleLabel.getText();
         titleLabel.setText("LISTADO DE LOTES SEMANAL #" + weekNumber);
         try {
@@ -374,7 +379,7 @@ public class WeeklyBatchesListController {
     
     @FXML
     private void openEditBatch(Batch sampleBatch) {
-        if (sampleBatch.getStatus() == Statuses.FINALIZADO || sampleBatch.getStatus() == Statuses.EN_PROCESO) {
+        if (sampleBatch.getStatus() != Statuses.EN_ESPERA) {
             openError(new FXMLLoader(getClass().getResource("/fxml/errorBatchInProgress.fxml")));
         } else {
             try {
@@ -505,30 +510,45 @@ public class WeeklyBatchesListController {
                 popupStage.setY(centerY - popupStage.getHeight() / 2);
             });
             popupStage.show();
-            timeline = new Timeline(
-                    new KeyFrame(Duration.seconds(2), event -> {
-                        new Thread(() -> {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Task<Void> periodicTask = new Task<>() {
+                @Override
+                protected Void call() {
+                    try {
+                            PPGScheduler scheduler = new PPGScheduler(operationCompleted);
+                            fillList(batchesToPlan);
                             try {
-                            PPGScheduler scheduler = new PPGScheduler();
-                            try {
-                                scheduler.insert(new ArrayList<>(batchData));
+                                listToUpdate = scheduler.insert(batchesToPlan);
                             } catch (CantAddException e) {
                                 e.printStackTrace();
                             }
-                            } catch (PPGSchedulerException e) {
-                                e.printStackTrace();
+                        while (!operationCompleted.get()) {
+                            // Ejecutar la lógica del ciclo
+                                                        // Verificar si debe terminar
+                            if (operationCompleted.get()) {
+                                break;
                             }
-                            
-                            //HACER CAMBIO EN EL CONSTRUCTOR DEL ALGORITMO
-                        }).start();
-                        if (operationCompleted.get()) {
-                            popupStage.close();
-                            timeline.stop();
+
+                            // Esperar 2 segundos antes de la próxima iteración
+                            Thread.sleep(2000);
                         }
-                    })
-            );
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
+                    } catch (InterruptedException | PPGSchedulerException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void succeeded() {
+                    // Tareas de limpieza al finalizar
+                    updateList(weeklyBatchData);
+                    updateList(batchData);
+                    popupStage.close();
+                }
+            };
+
+// Ejecutar la tarea en un solo hilo
+            executor.submit(periodicTask);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -565,7 +585,37 @@ public class WeeklyBatchesListController {
             } else if (batchToStart.getStatus() == Statuses.EN_ESPERA && batchToStart.getStartDate().isBefore(LocalDate.now())) {
                 batchToStart.setStatus(Statuses.EN_PROCESO);
             }
-            //Faltaria actualizar la bbdd
+            /*
+                try {
+            DESCOMENTAR ESTA LÍNEA PONE EN RIESGO LA INTEGRIDAD DE LA BBDD PUESTO QUE MODIFICA EL LOTE SELECCIONADO
+                    databaseManager.updateBatchDB(batchToStart);
+                } catch (PPGSchedulerException e) {
+                    e.printStackTrace();
+                }
+                */
+        }
+    }
+
+    private void updateList(ObservableList<Batch> list) {
+        for (Batch batch : listToUpdate) {
+            if (contains(batch, list)) {
+                int index = getIndex(batch, list);
+                Batch batchToUpdate = list.get(index);
+                batchToUpdate.setStartDate(batch.startDate());
+                if (contains(batch, weeklyBatchData) && batchToUpdate.getStartDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()) != weekNumber) {
+                    weeklyBatchData.remove(index);
+                }
+            }
+        }
+        tableView.refresh();
+    }
+
+    private void fillList(ArrayList<Batch> list) {
+        int i = 0;
+        for(Batch b: batchData) {
+            if (b.getStatus() == Statuses.EN_ESPERA) {
+                list.add(b);
+            }
         }
     }
 }
