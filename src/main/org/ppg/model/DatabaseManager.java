@@ -97,11 +97,28 @@ public class DatabaseManager {
         }
     }
 
+    public void updateBatchDates(Batch batch) throws PPGSchedulerException {
+        String query = "UPDATE Lote SET Fecha_inicio = ?, Fecha_fin=?, ID_diluidor=? WHERE Lote.N_Lote = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, batch.startDate().toString());
+            statement.setString(2, batch.endDate().toString());
+            statement.setInt(3, batch.getDilutorId());
+            statement.setInt(4, batch.getnBatch());
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new PPGSchedulerException("Error. No se ha modificado ningún registro en la base de datos");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new PPGSchedulerException("No se ha podido actualizar la base de datos debido a un error en la conexión");
+        }
+    }
+
     public void updateBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "UPDATE Lote SET Fecha_inicio = ?, Fecha_fin=?, Fecha_necesidad=?, ID_diluidor=?, Tipo=?, Plant=?, Cantidad=?, Planning_class=?, Estado=?, Descripcion=?, Item=? WHERE Lote.N_Lote = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, batch.getStartDate().toString());
-            statement.setString(2, batch.getEndDate().toString());
+            statement.setString(1, batch.startDate().toString());
+            statement.setString(2, batch.endDate().toString());
             statement.setString(3, batch.getNeedDate().toString());
             statement.setInt(4, batch.getDilutorId());
             statement.setString(5, batch.getType().getValue());
@@ -123,7 +140,7 @@ public class DatabaseManager {
 
     public ArrayList<Batch> getAllBatches() throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
-        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item";
+        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item ORDER BY Lote.N_Lote";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(query);
@@ -154,6 +171,34 @@ public class DatabaseManager {
         }
         return batches;
     }
+
+
+    public ArrayList<Batch> getAllBatchesBasic() throws PPGSchedulerException {
+        ArrayList<Batch> batches = new ArrayList<>();
+        String query = "SELECT Fecha_necesidad, Estado, N_Lote, Cantidad, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item ORDER BY Lote.N_Lote";
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
+                int quantity = resultSet.getInt("Cantidad");
+                Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
+                int nBatch = resultSet.getInt("N_Lote");
+                int duration = resultSet.getInt("duration");
+                Batch batch = new Batch(nBatch, duration, needDate, quantity, status != Statuses.EN_ESPERA);
+                batches.add(batch);
+            }
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        return batches;
+    }
+
 
     public ArrayList<Batch> getBatchesWeekly() throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
@@ -309,7 +354,7 @@ public class DatabaseManager {
 
     public ArrayList<Dilutor> getDilutors() throws PPGSchedulerException {
         ArrayList<Dilutor> dilutors = new ArrayList<>();
-        String query = "SELECT ID, Name, Capacity FROM Diluidores";
+        String query = "SELECT ID, Name, Capacity FROM Diluidores ORDER BY Capacity";
         Statement statement;
         try {
             statement = connection.createStatement();
@@ -364,10 +409,50 @@ public class DatabaseManager {
         }
         ArrayList<Dilutor> dilutorArrayList = new ArrayList<>();
         for (Dilutor dilutor : dilutors.values()) {
-            if (!dilutor.getBatches().isEmpty()) { // Filtrar solo diluidores con lotes asignados
-                dilutorArrayList.add(dilutor);
-            }
+            dilutorArrayList.add(dilutor);
         }
         return dilutorArrayList;
+    }
+
+    public ArrayList<Batch> getUpdatedBatches(ArrayList<Batch> newBatches) throws PPGSchedulerException {
+        String nBatches = "";
+        for (Batch batch : newBatches) {
+            if (batch == newBatches.getLast()) {
+                nBatches += "" + batch.getnBatch();
+            } else {
+                nBatches += "" + batch.getnBatch() + ", ";
+            }
+        }
+        ArrayList<Batch> batches = new ArrayList<>();
+        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Lote.N_Lote IN("+nBatches+")  ORDER BY Lote.N_Lote";
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        try {
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                LocalDate startDate = resultSet.getDate("Fecha_inicio").toLocalDate();
+                LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
+                LocalDate endDate = resultSet.getDate("Fecha_fin").toLocalDate();
+                int dilutorID = resultSet.getInt("ID_diluidor");
+                Types type = Types.fromValue(resultSet.getString("Tipo"));
+                String plant = resultSet.getString("Plant");
+                int quantity = resultSet.getInt("Cantidad");
+                String planningClass = resultSet.getString("Planning_class");
+                Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
+                String description = resultSet.getString("Descripcion");
+                int nBatch = resultSet.getInt("N_Lote");
+                String item = resultSet.getString("Item");
+                int duration = resultSet.getInt("duration");
+                Batch batch = new Batch(nBatch, planningClass, plant, item, quantity, startDate, endDate, needDate, status, description, type, dilutorID, duration);
+                batches.add(batch);
+            }
+        } catch (SQLException e) {
+            throw new PPGSchedulerException(e.getMessage());
+        }
+        return batches;
     }
 }

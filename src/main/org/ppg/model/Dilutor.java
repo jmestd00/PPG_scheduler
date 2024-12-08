@@ -52,6 +52,7 @@ public class Dilutor {
 
     //Methods
     public void add(Batch batch) {
+        batch.setDilutor(this.getId());
         batches.add(batch);
     }
 
@@ -147,7 +148,7 @@ public class Dilutor {
         }
     }
 
-    private int[] findBestDelaysAdjustment(ArrayList<Batch> list, int maxDelay, int[] defaultDelaysAdjustment){
+    private int[] findBestDelaysAdjustment(ArrayList<Batch> list, int maxDelay, int[] defaultDelaysAdjustment) {
         int[] delaySamples = delaySamples(maxDelay);
         int[] cache = new int[list.size()];
         int[] depthPosition = new int[list.size()];
@@ -404,6 +405,6 @@ public class Dilutor {
      */
     @Override
     public String toString() {
-        return "\nD" + this.getId() + "\tcapacity:"+this.getCapacity()+"\ttotal batches:"+this.getNumberOfBatches()+"\n" + batches + "\n";
+        return "\nD" + this.getId() + "\tcapacity:" + this.getCapacity() + "\ttotal batches:" + this.getNumberOfBatches() + "\n" + batches + "\n";
     }
 }

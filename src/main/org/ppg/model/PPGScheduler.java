@@ -15,27 +15,22 @@ public class PPGScheduler {
         //this.operationCompleted = operationCompleted;
     }
 
-    public ArrayList<Batch> insert(ArrayList<Batch> batches) throws PPGSchedulerException, CantAddException {
+    public ArrayList<Batch> insert(ArrayList<Batch> newBatches) throws PPGSchedulerException, CantAddException {
+        ArrayList<Batch> allBatches = connection.getAllBatchesBasic();
         ArrayList<Dilutor> dilutors = connection.getDilutors();
-        ArrayList<Batch> batchesDB = connection.getAllBatches();
-        Scheduler scheduler = new Scheduler(dilutors);
-        ArrayList<Batch> notAdded = new ArrayList<>();
-        for (Batch b : batchesDB) {
-            try {
-                scheduler.add(b);
-            } catch (CantAddException e) {
-                notAdded.add(b);
-            }
+        Scheduler scheduler = new Scheduler();
+        try {
+            scheduler.add(dilutors, allBatches, newBatches);
+        } catch (CantAddException e) {
+            throw new PPGSchedulerException("No se pudieron añadir los lotes");
         }
-        for (Batch b : batches) {
-            try {
-                scheduler.add(b);
-            } catch (CantAddException e) {
-                notAdded.add(b);
-            }
+        for (Batch b : allBatches) {
+            connection.updateBatchDates(b);
         }
-        //this.operationCompleted.set(true);
-        return scheduler.getAllBatches();
+        for(Batch batch:newBatches){
+            connection.insertBatchDB(batch);
+        }
+        return connection.getUpdatedBatches(newBatches);
     }
 
     public ArrayList<Batch> changeDate(Batch batch) {

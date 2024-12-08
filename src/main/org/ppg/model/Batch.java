@@ -219,17 +219,20 @@ public class Batch implements Comparable<Batch> {
     }
 
 
+
     public String toString(){
         return "(n:" + nBatch + ", " + startDate() + ", " + endDate() + ")";
     }
 
 
-
     /*
+    @Override
     public String toString(){
         return "(n:" + nBatch + ", Quantity: " + this.getQuantity() + ")";
     }
     */
+
+
 
     /*
     @Override
