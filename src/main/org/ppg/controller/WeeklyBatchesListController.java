@@ -35,6 +35,9 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Controller class for the weekly batches list, managing its display and related actions
+ */
 public class WeeklyBatchesListController {
     private static DatabaseManager databaseManager;
     private final int ROWS_PER_PAGE = 11;
@@ -75,7 +78,11 @@ public class WeeklyBatchesListController {
     @FXML
     private Label titleLabel;
 
-
+    /**
+     * Initializes the controller by setting up the columns, loading the data and setting actions related to the table and pagination
+     *
+     * @throws PPGSchedulerException exception thrown when there is an error while accessing the database
+     */
     public void initialize() throws PPGSchedulerException {
         LocalDate date = LocalDate.now();
         operationCompleted = new SimpleBooleanProperty(false);
@@ -263,6 +270,12 @@ public class WeeklyBatchesListController {
         });
     }
 
+    /**
+     * Updates the TableView with batches for the given page index and row limit
+     *
+     * @param index page index
+     * @param limit number of rows to display per page
+     */
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
         int toIndex = Math.min(fromIndex + limit, weeklyBatchData.size());
@@ -283,7 +296,13 @@ public class WeeklyBatchesListController {
         
         tableView.setItems(sortedData);
     }
-    
+
+    /**
+     * Adds a tooltip to the cells of the given column to display additional information
+     *
+     * @param column the TableColumn to which the tooltip will be added
+     * @param propertyIndex the index of the property in the Batch object that will be displayed in the tooltip
+     */
     private void addTooltipToCells(TableColumn<Batch, String> column, int propertyIndex) {
         column.setCellFactory(new Callback<>() {
             @Override
@@ -315,7 +334,14 @@ public class WeeklyBatchesListController {
             }
         });
     }
-    
+
+    /**
+     * Divides a long string into multiple lines with a maximum length
+     *
+     * @param text the text to be divided into lines
+     * @param maxLineLength the maximum length of each line
+     * @return a string with the text divided into lines
+     */
     private String divideText(String text, int maxLineLength) {
         StringBuilder wrappedText = new StringBuilder();
         int start = 0;
@@ -336,7 +362,10 @@ public class WeeklyBatchesListController {
         }
         return wrappedText.toString().trim();
     }
-    
+
+    /**
+     * Refreshes the TableView by reloading the data and updating the pagination
+     */
     public void refreshTable() {
         int totalPage = (int) Math.ceil(weeklyBatchData.size() * 1.0 / ROWS_PER_PAGE);
         pagination.setPageCount(totalPage);
@@ -346,6 +375,12 @@ public class WeeklyBatchesListController {
     }
     
     //Ventanas auxiliares
+
+    /**
+     * Opens a new batch creation window
+     *
+     * @param batchData the list of batches to be displayed in the new batch creation window
+     */
     @FXML
     private void openNewBatch(ObservableList<Batch> batchData) {
         try {
@@ -376,7 +411,12 @@ public class WeeklyBatchesListController {
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * Opens the batch edit window for the selected batch
+     *
+     * @param sampleBatch the batch to be edited
+     */
     @FXML
     private void openEditBatch(Batch sampleBatch) {
         if (sampleBatch.getStatus() != Statuses.EN_ESPERA) {
@@ -414,11 +454,21 @@ public class WeeklyBatchesListController {
             }
         }
     }
-    
+
+    /**
+     * Gets the pagination control for the weekly batches list
+     *
+     * @return the pagination control
+     */
     public Pagination getPagination() {
         return this.pagination;
     }
-    
+
+    /**
+     * Opens an error window with the provided FXML loader
+     *
+     * @param fxmlLoader the FXML loader for the error window
+     */
     private void openError(FXMLLoader fxmlLoader) {
         try {
             // Cargar el archivo FXML del popup
@@ -448,6 +498,9 @@ public class WeeklyBatchesListController {
         }
     }
 
+    /**
+     * Opens a windows displaying the full list of batches centered relative to the main window to prevent interaction with it while open
+     */
     @FXML
     private void openFullBatchesList() {
         try {
@@ -478,7 +531,12 @@ public class WeeklyBatchesListController {
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * Retrieves all batch data from the database and returns it as an ObservableList
+     *
+     * @return ObservableList containing all batches
+     */
     private ObservableList<Batch> getFullData() {
         try {
             batchData.addAll(databaseManager.getAllBatches());
@@ -489,6 +547,12 @@ public class WeeklyBatchesListController {
     }
     
     //Planificar lotes
+
+    /**
+     * Initiates the batch planning process, displaying a popup window and performing the batch insertion that runs in the background to avoid blocking the UI
+     *
+     * @throws PPGSchedulerException exception thrown if an error occurs while planning the batches
+     */
     @FXML
     public void planBatches() throws PPGSchedulerException {
         try {
@@ -555,6 +619,13 @@ public class WeeklyBatchesListController {
         tableView.refresh();
     }
 
+    /**
+     * Checks if a given batch is contained within a specified list of batches
+     *
+     * @param batch the batch to be checked
+     * @param list the list of batches to search through
+     * @return true if the batch is found in the list, false otherwise
+     */
     public boolean contains(Batch batch, ObservableList<Batch> list) {
         for (Batch value : list) {
             if (value.getnBatch() == batch.getnBatch()) {
@@ -564,6 +635,13 @@ public class WeeklyBatchesListController {
         return false;
     }
 
+    /**
+     * Retrieves the index of a given batch within a specified list of batches
+     *
+     * @param batch the batch to search for
+     * @param list the list of batches to search through
+     * @return the index of the batch in the list, -1 if it is not found
+     */
     public int getIndex(Batch batch, ObservableList<Batch> list) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getnBatch() == batch.getnBatch()) {
@@ -573,6 +651,11 @@ public class WeeklyBatchesListController {
         return -1;
     }
 
+    /**
+     * Starts processing batches based on their status and start date updating the status of each batch accordingly
+     *
+     * @param list the list of batches to process
+     */
     private void startBatches(ObservableList<Batch> list) {
         for (Batch batchToStart : list) {
             if (batchToStart.getStartDate().plusDays(batchToStart.getDuration()).isBefore(LocalDate.now())) {
@@ -596,6 +679,11 @@ public class WeeklyBatchesListController {
         }
     }
 
+    /**
+     * Updates the list of batches with new information if a batch exists in both lists
+     *
+     * @param list the list of batches to update
+     */
     private void updateList(ObservableList<Batch> list) {
         for (Batch batch : listToUpdate) {
             if (contains(batch, list)) {
@@ -610,6 +698,11 @@ public class WeeklyBatchesListController {
         tableView.refresh();
     }
 
+    /**
+     * Fills a list with all batches that are in the waiting status
+     *
+     * @param list the list to be filled with waiting batches
+     */
     private void fillList(ArrayList<Batch> list) {
         int i = 0;
         for(Batch b: batchData) {
