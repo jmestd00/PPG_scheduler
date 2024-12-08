@@ -13,7 +13,7 @@ public class PPGSchedulerTest {
     public void testSchedule() throws PPGSchedulerException, CantAddException {
         BooleanProperty operationCompleted = new SimpleBooleanProperty();
         operationCompleted.setValue(false);
-        PPGScheduler scheduler = new PPGScheduler(/*operationCompleted*/);
+        PPGScheduler scheduler = new PPGScheduler(operationCompleted);
         ArrayList<Batch> batches = new ArrayList<>();
 
         batches.add(new Batch(777, 3, LocalDate.of(2025, 2, 25), 20, false));
