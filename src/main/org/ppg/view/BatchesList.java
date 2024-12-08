@@ -9,23 +9,29 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
+/**
+ * Main class to launch the JavaFX application for managing and displaying a list of batches.
+ * It initializes the primary window and loads the FXML layout for the weekly batches list.
+ */
 public class BatchesList extends Application {
     Image logoPPG = new Image(String.valueOf(getClass().getResource("/images/PPG_Logo512_512.png")));
     
     /**
-     * Method to start the JavaFX Application
+     * Entry point for the JavaFX application.
+     * This method launches the JavaFX application and calls the start method
      *
-     * @param args
+     * @param args Command-line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
     
     /**
-     * JavaFX First Window Init
+     * Initializes the JavaFX window and loads the FXML layout for the weekly batches list.
+     * This method is called when the JavaFX application is launched
      *
-     * @param primaryStage
-     * @throws Exception
+     * @param primaryStage the primary stage for the application, representing the main window
+     * @throws Exception exception thrown if any error occurs while loading the FXML file or initializing the window
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
