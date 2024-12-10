@@ -17,7 +17,8 @@ En desarrollo
 
 ## Instalación
 Para instalar el proyecto, se debe instalar el software 
-[aquí marcado]() y tener instalado Java en el sistema.
+* Versión para Windows [aquí marcado](./release/PPG_scheduler_Windows.jar) y tener instalado Java en el sistema.
+* Versión para MacOS [aquí marcado](./release/PPG_scheduler_MacOS.jar) y tener instalado Java en el sistema.
 
 ## Uso
 Para ejecutar el proyecto, se debe ejecutar el siguiente
