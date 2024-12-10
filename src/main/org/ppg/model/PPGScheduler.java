@@ -24,14 +24,30 @@ public class PPGScheduler {
         } catch (CantAddException e) {
             throw new PPGSchedulerException("No se pudieron añadir los lotes");
         }
-        for (Batch b : allBatches) {
-            connection.updateBatchDates(b);
+        allBatches = scheduler.getAllBatches();
+        ArrayList<Batch> batchesToInsert = new ArrayList<>();
+        int count = newBatches.size();
+        for (Batch updateBatch : allBatches) {
+            for (Batch insertBatch : newBatches) {
+                if (insertBatch.getnBatch() == updateBatch.getnBatch()) {
+                    batchesToInsert.add(updateBatch);
+                    count--;
+                    break;
+                }
+            }
+            if (count == 0) {
+                break;
+            }
         }
-        for (Batch batch : newBatches) {
+
+        for (Batch batch : batchesToInsert) {
             connection.insertBatchDB(batch);
         }
+        for (Batch batch : allBatches) {
+            connection.updateBatchDates(batch);
+        }
         operationCompleted.set(true);
-        return connection.getUpdatedBatches(newBatches);
+        return batchesToInsert;
     }
 
     public ArrayList<Batch> changeDate(Batch batch) throws PPGSchedulerException {

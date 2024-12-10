@@ -2,7 +2,6 @@ package org.ppg.model;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import java.time.LocalDate;
 
 public class DatabaseManagerTest {
