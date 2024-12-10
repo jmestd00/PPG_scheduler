@@ -16,7 +16,7 @@ public class PPGSchedulerTest {
         PPGScheduler scheduler = new PPGScheduler(operationCompleted);
         ArrayList<Batch> batches = new ArrayList<>();
 
-        batches.add(new Batch(0, "VDWBBC", "VDW", "A-RXX3359-DD", 2000, LocalDate.of(2024, 12, 15), Types.PISC, "PISC"));
+        batches.add(new Batch(0, "VDWBBC", "VDW", "A-RXX3359-DD", 2000, LocalDate.of(2026, 12, 15), Types.PISC, "PISC"));
         scheduler.insert(batches);
     }
 }

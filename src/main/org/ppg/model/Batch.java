@@ -64,17 +64,9 @@ public class Batch implements Comparable<Batch> {
         this.type = type;
         this.description = description;
         this.endDate = needDate;
+        isLocked = status != Statuses.EN_ESPERA;
     }
 
-    public Batch(int nBatch, int duration, LocalDate needDate, int quantity, boolean isLocked) {
-        this.quantity = quantity;
-        this.duration = duration;
-        this.needDate = needDate;
-        this.delay = 0;
-        this.isLocked = isLocked;
-        this.nBatch = nBatch;
-        this.endDate = needDate;
-    }
 
     //Getters
     public StringProperty[] getProperties() {
@@ -193,11 +185,12 @@ public class Batch implements Comparable<Batch> {
     public LocalDate endDate() {
         return this.needDate.plusDays(this.delay);
     }
+
     //Override
     @Override
     public Batch clone() {
         LocalDate clonedNeedDay = LocalDate.of(this.needDate.getYear(), this.needDate.getMonth(), this.needDate.getDayOfMonth());
-        Batch cloned = new Batch(nBatch, duration, clonedNeedDay, quantity, isLocked);
+        Batch cloned = new  Batch(this.nBatch, this.planningClass, this.plant, this.item, this.quantity, clonedNeedDay, type, description);
         cloned.delay = this.delay;
         return cloned;
     }
@@ -220,9 +213,12 @@ public class Batch implements Comparable<Batch> {
 
 
 
+    /*
     public String toString(){
         return "(n:" + nBatch + ", " + startDate() + ", " + endDate() + ")";
     }
+
+     */
 
 
     /*
@@ -233,11 +229,24 @@ public class Batch implements Comparable<Batch> {
     */
 
 
-
-    /*
     @Override
     public String toString() {
-        return "BatchTemp{" + "nBatch=" + nBatch + ", planningClass='" + planningClass + '\'' + ", plant='" + plant + '\'' + ", item='" + item + '\'' + ", quantity=" + quantity + ", startDate=" + startDate + ", endDate=" + endDate + ", needDate=" + needDate + ", status=" + status + ", description='" + description + '\'' + ", type=" + type + ", dilutor=" + dilutor + ", duration=" + duration + '}';
+        return "Batch{" +
+                "nBatch=" + nBatch +
+                ", quantity=" + quantity +
+                ", needDate=" + needDate +
+                ", planningClass='" + planningClass + '\'' +
+                ", plant='" + plant + '\'' +
+                ", item='" + item + '\'' +
+                ", startDate=" + startDate() +
+                ", endDate=" + endDate() +
+                ", status=" + status +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", delay=" + delay +
+                ", dilutor=" + dilutor +
+                ", duration=" + duration +
+                ", isLocked=" + isLocked +
+                '}';
     }
-    */
 }

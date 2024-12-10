@@ -13,16 +13,14 @@ public class Scheduler {
 
     public void add(ArrayList<Dilutor> dilutors, ArrayList<Batch> allBatches, ArrayList<Batch> batch) throws CantAddException {
         if (dynamicAdd(dilutors, allBatches, batch, MAX_DELAY_VALUE)) {
-            //System.out.println("+El lote " + batch + " se añadió correctamente");
+            System.out.println("+El lote " + batch + " se añadió correctamente");
         } else {
-            //System.out.println("-El lote " + batch + " no se pudo añadir");
+            System.out.println("-El lote " + batch + " no se pudo añadir");
         }
     }
 
     public boolean dynamicAdd(ArrayList<Dilutor> dilutors, ArrayList<Batch> allBatches, ArrayList<Batch> newBatch, int delay) throws CantAddException {
-        if (newBatch != null) {
-            allBatches.addAll(newBatch);
-        }
+        allBatches.addAll(newBatch);
         allBatches.sort((o1, o2) -> {
             if (o1.getQuantity() > o2.getQuantity()) return 1;
             else if (o1.getQuantity() < o2.getQuantity()) return -1;
@@ -104,7 +102,7 @@ public class Scheduler {
         }
 
         if (!finallyNotAdded.isEmpty()) {
-            throw new CantAddException("No se ha podido añadir el lote. Quedan fuera: ");
+            throw new CantAddException("No se ha podido añadir el lote. Quedan fuera: "+finallyNotAdded);
         }
         for (Dilutor d : dilutors) {
             try {

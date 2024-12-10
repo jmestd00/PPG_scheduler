@@ -16,21 +16,22 @@ public class PPGScheduler {
     }
 
     public ArrayList<Batch> insert(ArrayList<Batch> newBatches) throws PPGSchedulerException, CantAddException {
-        ArrayList<Batch> allBatches = connection.getAllBatchesBasic();
+        ArrayList<Batch> allBatches = connection.getAllBatches();
         ArrayList<Dilutor> dilutors = connection.getDilutors();
         Scheduler scheduler = new Scheduler();
         try {
             scheduler.add(dilutors, allBatches, newBatches);
         } catch (CantAddException e) {
-            throw new PPGSchedulerException("No se pudieron añadir los lotes");
+            throw new PPGSchedulerException(e.getMessage());
         }
         allBatches = scheduler.getAllBatches();
         ArrayList<Batch> batchesToInsert = new ArrayList<>();
         int count = newBatches.size();
-        for (Batch updateBatch : allBatches) {
+        for (Batch updatedBatch : allBatches) {
             for (Batch insertBatch : newBatches) {
-                if (insertBatch.getnBatch() == updateBatch.getnBatch()) {
-                    batchesToInsert.add(updateBatch);
+                if (insertBatch.getnBatch() == updatedBatch.getnBatch()) {
+                    System.out.println(updatedBatch);
+                    batchesToInsert.add(updatedBatch);
                     count--;
                     break;
                 }
@@ -48,47 +49,5 @@ public class PPGScheduler {
         }
         operationCompleted.set(true);
         return batchesToInsert;
-    }
-
-    public ArrayList<Batch> changeDate(Batch batch) throws PPGSchedulerException {
-        try {
-            connection.updateBatchDB(batch);
-            ArrayList<Batch> allBatches = connection.getAllBatchesBasic();
-            ArrayList<Dilutor> dilutors = connection.getDilutors();
-            Scheduler scheduler = new Scheduler();
-            try {
-                scheduler.add(dilutors, allBatches, null);
-                for (Batch b : allBatches) {
-                    connection.updateBatchDates(b);
-                }
-                return connection.getAllBatches();
-            } catch (CantAddException e) {
-                throw new PPGSchedulerException("No se ha podido actualzar el lote");
-            }
-
-
-        } catch (PPGSchedulerException e) {
-            throw new PPGSchedulerException("No se ha podido actualzar el lote");
-        }
-    }
-
-    public ArrayList<Batch> remove(Batch batch) throws PPGSchedulerException {
-        try {
-            connection.deleteBatch(batch.getnBatch());
-            ArrayList<Batch> allBatches = connection.getAllBatchesBasic();
-            ArrayList<Dilutor> dilutors = connection.getDilutors();
-            Scheduler scheduler = new Scheduler();
-            try {
-                scheduler.add(dilutors, allBatches, null);
-                for (Batch b : allBatches) {
-                    connection.updateBatchDates(b);
-                }
-                return connection.getAllBatches();
-            } catch (CantAddException e) {
-                throw new PPGSchedulerException("No se ha podido actualzar el lote");
-            }
-        } catch (PPGSchedulerException e) {
-            throw new PPGSchedulerException("No se ha podido actualzar el lote");
-        }
     }
 }

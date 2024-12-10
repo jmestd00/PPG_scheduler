@@ -74,8 +74,8 @@ public class DatabaseManager {
     public void insertBatchDB(Batch batch) throws PPGSchedulerException {
         String query = "INSERT INTO Lote (Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Item) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, batch.getStartDate().toString());
-            statement.setString(2, batch.getNeedDate().toString());
+            statement.setString(1, batch.startDate().toString());
+            statement.setString(2, batch.endDate().toString());
             statement.setString(3, batch.getNeedDate().toString());
             statement.setInt(4, batch.getDilutorId());
             statement.setString(5, batch.getType().getValue());
@@ -171,34 +171,6 @@ public class DatabaseManager {
         }
         return batches;
     }
-
-
-    public ArrayList<Batch> getAllBatchesBasic() throws PPGSchedulerException {
-        ArrayList<Batch> batches = new ArrayList<>();
-        String query = "SELECT Fecha_necesidad, Estado, N_Lote, Cantidad, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item ORDER BY Lote.N_Lote";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new PPGSchedulerException(e.getMessage());
-        }
-        try {
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                LocalDate needDate = resultSet.getDate("Fecha_necesidad").toLocalDate();
-                int quantity = resultSet.getInt("Cantidad");
-                Statuses status = Statuses.fromValue(resultSet.getString("Estado"));
-                int nBatch = resultSet.getInt("N_Lote");
-                int duration = resultSet.getInt("duration");
-                Batch batch = new Batch(nBatch, duration, needDate, quantity, status != Statuses.EN_ESPERA);
-                batches.add(batch);
-            }
-        } catch (SQLException e) {
-            throw new PPGSchedulerException(e.getMessage());
-        }
-        return batches;
-    }
-
 
     public ArrayList<Batch> getBatchesWeekly() throws PPGSchedulerException {
         ArrayList<Batch> batches = new ArrayList<>();
@@ -424,7 +396,7 @@ public class DatabaseManager {
             }
         }
         ArrayList<Batch> batches = new ArrayList<>();
-        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Lote.N_Lote IN("+nBatches+")  ORDER BY Lote.N_Lote";
+        String query = "SELECT Fecha_inicio, Fecha_fin, Fecha_necesidad, ID_diluidor, Tipo, Plant, Cantidad, Planning_class, Estado, Descripcion, N_Lote, Lote.Item, Item.Duración as 'duration' FROM PPG_scheduler.Lote inner join Item on Item.Item like Lote.Item WHERE Lote.N_Lote IN(" + nBatches + ")  ORDER BY Lote.N_Lote";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(query);
